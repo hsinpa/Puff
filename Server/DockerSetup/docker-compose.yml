@@ -1,0 +1,12 @@
+version: "3.8"
+
+services:
+  mongodb-server-db:
+    container_name : mongodb-server-db
+    image: mongo:4.4.2-bionic
+    restart: always
+    ports:
+      - 27017:27017
+    environment: 
+      MONGO_INITDB_ROOT_USERNAME: hsinpa
+      MONGO_INITDB_ROOT_PASSWORD: Aaasss0602
