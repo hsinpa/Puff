@@ -1,6 +1,7 @@
 import * as http from 'http';
 import * as koa_static from 'koa-static';
 import * as Router from 'koa-router';
+import MongoDB from './service/MongoDB';
 
 const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
@@ -33,14 +34,18 @@ app.use(bodyParser());
 app.use(router.routes())
 app.use(router.allowedMethods())
 
-const dburi = `mongodb+srv://hsinpa:${env.DATABASE_PASSWORD}@cluster0.hpoyp.mongodb.net/${env.DATABASE_NAME}?retryWrites=true&w=majority`;
-
 // @ts-ignore
 var server = http.Server(app.callback());
 
-rootRouter(router, rootFolder);
+const mongodb = new MongoDB(env, (db: MongoDB) => {
+  
+  console.log("Connect to database");
 
-//"192.168.0.86"
-server.listen(env.NODE_PORT || 8020, 'localhost', function () {
-  console.log(`Application worker ${process.pid} started...`);
+  rootRouter(router, db);
+
+  //"192.168.0.86"
+  server.listen(env.NODE_PORT || 8020, 'localhost', function () {
+    console.log(`Application worker ${process.pid} started...`);
+  });
+
 });
