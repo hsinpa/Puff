@@ -6,7 +6,7 @@ using UnityEngine.Apple.ReplayKit;
 using UnityEngine.UI;
 
 namespace Puff.View {
-    public class PuffMsgFrontPage : BaseView
+    public class PuffMsgFrontPage : PuffMsgInnerPage
     {
         [SerializeField]
         private Text title;

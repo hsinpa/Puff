@@ -23,6 +23,11 @@ public class PuffApp : Singleton<PuffApp>
         Init();
     }
 
+    private void Start()
+    {
+        Notify(EventFlag.Event.GameStart);
+    }
+
     public void Notify(string entity, params object[] objects)
     {
         subject.notify(entity, objects);
@@ -30,7 +35,7 @@ public class PuffApp : Singleton<PuffApp>
 
     public void Init()
     {
-        Notify(EventFlag.Event.GameStart);
+        Modals.instance.CloseAll();
     }
 
     private void RegisterAllController(Subject p_subject)

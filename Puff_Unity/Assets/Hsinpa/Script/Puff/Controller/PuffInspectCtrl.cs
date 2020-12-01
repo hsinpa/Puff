@@ -52,13 +52,8 @@ namespace Puff.Ctrl {
         private void SetInspectViewEvent() {
             puffInspectView.SetReplyEvent(() =>
             {
-                OnOpenPuffMsg();
+                PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg);
             });
-        }
-
-        private void OnOpenPuffMsg() {
-            PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
-            PuffMsgFrontPage frontPage = puffMessageModal.GetPuffFrontPage();
         }
 
         #region Device Input Handler
