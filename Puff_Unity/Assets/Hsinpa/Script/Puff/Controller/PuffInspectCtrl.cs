@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using Puff.View;
 using Hsinpa.View;
+using System.Runtime.InteropServices;
+using UnityEngine.UIElements;
+using TMPro;
+using System.Diagnostics.Tracing;
 
 namespace Puff.Ctrl {
     public class PuffInspectCtrl : ObserverPattern.Observer
@@ -16,7 +20,7 @@ namespace Puff.Ctrl {
         [SerializeField]
         private GameObject SelectedPuffObject;
 
-        [SerializeField, Range(0.1f, 2)]
+        [SerializeField, Range(0.1f, 200)]
         private float DragThreshold = 0.1f;
 
         private RaycastHit[] raycastHits = new RaycastHit[1];
@@ -25,9 +29,20 @@ namespace Puff.Ctrl {
         Vector3 lastStandPoint;
 
         public enum Face {Front, RightSide, Back, LeftSide};
+        public enum DragDir { VerticalUp, VerticalDown, Horizontal, None };
+        public enum GestureEvent { Release, Save, None };
+
+        private GestureEvent gestureEvent = GestureEvent.None;
         private Face currentFace = Face.Front;
         private int rotDir = 1;
         private float recordRotationY;
+
+        private float moveXDist => (Input.mousePosition - lastStandPoint).x;
+        private float moveYDist => (Input.mousePosition - lastStandPoint).y;
+        private float absX => Mathf.Abs(moveXDist);
+        private float absY => Mathf.Abs(moveYDist);
+
+        private readonly Vector3 FixedPuffPosition = new Vector3(0, 0, 8);
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -59,6 +74,8 @@ namespace Puff.Ctrl {
         #region Device Input Handler
         private void Update()
         {
+            if (SelectedPuffObject == null) return;
+
             if (!hasHitOnPuffObj && Input.GetMouseButtonDown(0))
             {
                 hasHitOnPuffObj = HasHitPuffObject();
@@ -72,10 +89,18 @@ namespace Puff.Ctrl {
             if (!hasHitOnPuffObj)
             {
                 GraduallyRotateToFace(currentFace);
+                GraudaulyFlyToCenter();
                 return;
             }
 
-            ProcessRotation();
+            DragDir dragDirection = FindDragDirection();
+
+            if (dragDirection == DragDir.VerticalDown || dragDirection == DragDir.VerticalUp) {
+                ProcessVertical(dragDirection);
+            }
+
+            if (dragDirection == DragDir.Horizontal)
+                ProcessRotation();
 
             if (Input.GetMouseButtonUp(0))
             {
@@ -88,7 +113,23 @@ namespace Puff.Ctrl {
 
                 if (rotDir == 0 && recordRotationY >= 180)
                     rotDir = 360;
+
+                if (gestureEvent != GestureEvent.None) {
+                    ReleaseSelectObject();
+                }
             }
+        }
+
+        private DragDir FindDragDirection() {
+            //Vertical check first
+            if (absY > DragThreshold) {
+                return (moveYDist > 0) ? DragDir.VerticalUp : DragDir.VerticalDown;
+            }
+
+            if (absX > DragThreshold)
+                return DragDir.Horizontal;
+
+            return DragDir.None;
         }
 
         private bool HasHitPuffObject()
@@ -98,6 +139,26 @@ namespace Puff.Ctrl {
             int hitCount = Physics.RaycastNonAlloc(ray, raycastHits, 10, GeneralFlag.Puff.Layer);
 
             return hitCount > 0;
+        }
+
+        private void ProcessVertical(DragDir dragDir) {
+
+            float offset = Mathf.Clamp((absY - DragThreshold) * 0.02f, -5, 5);
+            float ratio = 1 - (Mathf.Abs(offset * 2f) / 5);
+            if (dragDir == DragDir.VerticalDown) offset *= -1;
+
+            SelectedPuffObject.transform.position = new Vector3(0, offset, 8);
+
+            puffInspectView.SetFunctionCanvas(ratio);
+            puffInspectView.SetSemiText(dragDir == DragDir.VerticalDown ? GeneralFlag.String.SaveToMailbox : GeneralFlag.String.ReleaseBackToSky);
+
+            if (ratio <= 0)
+            {
+                gestureEvent = dragDir == DragDir.VerticalDown ? GestureEvent.Save : GestureEvent.Release;
+            }
+            else {
+                gestureEvent = GestureEvent.None; 
+            }
         }
 
         private int ProcessRotation()
@@ -121,13 +182,26 @@ namespace Puff.Ctrl {
             return (Face)face;
         }
 
+        private void GraudaulyFlyToCenter() {
+            SelectedPuffObject.transform.position = Vector3.Lerp(SelectedPuffObject.transform.position, new Vector3(0, 0, 8), 0.1f);
+
+        }
+
         private void GraduallyRotateToFace(Face face)
         {
-
             recordRotationY = Mathf.Lerp(recordRotationY, rotDir, 0.1f);
 
             SelectedPuffObject.transform.rotation = Quaternion.Euler(0, recordRotationY, 0);
         }
         #endregion
+
+        private void ReleaseSelectObject() {
+            gestureEvent = GestureEvent.None;
+            puffInspectView.Show(false);
+            SelectedPuffObject.SetActive(false);
+            SelectedPuffObject = null;
+
+            Debug.Log("Released");
+        }
     }
 }

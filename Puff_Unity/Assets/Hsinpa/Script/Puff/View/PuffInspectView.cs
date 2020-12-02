@@ -18,11 +18,24 @@ namespace Puff.View
         [SerializeField]
         private ButtonManagerBasicIcon ReplyButton;
 
+        [SerializeField]
+        private CanvasGroup functionalPanelCanvas;
+
         public void SetUp(string title, string semiTitle) {
             base.Show(true);
 
+            functionalPanelCanvas.alpha = 1;
+
             titleTxt.text = title;
-            functionText.text = semiTitle;
+            SetSemiText(semiTitle);
+        }
+
+        public void SetSemiText(string semiText) {
+            functionText.text = semiText;
+        }
+
+        public void SetFunctionCanvas(float alpha) {
+            functionalPanelCanvas.alpha = alpha;
         }
 
         public void SetReplyEvent(System.Action p_event) {

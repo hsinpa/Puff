@@ -625,6 +625,7 @@ GameObject:
   - component: {fileID: 6722792065152463737}
   - component: {fileID: 6722792065152463719}
   - component: {fileID: 6722792065152463718}
+  - component: {fileID: 308572078}
   m_Layer: 5
   m_Name: functions_panel
   m_TagString: Untagged
@@ -651,7 +652,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0.14500001}
-  m_AnchoredPosition: {x: 0, y: 0.2000122}
+  m_AnchoredPosition: {x: 0, y: 0.20007324}
   m_SizeDelta: {x: 0, y: 0.36997986}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6722792065152463719
@@ -687,6 +688,18 @@ MonoBehaviour:
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 1
   m_ChildScaleHeight: 1
+--- !u!225 &308572078
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6722792065152463736}
+  m_Enabled: 1
+  m_Alpha: 0
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &6722792065528892495
 GameObject:
   m_ObjectHideFlags: 0
@@ -1288,7 +1301,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6722792066349823031}
   m_Enabled: 1
-  m_Alpha: 0
+  m_Alpha: 1
   m_Interactable: 0
   m_BlocksRaycasts: 0
   m_IgnoreParentGroups: 0
@@ -1308,6 +1321,7 @@ MonoBehaviour:
   titleTxt: {fileID: 6722792066074036431}
   functionText: {fileID: 6722792065528892490}
   ReplyButton: {fileID: 6722792064414835354}
+  functionalPanelCanvas: {fileID: 308572078}
 --- !u!1 &6722792066403571281
 GameObject:
   m_ObjectHideFlags: 0
