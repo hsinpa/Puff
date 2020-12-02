@@ -1,13 +1,15 @@
 import * as moogoose from 'mongoose';
 import PuffSchema from './Schema/PuffSchema';
+import PuffModel from './Model/PuffModel';
 
 class MongoDB {
-    
     private config = {};
     private dburi : string;
     private moogoseDB : typeof moogoose;
 
-    puffSchema : typeof moogoose.Model;
+    private puffSchema : typeof moogoose.Model;
+    
+    puffModel : PuffModel;
 
     constructor(env : NodeJS.ProcessEnv, callback :  (db : MongoDB )=> void) {
         this.config = {
@@ -24,13 +26,17 @@ class MongoDB {
     async ConnectToDatabase(callback : (db : MongoDB ) => void) {
         this.moogoseDB = await moogoose.connect(this.dburi, {useUnifiedTopology : true, useNewUrlParser : true});
         this.RegisterAllSchema();
+        this.RegisterAllModel();
         callback(this);
     }
 
-    async RegisterAllSchema() {
+    RegisterAllSchema() {
         this.puffSchema = this.moogoseDB.model("puff_record", PuffSchema);
-        let r = await this.puffSchema.find();
-        console.log(r);
+        this.puffSchema.schema
+    }
+
+    RegisterAllModel() {
+        this.puffModel = new PuffModel(this.puffSchema);
     }
 
 }
