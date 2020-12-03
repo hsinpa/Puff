@@ -44,7 +44,7 @@ const mongodb = new MongoDB(env, (db: MongoDB) => {
   rootRouter(router, db);
 
   //"192.168.0.86"
-  server.listen(env.NODE_PORT || 8020, 'localhost', function () {
+  server.listen(env.NODE_PORT || 8030, 'localhost', function () {
     console.log(`Application worker ${process.pid} started...`);
   });
 

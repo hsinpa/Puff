@@ -1,6 +1,7 @@
 import PuffSchema from '../Schema/PuffSchema';
 import * as moogoose from 'mongoose';
-import {PuffCommentType, PuffMessageType } from '../../Utility/Flag/TypeFlag'
+import {PuffCommentType, PuffMessageType } from '../../Utility/Flag/TypeFlag';
+import * as uuid from 'uuid';
 
 class PuffModel {
 
@@ -16,11 +17,15 @@ class PuffModel {
     }
 
     async SavePuffRecord(puffMsg : PuffMessageType) {
-        let result = await this.puffSchema.create(puffMsg );
+        return await this.puffSchema.create(puffMsg );
     }
 
-    async SavePuffComment(puff_id : string, ) {
-
+    async SavePuffComment(puff_id : string, author_id : string, author : string, body : string ) {
+        let comment_uuid = uuid.v4();
+        
+        let puffObject = await this.puffSchema.findById(puff_id);
+        puffObject.comments.push( {_id : comment_uuid, author_id : author_id, author: author, body : body});
+        return await puffObject.save();
     }
 
 }

@@ -2,7 +2,7 @@
 import * as path from 'path';
 import * as Router from 'koa-router';
 import MongoDB from '../service/MongoDB';
-import {PuffMessageType} from '../Utility/Flag/TypeFlag';
+import {PuffMessageType, PuffCommentType} from '../Utility/Flag/TypeFlag';
 import bodyParser = require('koa-bodyparser');
 
 module.exports =  (router : Router, mongodb:MongoDB) => {
@@ -20,18 +20,24 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     ctx.body = r;
   });
 
-  router.get('/test_save_puff/:author_id/:author/:body', async function (ctx:any, next:any) {
-    //let r = ctx.params.author_id +"/"+ ctx.params.author + "/"+ctx.params.body;
-
-    let r : PuffMessageType = {
-      author : ctx.params.author,
-      author_id : ctx.params.author_id,
-      body : ctx.params.body
-    }
-
-    await mongodb.puffModel.SavePuffRecord(r);
+  router.post('/send_puff_comment', async function (ctx:any, next:any) {
+    let r = await mongodb.puffModel.SavePuffComment(ctx.request.body.puff_id, ctx.request.body.author_id, ctx.request.body.author, ctx.request.body.body );
 
     ctx.body = r;
   });
+
+  router.post('/send_puff_msg', async function (ctx:any, next:any) {
+    let msgType : PuffMessageType = {
+      author : ctx.request.body['author'],
+      author_id : ctx.request.body['author_id'],
+      body : ctx.request.body['body'],
+      comments : []
+    }
+
+    let result = await mongodb.puffModel.SavePuffRecord(msgType);
+
+    ctx.body = result;
+  });
+
 
 }

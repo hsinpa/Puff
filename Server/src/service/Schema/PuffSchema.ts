@@ -1,6 +1,7 @@
 import {Schema, model} from 'mongoose';
 
 const commentSchema = new Schema({
+    _id : String,
     author_id : String,
     author : String,
     body : String,
@@ -12,7 +13,8 @@ const puffSchema = new Schema({
     author : String,
     body : String,
     comments : [commentSchema],
-    date : {type : Date, default :Date.now}
+    date : {type : Date, default :Date.now},
+    expire : {type:Date, default :Date.now}
 });
 
 export default puffSchema;

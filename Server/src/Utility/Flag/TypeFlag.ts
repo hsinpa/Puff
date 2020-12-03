@@ -17,7 +17,7 @@ export interface LoginReturnType {
 }
 
 export interface PuffCommentType {
-    message_id : string,
+    _id : string,
     author_id : string,
     author : string,
     body : string
@@ -26,7 +26,8 @@ export interface PuffCommentType {
 export interface PuffMessageType {
     author_id : string,
     author : string,
-    body : string
+    body : string,
+    comments : string[]
 }
 
 export interface DatabaseResultType {
