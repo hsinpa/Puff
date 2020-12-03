@@ -18,7 +18,7 @@ namespace Puff.Ctrl {
         private Camera _camera;
 
         [SerializeField]
-        private GameObject SelectedPuffObject;
+        private PuffItemView SelectedPuffObject;
 
         [SerializeField, Range(0.1f, 200)]
         private float DragThreshold = 0.1f;
@@ -56,7 +56,8 @@ namespace Puff.Ctrl {
 
         private void SetUp()
         {
-            SetFaceInfo(currentFace);
+            //SetFaceInfo(currentFace);
+            puffInspectView.Show(false);
             SetInspectViewEvent();
         }
 
@@ -74,8 +75,6 @@ namespace Puff.Ctrl {
         #region Device Input Handler
         private void Update()
         {
-            if (SelectedPuffObject == null) return;
-
             if (!hasHitOnPuffObj && Input.GetMouseButtonDown(0))
             {
                 hasHitOnPuffObj = HasHitPuffObject();
@@ -83,8 +82,11 @@ namespace Puff.Ctrl {
                 if (hasHitOnPuffObj)
                 {
                     lastStandPoint = Input.mousePosition;
+                    SetCurrentSelectedObject(raycastHits[0].transform.GetComponent<PuffItemView>());
                 }
             }
+
+            if (SelectedPuffObject == null) return;
 
             if (!hasHitOnPuffObj)
             {
@@ -136,7 +138,7 @@ namespace Puff.Ctrl {
         {
             Ray ray = _camera.ScreenPointToRay(Input.mousePosition);
 
-            int hitCount = Physics.RaycastNonAlloc(ray, raycastHits, 10, GeneralFlag.Puff.Layer);
+            int hitCount = Physics.RaycastNonAlloc(ray, raycastHits, 100, GeneralFlag.Puff.Layer);
 
             return hitCount > 0;
         }
@@ -195,11 +197,30 @@ namespace Puff.Ctrl {
         }
         #endregion
 
+        private bool SetCurrentSelectedObject(PuffItemView puffItem) {
+
+            if (SelectedPuffObject != null && SelectedPuffObject.name == puffItem.name) {
+                return false;
+            } 
+
+            Debug.Log("Hit something new");
+
+            SelectedPuffObject = puffItem;
+            SelectedPuffObject.CatchToFront();
+            puffInspectView.Show(true);
+            SetFaceInfo(Face.Front);      
+
+            return true;
+        }
+
         private void ReleaseSelectObject() {
             gestureEvent = GestureEvent.None;
             puffInspectView.Show(false);
-            SelectedPuffObject.SetActive(false);
-            SelectedPuffObject = null;
+
+            if (SelectedPuffObject != null) {
+                SelectedPuffObject.Dismiss();
+                SelectedPuffObject = null;
+            }
 
             Debug.Log("Released");
         }
