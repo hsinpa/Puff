@@ -1,79 +1,60 @@
-﻿using System.Collections;
+﻿using Puff.View;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Puff.View;
-using Hsinpa.View;
-using System.Runtime.InteropServices;
-using UnityEngine.UIElements;
-using TMPro;
-using System.Diagnostics.Tracing;
 
-namespace Puff.Ctrl {
-    public class PuffInspectCtrl : ObserverPattern.Observer
+namespace Puff.Ctrl.Utility
+{
+    public class PuffInspectorInput
     {
-        [SerializeField]
-        private PuffInspectView puffInspectView;
-
-        [SerializeField]
-        private Camera _camera;
-
-        [SerializeField]
+        private bool hasHitOnPuffObj = false;
+        private Vector3 lastStandPoint;
         private PuffItemView SelectedPuffObject;
-
-        [SerializeField, Range(0.1f, 200)]
-        private float DragThreshold = 0.1f;
-
-        private RaycastHit[] raycastHits = new RaycastHit[1];
-
-        bool hasHitOnPuffObj = false;
-        Vector3 lastStandPoint;
-
-        public enum Face {Front, RightSide, Back, LeftSide};
-        public enum DragDir { VerticalUp, VerticalDown, Horizontal, None };
-        public enum GestureEvent { Release, Save, None };
 
         private GestureEvent gestureEvent = GestureEvent.None;
         private Face currentFace = Face.Front;
         private int rotDir = 1;
         private float recordRotationY;
 
+        public enum DragDir { VerticalUp, VerticalDown, Horizontal, None };
+        public enum Face { Front, RightSide, Back, LeftSide };
+        public enum GestureEvent { Release, Save, None };
+
         private float moveXDist => (Input.mousePosition - lastStandPoint).x;
         private float moveYDist => (Input.mousePosition - lastStandPoint).y;
         private float absX => Mathf.Abs(moveXDist);
         private float absY => Mathf.Abs(moveYDist);
 
-        private readonly Vector3 FixedPuffPosition = new Vector3(0, 0, 8);
+        private float DragThreshold = 0.1f;
+        private Camera _camera;
+        private RaycastHit[] raycastHits = new RaycastHit[1];
 
-        public override void OnNotify(string p_event, params object[] p_objects)
-        {
-            switch (p_event) {
-                case EventFlag.Event.GameStart: {
-                        SetUp();
-                }
-                break;
-            }
+        private System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback;
+        private System.Action<Face> SetFaceCallback;
+        private System.Action ReleaseObjectCallback;
+        private System.Action<DragDir, float, float> ProcessVerticalCallback;
+
+
+        public PuffInspectorInput(System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback, 
+                                System.Action<Face> SetFaceCallback,
+                                System.Action ReleaseObjectCallback,
+                                System.Action<DragDir, float, float> ProcessVerticalCallback, float dragThreshold, Camera camera) {
+            this.SetCurrentSelectedObjectCallback = SetCurrentSelectedObjectCallback;
+            this.SetFaceCallback = SetFaceCallback;
+            this.ReleaseObjectCallback = ReleaseObjectCallback;
+            this.ProcessVerticalCallback = ProcessVerticalCallback;
+            this.DragThreshold = dragThreshold;
+            this._camera = camera;
         }
 
-        private void SetUp()
-        {
-            //SetFaceInfo(currentFace);
-            puffInspectView.Show(false);
-            SetInspectViewEvent();
+        public void SetInputSelectObject(PuffItemView puffItem) {
+            this.SelectedPuffObject = puffItem;
+
+            if (this.SelectedPuffObject == null)
+                gestureEvent = GestureEvent.None;
         }
 
-        private void SetFaceInfo(Face p_face) {
-            puffInspectView.SetUp(SelectedPuffObject.name, currentFace.ToString("g"));
-        }
-
-        private void SetInspectViewEvent() {
-            puffInspectView.SetReplyEvent(() =>
-            {
-                PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg);
-            });
-        }
-
-        #region Device Input Handler
-        private void Update()
+        public void OnUpdate()
         {
             if (!hasHitOnPuffObj && Input.GetMouseButtonDown(0))
             {
@@ -82,7 +63,9 @@ namespace Puff.Ctrl {
                 if (hasHitOnPuffObj)
                 {
                     lastStandPoint = Input.mousePosition;
-                    SetCurrentSelectedObject(raycastHits[0].transform.GetComponent<PuffItemView>());
+
+                    if (SelectedPuffObject == null)
+                        this.SetCurrentSelectedObjectCallback(raycastHits[0].transform.GetComponent<PuffItemView>());
                 }
             }
 
@@ -97,7 +80,8 @@ namespace Puff.Ctrl {
 
             DragDir dragDirection = FindDragDirection();
 
-            if (dragDirection == DragDir.VerticalDown || dragDirection == DragDir.VerticalUp) {
+            if (dragDirection == DragDir.VerticalDown || dragDirection == DragDir.VerticalUp)
+            {
                 ProcessVertical(dragDirection);
             }
 
@@ -109,22 +93,25 @@ namespace Puff.Ctrl {
                 hasHitOnPuffObj = false;
                 recordRotationY = SelectedPuffObject.transform.eulerAngles.y;
                 currentFace = FindTheBestFace();
-                SetFaceInfo(currentFace);
+                this.SetFaceCallback(currentFace);
 
                 rotDir = ((int)currentFace) * 90;
 
                 if (rotDir == 0 && recordRotationY >= 180)
                     rotDir = 360;
 
-                if (gestureEvent != GestureEvent.None) {
-                    ReleaseSelectObject();
+                if (gestureEvent != GestureEvent.None)
+                {
+                    this.ReleaseObjectCallback();
                 }
             }
         }
 
-        private DragDir FindDragDirection() {
+        private DragDir FindDragDirection()
+        {
             //Vertical check first
-            if (absY > DragThreshold) {
+            if (absY > DragThreshold)
+            {
                 return (moveYDist > 0) ? DragDir.VerticalUp : DragDir.VerticalDown;
             }
 
@@ -143,23 +130,22 @@ namespace Puff.Ctrl {
             return hitCount > 0;
         }
 
-        private void ProcessVertical(DragDir dragDir) {
+        private void ProcessVertical(DragDir dragDir)
+        {
 
             float offset = Mathf.Clamp((absY - DragThreshold) * 0.02f, -5, 5);
             float ratio = 1 - (Mathf.Abs(offset * 2f) / 5);
             if (dragDir == DragDir.VerticalDown) offset *= -1;
 
-            SelectedPuffObject.transform.position = new Vector3(0, offset, 8);
-
-            puffInspectView.SetFunctionCanvas(ratio);
-            puffInspectView.SetSemiText(dragDir == DragDir.VerticalDown ? GeneralFlag.String.SaveToMailbox : GeneralFlag.String.ReleaseBackToSky);
+            ProcessVerticalCallback(dragDir, ratio, offset);
 
             if (ratio <= 0)
             {
                 gestureEvent = dragDir == DragDir.VerticalDown ? GestureEvent.Save : GestureEvent.Release;
             }
-            else {
-                gestureEvent = GestureEvent.None; 
+            else
+            {
+                gestureEvent = GestureEvent.None;
             }
         }
 
@@ -184,7 +170,8 @@ namespace Puff.Ctrl {
             return (Face)face;
         }
 
-        private void GraudaulyFlyToCenter() {
+        private void GraudaulyFlyToCenter()
+        {
             SelectedPuffObject.transform.position = Vector3.Lerp(SelectedPuffObject.transform.position, new Vector3(0, 0, 8), 0.1f);
 
         }
@@ -195,34 +182,9 @@ namespace Puff.Ctrl {
 
             SelectedPuffObject.transform.rotation = Quaternion.Euler(0, recordRotationY, 0);
         }
-        #endregion
 
-        private bool SetCurrentSelectedObject(PuffItemView puffItem) {
 
-            if (SelectedPuffObject != null && SelectedPuffObject.name == puffItem.name) {
-                return false;
-            } 
 
-            Debug.Log("Hit something new");
 
-            SelectedPuffObject = puffItem;
-            SelectedPuffObject.CatchToFront();
-            puffInspectView.Show(true);
-            SetFaceInfo(Face.Front);      
-
-            return true;
-        }
-
-        private void ReleaseSelectObject() {
-            gestureEvent = GestureEvent.None;
-            puffInspectView.Show(false);
-
-            if (SelectedPuffObject != null) {
-                SelectedPuffObject.Dismiss();
-                SelectedPuffObject = null;
-            }
-
-            Debug.Log("Released");
-        }
     }
 }
