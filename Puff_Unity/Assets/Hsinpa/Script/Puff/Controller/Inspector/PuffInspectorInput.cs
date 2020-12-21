@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Puff.Ctrl.Utility
 {
@@ -29,6 +30,9 @@ namespace Puff.Ctrl.Utility
         private Camera _camera;
         private RaycastHit[] raycastHits = new RaycastHit[1];
 
+        private PointerEventData eventData;
+        private List<RaycastResult> raycastResults = new List<RaycastResult>();
+
         private System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback;
         private System.Action<Face> SetFaceCallback;
         private System.Action ReleaseObjectCallback;
@@ -45,6 +49,8 @@ namespace Puff.Ctrl.Utility
             this.ProcessVerticalCallback = ProcessVerticalCallback;
             this.DragThreshold = dragThreshold;
             this._camera = camera;
+
+            this.eventData = new PointerEventData(EventSystem.current);
         }
 
         public void SetInputSelectObject(PuffItemView puffItem) {
@@ -56,6 +62,8 @@ namespace Puff.Ctrl.Utility
 
         public void OnUpdate()
         {
+            if (HasHitUIComponent()) return;
+
             if (!hasHitOnPuffObj && Input.GetMouseButtonDown(0))
             {
                 hasHitOnPuffObj = HasHitPuffObject();
@@ -183,7 +191,13 @@ namespace Puff.Ctrl.Utility
             SelectedPuffObject.transform.rotation = Quaternion.Euler(0, recordRotationY, 0);
         }
 
+        private bool HasHitUIComponent() {
+            raycastResults.Clear();
 
+            eventData.position = UnityEngine.Input.mousePosition;
+            EventSystem.current.RaycastAll(eventData, raycastResults);
+            return raycastResults.Count > 0;
+        }
 
 
     }

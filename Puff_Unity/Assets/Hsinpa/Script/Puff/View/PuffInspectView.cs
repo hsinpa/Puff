@@ -24,18 +24,22 @@ namespace Puff.View
         public void SetUp(string title, string semiTitle) {
             base.Show(true);
 
-            functionalPanelCanvas.alpha = 1;
+            SetFunctionCanvasAlpha(1);
 
             titleTxt.text = title;
             SetSemiText(semiTitle);
+
         }
 
         public void SetSemiText(string semiText) {
             functionText.text = semiText;
         }
 
-        public void SetFunctionCanvas(float alpha) {
+        public void SetFunctionCanvasAlpha(float alpha) {
             functionalPanelCanvas.alpha = alpha;
+
+            functionalPanelCanvas.interactable = alpha > 0.95f;
+            functionalPanelCanvas.blocksRaycasts = alpha > 0.95f;            
         }
 
         public void SetReplyEvent(System.Action p_event) {

@@ -26,6 +26,13 @@ namespace Puff.Ctrl
                         OnOpenPuffMsg();
                     }
                     break;
+
+                case EventFlag.Event.OpenSendMsg:
+                    {
+                        PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
+                        puffMessageModal.OpenPage<PuffTextMsgPage>();
+                    }
+                    break;
             }
         }
 
