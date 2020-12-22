@@ -25,6 +25,7 @@ namespace Puff.Ctrl
                 case EventFlag.Event.GameStart:
                     {
                         GenerateTestPuffObject(20);
+                        RenderPuffObjectFromDatabase();
                     }
                     break;
 
@@ -57,10 +58,12 @@ namespace Puff.Ctrl
             }    
         }
 
+        private async void RenderPuffObjectFromDatabase() {
+            var datasets = await PuffApp.Instance.models.puffModel.GetAllPuff();
+        }
+
         //private Vector3 RandomPosition() { 
         
         //}
-
-
     }
 }

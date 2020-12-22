@@ -29,22 +29,37 @@ namespace Puff.View {
             this.pages = GetComponentsInChildren<PuffMsgInnerPage>(includeInactive: true);
         }
 
-        public T OpenPage<T>() where T : PuffMsgInnerPage {
 
+        public T GetPage<T>(bool hideOtherPage = false) where T : PuffMsgInnerPage
+        {
             T innerPage = null;
 
-            if (this.pages != null && this.pages.Length > 0) {
-                for (int i = 0; i < pages.Length; i++) {
+            if (this.pages != null && this.pages.Length > 0)
+            {
+                for (int i = 0; i < pages.Length; i++)
+                {
+                    if (hideOtherPage)
+                        pages[i].Show(false);
 
-                    pages[i].Show(false);
-                   
-                    if (pages[i].GetType() == typeof(T)) {
+                    if (pages[i].GetType() == typeof(T))
+                    {
                         innerPage = (T)pages[i];
-                        pages[i].Show(true);
-
-                        puffMsgHeader.gameObject.SetActive( typeof(T) == typeof(PuffMsgFrontPage));
+                        continue;
                     }
                 }
+            }
+
+            return innerPage;
+        }
+
+        public T OpenPage<T>() where T : PuffMsgInnerPage {
+
+            T innerPage = GetPage<T>(hideOtherPage : true);
+
+            if (innerPage != null) {
+                innerPage.Show(true);
+
+                puffMsgHeader.gameObject.SetActive(typeof(T) == typeof(PuffMsgFrontPage));
             }
 
             return innerPage;

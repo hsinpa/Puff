@@ -9,8 +9,12 @@ public class JsonTypes {
         public string author_id;
         public string author;
         public string body;
-        public DateTime date;
-        public DateTime expire;
+
+        public string date;
+        public string expire;
+
+        public DateTime parseDate => DateTime.Parse(date);
+        public DateTime parseExpire => DateTime.Parse(expire);
 
         public PuffCommentType[] comments;
     }
@@ -22,6 +26,8 @@ public class JsonTypes {
         public string author_id;
         public string author;
         public string body;
-        public DateTime date;
+
+        public string date;
+        public DateTime parseDate => DateTime.Parse(date);
     }
 }

@@ -3,6 +3,8 @@ using Puff.View;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Puff.Ctrl.Utility;
+using Hsinpa.Utility;
 
 namespace Puff.Ctrl
 {
@@ -13,6 +15,7 @@ namespace Puff.Ctrl
         
         private PuffMessageModal puffMessageModal;
         private GeneralFlag.PuffMsgBoardState _puffMsgBoardState;
+        private PuffMsgBoardHelper _puffMsgBoardHelper;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -42,8 +45,10 @@ namespace Puff.Ctrl
 
         private void SetUp()
         {
+            this._puffMsgBoardHelper = new PuffMsgBoardHelper();
             this.puffMessageModal = Modals.instance.GetModal<PuffMessageModal>();
-            RegisterPageEvent(this.puffMessageModal);
+
+            puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, OpenFrontPage);
         }
 
         #region UI Event
@@ -55,13 +60,13 @@ namespace Puff.Ctrl
 
         private void OnCreatePuffMsg() {
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
-            puffMessageModal.OpenPage<PuffTextMsgPage>();
-        }
+            PuffTextMsgPage puffMsgPage = puffMessageModal.OpenPage<PuffTextMsgPage>();
 
-        private void RegisterPageEvent(PuffMessageModal puffMessageModal) {
-            puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, OpenFrontPage);
+            puffMsgPage.SetUp(OnCreatorMessageSubmitEvent, () =>
+            {
+                Modals.instance.Close();
+            });
 
-            puffMessageModal.puffTextMsgPage.SetUp(OnMessageSubmitEvent, OpenSActionPage);
         }
 
         private void OpenFrontPage() {
@@ -71,6 +76,9 @@ namespace Puff.Ctrl
             {
                 OpenSActionPage();
             });
+
+            PuffTextMsgPage puffTextMsgPage = puffMessageModal.GetPage<PuffTextMsgPage>();
+            puffTextMsgPage.SetUp(OnReviewerMessageSubmitEvent, OpenSActionPage);
         }
 
         private void OpenSActionPage() {
@@ -81,10 +89,21 @@ namespace Puff.Ctrl
             var page = puffMessageModal.OpenPage<PuffTextMsgPage>();
         }
 
-        private void OnMessageSubmitEvent(string p_message)
+        private void OnCreatorMessageSubmitEvent(string p_message)
         {
+            JsonTypes.PuffMessageType msgType = _puffMsgBoardHelper.GetCreateMessageType(_fake_user_id, p_message);
+            string url = GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffMsg);
+
+            _ = APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(msgType));
+        }
+
+        private void OnReviewerMessageSubmitEvent(string p_message)
+        {
+            JsonTypes.PuffCommentType msgType = _puffMsgBoardHelper.GetCommentType(_fake_user_id, p_message);
+
             OpenFrontPage();
         }
+
         #endregion
 
     }

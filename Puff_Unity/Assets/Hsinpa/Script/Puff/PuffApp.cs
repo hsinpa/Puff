@@ -1,5 +1,6 @@
 ﻿using Hsinpa.View;
 using ObserverPattern;
+using Puff.Model;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,6 +8,10 @@ using UnityEngine.Networking;
 
 public class PuffApp : Singleton<PuffApp>
 {
+    [SerializeField]
+    private ModelsManager _models;
+    public ModelsManager models => _models;
+
     protected PuffApp() { } // guarantee this will be always a singleton only - can't use the constructor!
 
     private Subject subject;
@@ -36,6 +41,7 @@ public class PuffApp : Singleton<PuffApp>
     public void Init()
     {
         Modals.instance.CloseAll();
+        models.SetUp();
     }
 
     private void RegisterAllController(Subject p_subject)

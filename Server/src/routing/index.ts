@@ -14,7 +14,7 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
   });
 
   router.get('/get_all', async function (ctx:any, next:any) {
-    let r = await mongodb.puffModel.GetAllPuff();
+    let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
     console.log(r);
 
     ctx.body = r;

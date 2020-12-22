@@ -14,20 +14,21 @@ namespace Hsinpa.Utility {
 
         static HttpResult _httpResult = new HttpResult();
 
-        public static async Task<HttpResult> Curl(string url, HTTPMethods httpMethods, string rawJsonObject)
+        public static async Task<HttpResult> Curl(string url, HTTPMethods httpMethods, string rawJsonObject = null)
         {
             var request = new HTTPRequest(new System.Uri(url), httpMethods);
             CancellationTokenSource tokenSource = new CancellationTokenSource(System.TimeSpan.FromSeconds(10));
-
-            if (rawJsonObject != null)
+            if (rawJsonObject != null) {
+                request.AddHeader("Content-Type", "application/json");
                 request.RawData = Encoding.UTF8.GetBytes(rawJsonObject);
-
+            }
             request.DisableCache = true;
 
             try
             {
                 var resultString = await request.GetAsStringAsync();
                 _httpResult.isSuccess = true;
+                _httpResult.body = resultString;
             }
             catch (System.Exception ex)
             {

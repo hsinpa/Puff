@@ -1,7 +1,6 @@
 import {Schema, model} from 'mongoose';
 
 const commentSchema = new Schema({
-    _id : String,
     author_id : String,
     author : String,
     body : String,
@@ -9,7 +8,6 @@ const commentSchema = new Schema({
 });
 
 const puffSchema = new Schema({
-    _id : String,
     author_id : String,
     author : String,
     body : String,
