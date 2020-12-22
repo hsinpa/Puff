@@ -16,10 +16,13 @@ namespace Puff.View
         [SerializeField]
         private Button cancelBtn;
 
-        public void SetUp(System.Action<string> submitEvent, System.Action cancelEvent) {
+        public delegate void OnPuffMsgSend(string content);
+
+
+        public void SetUp(OnPuffMsgSend onPuffMsgSendEvent, System.Action cancelEvent) {
             this.submitBtn.onClick.RemoveAllListeners();
             this.submitBtn.onClick.AddListener(() => {
-                submitEvent(msgText.text);
+                onPuffMsgSendEvent(msgText.text);
                 msgText.text = "";
             });
 

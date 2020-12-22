@@ -8,8 +8,11 @@ namespace Puff.Ctrl
 {
     public class PuffMsgBoardCtrl : ObserverPattern.Observer
     {
-
+        [SerializeField]
+        private string _fake_user_id = "hsinpa_fake";
+        
         private PuffMessageModal puffMessageModal;
+        private GeneralFlag.PuffMsgBoardState _puffMsgBoardState;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -23,14 +26,15 @@ namespace Puff.Ctrl
 
                 case EventFlag.Event.OpenPuffMsg:
                     {
+                        _puffMsgBoardState = GeneralFlag.PuffMsgBoardState.Reviewer;
                         OnOpenPuffMsg();
                     }
                     break;
 
                 case EventFlag.Event.OpenSendMsg:
                     {
-                        PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
-                        puffMessageModal.OpenPage<PuffTextMsgPage>();
+                        _puffMsgBoardState = GeneralFlag.PuffMsgBoardState.Creator;
+                        OnCreatePuffMsg();
                     }
                     break;
             }
@@ -47,6 +51,11 @@ namespace Puff.Ctrl
         {
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
             OpenFrontPage();
+        }
+
+        private void OnCreatePuffMsg() {
+            PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
+            puffMessageModal.OpenPage<PuffTextMsgPage>();
         }
 
         private void RegisterPageEvent(PuffMessageModal puffMessageModal) {

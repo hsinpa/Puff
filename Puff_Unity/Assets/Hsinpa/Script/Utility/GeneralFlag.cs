@@ -9,11 +9,15 @@ public class GeneralFlag
         public const int Layer = 1 << 8;
     }
 
+    public enum PuffMsgBoardState {
+        Creator,
+        Reviewer
+    }
+
     public class String {
         public const string SaveToMailbox = "Save to mailbox";
         public const string ReleaseBackToSky = "Back to sky";
     }
-
 
     public class Domain
     {
