@@ -2,6 +2,7 @@
 using Hsinpa.Utility;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -10,23 +11,59 @@ namespace Puff.Model
     public class PuffModel
     {
 
-        JsonTypes.PuffMessageType[] _puffMessageTypes = new JsonTypes.PuffMessageType[0];
+        Dictionary<string, JsonTypes.PuffMessageType> _puffMessageTypes = new Dictionary<string, JsonTypes.PuffMessageType>();
 
-        public async Task<JsonTypes.PuffMessageType[]> GetAllPuff() {
+        public System.Action<List<JsonTypes.PuffMessageType>> OnReceiveNewPuffMsgEvent;
+
+        public async Task<List<JsonTypes.PuffMessageType>> GetAllPuff() {
 
             APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.GetAll), BestHTTP.HTTPMethods.Get);
 
+            List<JsonTypes.PuffMessageType> puffArray = new List<JsonTypes.PuffMessageType>();
+
             if (rawPuffMsgData.isSuccess) {
                 Debug.Log(rawPuffMsgData.body);
-                _puffMessageTypes = JsonHelper.FromJson<JsonTypes.PuffMessageType>(rawPuffMsgData.body);
 
-                foreach (var data in _puffMessageTypes) {
-                    Debug.Log($"Body {data.body}, Author ID {data.author_id}, Date {data.parseDate}");
-                }
-                
+                puffArray = JsonHelper.FromJson<JsonTypes.PuffMessageType>(rawPuffMsgData.body).ToList();
+
+                RegisterNewPuffMsg(puffArray);
             }
 
-            return _puffMessageTypes;
+            return puffArray;
+        }
+
+        private async void RegisterNewPuffMsg(List<JsonTypes.PuffMessageType> puffArray) {
+            var filterArray = await FilterExistPuffMsg(puffArray);
+            
+            if (OnReceiveNewPuffMsgEvent != null)
+            {
+                OnReceiveNewPuffMsgEvent(filterArray);
+            }
+        }
+
+        private async Task<List<JsonTypes.PuffMessageType>> FilterExistPuffMsg(List<JsonTypes.PuffMessageType> puffArray) {
+
+                var filterPuff = await Task.Run(() =>
+                {
+                    lock (_puffMessageTypes)
+                    {
+                        int puffLength = puffArray.Count;
+
+                        for (int i = puffLength - 1; i >= 0; i--) {
+
+                            if (_puffMessageTypes.ContainsKey(puffArray[i]._id)) {
+                                puffArray.RemoveAt(i);
+                                continue;
+                            }
+
+                            _puffMessageTypes.Add(puffArray[i]._id, puffArray[i]);
+                        }
+
+                    }
+                    return puffArray;
+                });
+
+            return filterPuff;
         }
 
     }

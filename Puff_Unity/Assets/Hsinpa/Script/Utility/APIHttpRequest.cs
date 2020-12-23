@@ -17,7 +17,6 @@ namespace Hsinpa.Utility {
         public static async Task<HttpResult> Curl(string url, HTTPMethods httpMethods, string rawJsonObject = null)
         {
             var request = new HTTPRequest(new System.Uri(url), httpMethods);
-            CancellationTokenSource tokenSource = new CancellationTokenSource(System.TimeSpan.FromSeconds(10));
             if (rawJsonObject != null) {
                 request.AddHeader("Content-Type", "application/json");
                 request.RawData = Encoding.UTF8.GetBytes(rawJsonObject);
@@ -36,7 +35,7 @@ namespace Hsinpa.Utility {
                 Debug.LogException(ex);
             }
 
-            tokenSource.Dispose();
+            request.Dispose();
 
             return _httpResult;
         }
