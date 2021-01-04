@@ -33,8 +33,8 @@ namespace Puff.Ctrl
                     {
                         Init();
 
-                        //GenerateTestPuffObject(20);
-                        RefreshPuffMsg();
+                        GenerateTestPuffObject(20);
+                        //RefreshPuffMsg();
                     }
                     break;
 

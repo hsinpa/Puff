@@ -21,6 +21,7 @@ namespace Puff.View {
 
         public void SetUp(JsonTypes.PuffMessageType p_puffMessageType) {
             offsetTime = Random.Range(0.1f, 2f);
+            _puffMessageType = p_puffMessageType;
             gameObject.name = p_puffMessageType.author;
         }
 

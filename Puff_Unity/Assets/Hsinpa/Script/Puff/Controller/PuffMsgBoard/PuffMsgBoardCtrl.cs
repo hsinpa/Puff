@@ -17,6 +17,8 @@ namespace Puff.Ctrl
         private GeneralFlag.PuffMsgBoardState _puffMsgBoardState;
         private PuffMsgBoardHelper _puffMsgBoardHelper;
 
+        private JsonTypes.PuffMessageType _currentPuffMsg;
+
         public override void OnNotify(string p_event, params object[] p_objects)
         {
             switch (p_event)
@@ -30,7 +32,8 @@ namespace Puff.Ctrl
                 case EventFlag.Event.OpenPuffMsg:
                     {
                         _puffMsgBoardState = GeneralFlag.PuffMsgBoardState.Reviewer;
-                        OnOpenPuffMsg();
+                        _currentPuffMsg = (JsonTypes.PuffMessageType)p_objects[0];
+                        OnOpenPuffMsg(_currentPuffMsg);
                     }
                     break;
 
@@ -48,14 +51,14 @@ namespace Puff.Ctrl
             this._puffMsgBoardHelper = new PuffMsgBoardHelper();
             this.puffMessageModal = Modals.instance.GetModal<PuffMessageModal>();
 
-            puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, OpenFrontPage);
+            puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, () => OpenFrontPage(_currentPuffMsg));
         }
 
         #region UI Event
-        private void OnOpenPuffMsg()
+        private void OnOpenPuffMsg(JsonTypes.PuffMessageType puffMessageType)
         {
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
-            OpenFrontPage();
+            OpenFrontPage(puffMessageType);
         }
 
         private void OnCreatePuffMsg() {
@@ -69,10 +72,10 @@ namespace Puff.Ctrl
 
         }
 
-        private void OpenFrontPage() {
+        private void OpenFrontPage(JsonTypes.PuffMessageType puffMessageType) {
             PuffMsgFrontPage frontPage = puffMessageModal.OpenPage<PuffMsgFrontPage>();
 
-            frontPage.SetContent("Fake Title", "Fake semi title", "Fake Description", () =>
+            frontPage.SetContent(puffMessageType.author, "", puffMessageType.body, () =>
             {
                 OpenSActionPage();
             });
@@ -101,7 +104,7 @@ namespace Puff.Ctrl
         {
             JsonTypes.PuffCommentType msgType = _puffMsgBoardHelper.GetCommentType(_fake_user_id, p_message);
 
-            OpenFrontPage();
+            OpenFrontPage(this._currentPuffMsg);
         }
 
         #endregion

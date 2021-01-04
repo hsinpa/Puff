@@ -58,7 +58,7 @@ namespace Puff.Ctrl {
         private void SetInspectViewEvent() {
             puffInspectView.SetReplyEvent(() =>
             {
-                PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg);
+                PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg, SelectedPuffObject.puffMessageType);
             });
         }
 
