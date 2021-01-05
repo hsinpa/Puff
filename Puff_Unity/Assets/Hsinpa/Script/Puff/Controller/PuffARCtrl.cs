@@ -33,8 +33,8 @@ namespace Puff.Ctrl
                     {
                         Init();
 
-                        GenerateTestPuffObject(20);
-                        //RefreshPuffMsg();
+                        //GenerateTestPuffObject(20);
+                        RefreshPuffMsg();
                     }
                     break;
 
@@ -78,7 +78,7 @@ namespace Puff.Ctrl
         private async void RefreshPuffMsg() {
             await _puffModel.GetAllPuff();
 
-            //RepeatRefreshPuffMsg(tokenSource);
+            RepeatRefreshPuffMsg(tokenSource);
         }
 
         private void RenderPuffObjectFromDatabase(List<JsonTypes.PuffMessageType> newPuffMsgArray)
@@ -91,7 +91,7 @@ namespace Puff.Ctrl
         }
 
         private async void RepeatRefreshPuffMsg(CancellationTokenSource tokenSource) {
-            await Task.Delay(10000, tokenSource.Token);
+            await Task.Delay(5000, tokenSource.Token);
 
             if (!tokenSource.IsCancellationRequested)
                 RefreshPuffMsg();
