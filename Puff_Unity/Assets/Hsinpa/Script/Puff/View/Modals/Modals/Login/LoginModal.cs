@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using Hsinpa.View;
 using UnityEngine.UI;
+using System.Text.RegularExpressions;
 
 namespace Puff.View
 {
     public class LoginModal : Modal
     {
+        [SerializeField]
+        private Text errorTips;
+
         [SerializeField]
         private InputField emailField;
 
@@ -78,12 +82,32 @@ namespace Puff.View
 
         private void OnSubmitEvent() {
             if (OnLoginEvent != null && _state == State.Login)
-                OnLoginEvent(emailField.text, passwordField.text);
+                ProcessLoginValidation();
 
+            if (OnSignInEvent != null && _state == State.SignUp)
+                ProcessSignupValidation();
+        }
+
+        private void ProcessLoginValidation() {
+
+            bool allTestPass = CheckEmail(emailField.text) && CheckPassword(passwordField.text);
+
+            if (OnLoginEvent != null && _state == State.Login)
+                OnLoginEvent(emailField.text, passwordField.text);
+        }
+
+        private void ProcessSignupValidation()
+        {
             if (OnSignInEvent != null && _state == State.SignUp)
                 OnSignInEvent(emailField.text, passwordField.text);
         }
 
+        private bool CheckPassword(string p_password) {
+            return Regex.Match(p_password, GeneralFlag.RegularExpression.UniversalSyntaxRex).Success;
+        }
+        private bool CheckEmail(string p_email) {
+            return Regex.Match(p_email, GeneralFlag.RegularExpression.Email).Success;
+        }
 
     }
 }

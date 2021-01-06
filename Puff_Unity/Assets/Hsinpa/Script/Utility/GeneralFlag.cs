@@ -5,6 +5,11 @@ using UnityEngine;
 public class GeneralFlag
 {
 
+    public class RegularExpression {
+        public const string Email = @"^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$";
+        public const string UniversalSyntaxRex = @"^.{6,30}$";
+    }
+
     public class Puff {
         public const int Layer = 1 << 8;
     }
