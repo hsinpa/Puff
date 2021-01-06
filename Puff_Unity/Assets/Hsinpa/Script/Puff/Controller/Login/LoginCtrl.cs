@@ -29,7 +29,7 @@ namespace Puff.Ctrl
             loginModal.SetUp(OnLoginEvent, OnSignInEvent);
         }
 
-        private void OnSignInEvent(string email, string password) {
+        private void OnSignInEvent(string email, string username, string password) {
             Debug.Log("OnSignInEvent");
         }
 

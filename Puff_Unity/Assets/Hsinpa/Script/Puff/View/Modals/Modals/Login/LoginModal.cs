@@ -13,10 +13,16 @@ namespace Puff.View
         private Text errorTips;
 
         [SerializeField]
+        private InputField usernameField;
+
+        [SerializeField]
         private InputField emailField;
 
         [SerializeField]
         private InputField passwordField;
+
+        [SerializeField]
+        private InputField confirmPasswordField;
 
         [SerializeField]
         private Toggle agreementToggle;
@@ -30,7 +36,7 @@ namespace Puff.View
         private Text signSwitchText => signSwitch.GetComponent<Text>();
 
         private System.Action<string, string> OnLoginEvent;
-        private System.Action<string, string> OnSignInEvent;
+        private System.Action<string, string, string> OnSignInEvent;
         public enum State { Login, SignUp }
         private State _state = State.Login;
 
@@ -47,7 +53,7 @@ namespace Puff.View
             Openpage(State.Login);
         }
 
-        public void SetUp(System.Action<string, string> loginEvent, System.Action<string, string> signInEvent) {
+        public void SetUp(System.Action<string, string> loginEvent, System.Action<string, string, string> signInEvent) {
             OnLoginEvent = loginEvent;
             OnSignInEvent = signInEvent;
         }
@@ -70,6 +76,8 @@ namespace Puff.View
 
         private void OpenSignInPage() {
             agreementToggle.gameObject.SetActive(true);
+            usernameField.gameObject.SetActive(true);
+            confirmPasswordField.gameObject.SetActive(true);
             signBtnText.text = StringTextAsset.Login.LoginBtn;
             signSwitchText.text = StringTextAsset.Login.LoginTip;
         }
@@ -77,6 +85,12 @@ namespace Puff.View
         private void EmptyPageContent() {
             emailField.text = "";
             passwordField.text = "";
+            usernameField.text = "";
+            confirmPasswordField.text = "";
+            errorTips.text = "";
+
+            confirmPasswordField.gameObject.SetActive(false);
+            usernameField.gameObject.SetActive(false);
             agreementToggle.gameObject.SetActive(false);
         }
 
@@ -90,16 +104,41 @@ namespace Puff.View
 
         private void ProcessLoginValidation() {
 
-            bool allTestPass = CheckEmail(emailField.text) && CheckPassword(passwordField.text);
+            string errorMessage = "";
 
-            if (OnLoginEvent != null && _state == State.Login)
+            if (!CheckEmail(emailField.text) && errorMessage == "")
+                errorMessage = StringTextAsset.Login.EmailWrongFormat;
+
+            if (!CheckPassword(passwordField.text) && errorMessage == "")
+                errorMessage = StringTextAsset.Login.PasswordWrongFormat; 
+
+            errorTips.text = errorMessage;
+
+            if (errorMessage == "")
                 OnLoginEvent(emailField.text, passwordField.text);
         }
 
         private void ProcessSignupValidation()
         {
-            if (OnSignInEvent != null && _state == State.SignUp)
-                OnSignInEvent(emailField.text, passwordField.text);
+            string errorMessage = "";
+
+            if (!CheckEmail(emailField.text) && errorMessage == "")
+                errorMessage = StringTextAsset.Login.EmailWrongFormat;
+
+            //Check Username validation
+            if (string.IsNullOrEmpty(usernameField.text) && errorMessage == "")
+                errorMessage = StringTextAsset.Login.UserWrongFormat;
+
+            if (!CheckPassword(passwordField.text) && errorMessage == "")
+                errorMessage = StringTextAsset.Login.PasswordWrongFormat;
+
+            if (passwordField.text != confirmPasswordField.text && errorMessage == "")
+                errorMessage = StringTextAsset.Login.PasswordRepeatFormat;
+
+            errorTips.text = errorMessage;
+
+            if (errorMessage == "")
+                OnSignInEvent(emailField.text, usernameField.text, passwordField.text);
         }
 
         private bool CheckPassword(string p_password) {
