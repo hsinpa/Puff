@@ -15,6 +15,7 @@ public class EventFlag
     public class Domain
     {
         public const string Local = "http://localhost:8020/";
+        public const string GoogleServer = "http://35.222.38.95:81/";
     }
 
     public class API
