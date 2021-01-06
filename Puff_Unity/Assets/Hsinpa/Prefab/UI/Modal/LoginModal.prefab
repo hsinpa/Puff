@@ -347,8 +347,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1362701082082190161}
   m_TextComponent: {fileID: 4201811663653237606}
   m_Placeholder: {fileID: 4470028477856370372}
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0
@@ -1719,8 +1719,10 @@ MonoBehaviour:
   canvasGroup: {fileID: 4787841928180004944}
   CloseBtn: {fileID: 0}
   errorTips: {fileID: 3702333724824735083}
+  usernameField: {fileID: 8678483709826365102}
   emailField: {fileID: 4787841928103142752}
   passwordField: {fileID: 4787841928533049158}
+  confirmPasswordField: {fileID: 2304654399882026063}
   agreementToggle: {fileID: 4787841927648653748}
   signBtn: {fileID: 4787841928724996233}
   signSwitch: {fileID: 4787841927339321355}
@@ -2156,8 +2158,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 4787841928533049159}
   m_TextComponent: {fileID: 4787841928266390672}
   m_Placeholder: {fileID: 4787841927309977861}
-  m_ContentType: 0
-  m_InputType: 0
+  m_ContentType: 7
+  m_InputType: 2
   m_AsteriskChar: 42
   m_KeyboardType: 0
   m_LineType: 0

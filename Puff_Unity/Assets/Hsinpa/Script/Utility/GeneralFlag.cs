@@ -27,6 +27,7 @@ public class GeneralFlag
     public class Domain
     {
         public const string LocalHost = "http://localhost:8020/";
+        public const string GoogleServer = "http://35.222.38.95:81/";
     }
 
     public class API
@@ -34,6 +35,9 @@ public class GeneralFlag
         public const string GetAll = "get_all";
         public const string SendPuffComment = "send_puff_comment";
         public const string SendPuffMsg = "send_puff_msg";
+
+        public const string Login = "login";
+        public const string SignUp = "sign_up";
     }
 
     public static string GetFullAPIUri(string apiUrl)

@@ -10,10 +10,11 @@ export interface UserComponentType {
     mobilephone? : number,
 }
 
-export interface LoginReturnType { 
-    status : boolean,
-    username? : string,
-    user_id? : string,
+export interface ClientSignLogType { 
+    password : string,
+    username : string,
+    email : string,
+    type : number,
 }
 
 export interface PuffCommentType {

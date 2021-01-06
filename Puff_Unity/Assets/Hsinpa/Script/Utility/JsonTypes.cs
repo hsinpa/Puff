@@ -30,4 +30,22 @@ public class JsonTypes {
         public string date;
         public DateTime parseDate => DateTime.Parse(date);
     }
+
+    [System.Serializable]
+    public struct PuffAccountLoginType {
+        public string password;
+        public string username;
+        public string email;
+        public int type;
+    }
+
+    public struct PuffAccountType
+    {
+        public string _id;
+        public string username;
+        public string email;
+
+        public int server_state;
+        public bool isValid => !string.IsNullOrEmpty(_id);
+    }
 }

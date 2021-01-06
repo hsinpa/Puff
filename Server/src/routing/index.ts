@@ -13,6 +13,21 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     await ctx.render('index', {title: "HSINPA"});
   });
 
+//#region Account Management 
+  router.post('/login', async function (ctx:any, next:any) {
+    let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
+    console.log(r);
+
+    ctx.body = r;
+  });
+
+  router.post('/sign_up', async function (ctx:any, next:any) {
+    let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
+    console.log(r);
+
+    ctx.body = r;
+  });
+//#endregion
   router.get('/get_all', async function (ctx:any, next:any) {
     let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
     console.log(r);

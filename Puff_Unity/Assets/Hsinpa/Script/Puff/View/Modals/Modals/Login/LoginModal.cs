@@ -70,7 +70,7 @@ namespace Puff.View
 
         private void OpenLoginPage() {
             emailField.text = "";
-            signBtnText.text = StringTextAsset.Login.SignUpBtn;
+            signBtnText.text = StringTextAsset.Login.LoginBtn;
             signSwitchText.text = StringTextAsset.Login.SignUpTip;
         }
 
@@ -78,7 +78,7 @@ namespace Puff.View
             agreementToggle.gameObject.SetActive(true);
             usernameField.gameObject.SetActive(true);
             confirmPasswordField.gameObject.SetActive(true);
-            signBtnText.text = StringTextAsset.Login.LoginBtn;
+            signBtnText.text = StringTextAsset.Login.SignUpBtn;
             signSwitchText.text = StringTextAsset.Login.LoginTip;
         }
 
@@ -88,6 +88,7 @@ namespace Puff.View
             usernameField.text = "";
             confirmPasswordField.text = "";
             errorTips.text = "";
+            agreementToggle.isOn = false;
 
             confirmPasswordField.gameObject.SetActive(false);
             usernameField.gameObject.SetActive(false);
@@ -122,12 +123,12 @@ namespace Puff.View
         {
             string errorMessage = "";
 
-            if (!CheckEmail(emailField.text) && errorMessage == "")
-                errorMessage = StringTextAsset.Login.EmailWrongFormat;
-
             //Check Username validation
             if (string.IsNullOrEmpty(usernameField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.UserWrongFormat;
+
+            if (!CheckEmail(emailField.text) && errorMessage == "")
+                errorMessage = StringTextAsset.Login.EmailWrongFormat;
 
             if (!CheckPassword(passwordField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.PasswordWrongFormat;
