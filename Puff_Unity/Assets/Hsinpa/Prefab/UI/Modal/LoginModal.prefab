@@ -1724,7 +1724,7 @@ MonoBehaviour:
   passwordField: {fileID: 4787841928533049158}
   confirmPasswordField: {fileID: 2304654399882026063}
   agreementToggle: {fileID: 4787841927648653748}
-  signBtn: {fileID: 4787841928724996233}
+  _signBtn: {fileID: 4787841928724996233}
   signSwitch: {fileID: 4787841927339321355}
 --- !u!1 &4787841928183625719
 GameObject:

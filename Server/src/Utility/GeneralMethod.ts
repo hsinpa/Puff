@@ -16,3 +16,7 @@ export function GenerateRandomString(p_len : number) {
 
   return shaString.substring(0, p_len);
 };
+
+export function SHA256Hash(p_input : string) {
+  return createHash('sha256').update(p_input).digest('base64');
+}

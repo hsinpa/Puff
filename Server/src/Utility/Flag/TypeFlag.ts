@@ -17,6 +17,12 @@ export interface ClientSignLogType {
     type : number,
 }
 
+export interface AccountType {
+    _id : string,
+    username : string,
+    email : string
+}
+
 export interface PuffCommentType {
     _id : string,
     author_id : string,
@@ -32,6 +38,6 @@ export interface PuffMessageType {
 }
 
 export interface DatabaseResultType {
-    status : boolean,
+    status : number,
     result? : any
 }

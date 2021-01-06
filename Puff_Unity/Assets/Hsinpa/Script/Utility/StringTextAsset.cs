@@ -17,6 +17,11 @@ public class StringTextAsset
         public const string PasswordWrongFormat = "Wrong password foramt; Need to be between 6-20 characters count";
         public const string PasswordRepeatFormat = "Wrong password foramt; Password and confirm password field is different";
         public const string UserWrongFormat = "Wrong Username Format; Cannot be empty";
+        public const string AgreementToggleFormat = "Please check the agreement box by reading through \"Terms and Condition\"";
+
+        public const string DatabaseFail_SignUp = "Sign up fail; Duplicate email existed";
+        public const string DatabaseFail_Login = "Login fail; No Account is find";
+        public const string InternetError = "Fail to establish connection to server; Please check internet visibility";
     }
 
 }

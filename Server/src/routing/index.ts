@@ -2,7 +2,7 @@
 import * as path from 'path';
 import * as Router from 'koa-router';
 import MongoDB from '../service/MongoDB';
-import {PuffMessageType, PuffCommentType} from '../Utility/Flag/TypeFlag';
+import {PuffMessageType, ClientSignLogType} from '../Utility/Flag/TypeFlag';
 import bodyParser = require('koa-bodyparser');
 
 module.exports =  (router : Router, mongodb:MongoDB) => {
@@ -15,21 +15,20 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
 
 //#region Account Management 
   router.post('/login', async function (ctx:any, next:any) {
-    let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
+    let r = JSON.stringify(await mongodb.accountModel.Login(ctx.request.body as ClientSignLogType));
     console.log(r);
 
     ctx.body = r;
   });
 
   router.post('/sign_up', async function (ctx:any, next:any) {
-    let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
+    let r = JSON.stringify(await mongodb.accountModel.SignUp(ctx.request.body as ClientSignLogType));
     console.log(r);
-
     ctx.body = r;
   });
 //#endregion
   router.get('/get_all', async function (ctx:any, next:any) {
-    let r =JSON.stringify(await mongodb.puffModel.GetAllPuff());
+    let r = JSON.stringify(await mongodb.puffModel.GetAllPuff());
     console.log(r);
 
     ctx.body = r;

@@ -44,8 +44,12 @@ public class JsonTypes {
         public string _id;
         public string username;
         public string email;
-
-        public int server_state;
         public bool isValid => !string.IsNullOrEmpty(_id);
+    }
+
+    public struct DatabaseResultType
+    {
+        public int status;
+        public string result;
     }
 }

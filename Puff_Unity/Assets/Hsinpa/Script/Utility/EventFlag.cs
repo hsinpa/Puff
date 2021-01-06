@@ -10,6 +10,12 @@ public class EventFlag
 
         public const string OpenPuffMsg = "event@open_puff_msg";
         public const string OpenSendMsg = "event@open_send_msg";
+
+        public const string LoginSuccessful = "event@login_success";
+    }
+
+    public class DatabaseStateType {
+        public enum AccountState {Normal, Fail_Login_NoAccount, Fail_SignUp_DuplicateAccount };
     }
 
 }

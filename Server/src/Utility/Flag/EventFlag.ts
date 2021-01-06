@@ -16,3 +16,11 @@ export const UniversalSocketEvent = {
 
 }
 
+export const DatabaseErrorType = {
+    Normal : 0,
+
+    Account : {
+        Fail_Login_NoAccount : 1,
+        Fail_SignUp_DuplicateAccount : 2
+    }
+}

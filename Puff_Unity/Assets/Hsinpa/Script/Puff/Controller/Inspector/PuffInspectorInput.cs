@@ -41,7 +41,7 @@ namespace Puff.Ctrl.Utility
         private System.Action<DragDir, float, float> ProcessVerticalCallback;
 
 
-        public PuffInspectorInput(System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback, 
+        public PuffInspectorInput(System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback,
                                 System.Action<Face> SetFaceCallback,
                                 System.Action ReleaseObjectCallback,
                                 System.Action<DragDir, float, float> ProcessVerticalCallback, float dragThreshold, Camera camera) {
@@ -62,9 +62,19 @@ namespace Puff.Ctrl.Utility
                 gestureEvent = GestureEvent.None;
         }
 
+        private void PlaySmoothAnimation() {
+            if (SelectedPuffObject == null) return;
+
+            GraduallyRotateToFace(currentFace);
+            GraudaulyFlyToCenter();
+        }
+
         public void OnUpdate()
         {
-            if (HasHitUIComponent()) return;
+            if (HasHitUIComponent()) {
+                PlaySmoothAnimation();
+                return;
+            }
 
             if (!hasHitOnPuffObj && Input.GetMouseButtonDown(0))
             {
@@ -83,8 +93,7 @@ namespace Puff.Ctrl.Utility
 
             if (!hasHitOnPuffObj)
             {
-                GraduallyRotateToFace(currentFace);
-                GraudaulyFlyToCenter();
+                PlaySmoothAnimation();
                 return;
             }
 

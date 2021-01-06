@@ -11,6 +11,9 @@ namespace Puff.Ctrl
 
     public class LoginCtrl : ObserverPattern.Observer
     {
+        private LoginModal _loginModal;
+        private AccountModel _accountModel;
+
         public override void OnNotify(string p_event, params object[] p_objects)
         {
             switch (p_event)
@@ -24,36 +27,59 @@ namespace Puff.Ctrl
         }
 
         private void SetUp() {
+            _accountModel = PuffApp.Instance.models.accountModel;
+
             //Check if is already login
-
-            var loginModal = Modals.instance.OpenModal<LoginModal>();
-            loginModal.SetUp(OnLoginEvent, OnSignUpEvent);
+            _loginModal = Modals.instance.OpenModal<LoginModal>();
+            _loginModal.SetUp(OnSignLoginEvent);
         }
 
-        private void OnSignUpEvent(string email, string username, string password) {
-            Debug.Log("OnSignUpEvent");
+        private async void OnSignLoginEvent(string email, string username, string password) {
+            Debug.Log("OnSignLoginEvent");
 
-            var accountStruct = GetAccountLoginStruct(email, username, password, (int)LoginModal.State.SignUp);
+            _loginModal.signBtn.interactable = false;
 
+            //Prepare and curl request
+            LoginModal.State actionType = (username == "") ? LoginModal.State.Login : LoginModal.State.SignUp;
+            var accountStruct = GetAccountLoginStruct(email, username, password, actionType);
+
+            var rawResult = await _accountModel.PerformSignLogin(accountStruct);
+            _loginModal.ShowErrorMsg("");
+            _loginModal.signBtn.interactable = true;
+
+            //Internet Error
+            if (!rawResult.isSuccess) {
+                _loginModal.ShowErrorMsg(StringTextAsset.Login.InternetError);
+
+                return;
+            }
+
+            //Check Server Error
+            JsonTypes.DatabaseResultType databaseResultType = JsonUtility.FromJson<JsonTypes.DatabaseResultType>(rawResult.body);
+            switch (databaseResultType.status) {
+                case (int)EventFlag.DatabaseStateType.AccountState.Fail_Login_NoAccount:
+                    _loginModal.ShowErrorMsg(StringTextAsset.Login.DatabaseFail_Login);
+                    return;
+
+                case (int)EventFlag.DatabaseStateType.AccountState.Fail_SignUp_DuplicateAccount:
+                    _loginModal.ShowErrorMsg(StringTextAsset.Login.DatabaseFail_SignUp);
+                    return;
+            }
+
+            Debug.Log(databaseResultType.result);
+            JsonTypes.PuffAccountType account = JsonUtility.FromJson<JsonTypes.PuffAccountType>(databaseResultType.result);
+            _accountModel.SetAccount(account);
+
+            Modals.instance.CloseAll();
+            PuffApp.Instance.Notify(EventFlag.Event.LoginSuccessful);
         }
 
-        private void OnLoginEvent(string email, string password)
-        {
-            Debug.Log("OnLoginEvent");
-            var accountStruct = GetAccountLoginStruct(email, "", password, (int)LoginModal.State.Login);
-
-            Debug.Log($"Email {accountStruct.email}, Password {password}, Encode Password {accountStruct.password}");
-
-
-
-        }
-
-        private JsonTypes.PuffAccountLoginType GetAccountLoginStruct(string email, string username, string password, int type) {
+        private JsonTypes.PuffAccountLoginType GetAccountLoginStruct(string email, string username, string password, LoginModal.State type) {
             JsonTypes.PuffAccountLoginType accountType = new JsonTypes.PuffAccountLoginType();
             accountType.email = email;
             accountType.username = username;
             accountType.password = UtilityMethod.Base64Encode(password);
-            accountType.type = type;
+            accountType.type = (int)type;
 
             return accountType;
         }

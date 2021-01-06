@@ -3,7 +3,7 @@ import PuffSchema from './Schema/PuffSchema';
 import AccountSchema from './Schema/AccountSchema';
 
 import PuffModel from './Model/PuffModel';
-import AccountModel from './Model/PuffModel';
+import AccountModel from './Model/AccountModel';
 
 class MongoDB {
     private config = {};
@@ -14,7 +14,7 @@ class MongoDB {
     private accountSchema : typeof moogoose.Model;
 
     puffModel : PuffModel;
-    accountModel : PuffModel;
+    accountModel : AccountModel;
 
     constructor(env : NodeJS.ProcessEnv, callback :  (db : MongoDB )=> void) {
         this.config = {

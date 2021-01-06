@@ -9,8 +9,13 @@ namespace Puff.Model
         private PuffModel _puffModel;
         public PuffModel puffModel => _puffModel;
 
+        private AccountModel _accountModel;
+        public AccountModel accountModel => _accountModel;
+
+
         public void SetUp() {
             _puffModel = new PuffModel();
+            _accountModel = new AccountModel();
         }
 
     }

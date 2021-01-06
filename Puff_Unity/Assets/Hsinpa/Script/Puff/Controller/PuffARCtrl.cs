@@ -34,13 +34,13 @@ namespace Puff.Ctrl
                         Init();
 
                         //GenerateTestPuffObject(20);
-                        RefreshPuffMsg();
+                        //RefreshPuffMsg();
                     }
                     break;
 
-                case EventFlag.Event.OpenPuffMsg:
+                case EventFlag.Event.LoginSuccessful:
                     {
-
+                        RefreshPuffMsg();
                     }
                     break;
             }

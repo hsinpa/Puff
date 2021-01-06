@@ -28,15 +28,16 @@ namespace Puff.View
         private Toggle agreementToggle;
 
         [SerializeField]
-        private Button signBtn;
-        private Text signBtnText => signBtn.GetComponentInChildren<Text>();
+        private Button _signBtn;
+        public Button signBtn => _signBtn;
+
+        private Text signBtnText => _signBtn.GetComponentInChildren<Text>();
 
         [SerializeField]
         private Button signSwitch;
         private Text signSwitchText => signSwitch.GetComponent<Text>();
 
-        private System.Action<string, string> OnLoginEvent;
-        private System.Action<string, string, string> OnSignInEvent;
+        private System.Action<string, string, string> OnSignSubmitEvent;
         public enum State { Login, SignUp }
         private State _state = State.Login;
 
@@ -48,14 +49,17 @@ namespace Puff.View
             {
                 Openpage((_state == State.Login) ? State.SignUp : State.Login);
             });
-            signBtn.onClick.AddListener(OnSubmitEvent);
+            _signBtn.onClick.AddListener(OnSubmitEvent);
 
             Openpage(State.Login);
         }
 
-        public void SetUp(System.Action<string, string> loginEvent, System.Action<string, string, string> signInEvent) {
-            OnLoginEvent = loginEvent;
-            OnSignInEvent = signInEvent;
+        public void SetUp(System.Action<string, string, string> signInEvent) {
+            OnSignSubmitEvent = signInEvent;
+        }
+
+        public void ShowErrorMsg(string error_msg) {
+            errorTips.text = error_msg;
         }
 
         public void Openpage(State p_state) {
@@ -96,10 +100,10 @@ namespace Puff.View
         }
 
         private void OnSubmitEvent() {
-            if (OnLoginEvent != null && _state == State.Login)
+            if (_state == State.Login)
                 ProcessLoginValidation();
 
-            if (OnSignInEvent != null && _state == State.SignUp)
+            if ( _state == State.SignUp)
                 ProcessSignupValidation();
         }
 
@@ -116,7 +120,7 @@ namespace Puff.View
             errorTips.text = errorMessage;
 
             if (errorMessage == "")
-                OnLoginEvent(emailField.text, passwordField.text);
+                OnSignSubmitEvent(emailField.text, "",passwordField.text);
         }
 
         private void ProcessSignupValidation()
@@ -136,10 +140,13 @@ namespace Puff.View
             if (passwordField.text != confirmPasswordField.text && errorMessage == "")
                 errorMessage = StringTextAsset.Login.PasswordRepeatFormat;
 
+            if (!agreementToggle.isOn && errorMessage == "")
+                errorMessage = StringTextAsset.Login.AgreementToggleFormat;
+
             errorTips.text = errorMessage;
 
             if (errorMessage == "")
-                OnSignInEvent(emailField.text, usernameField.text, passwordField.text);
+                OnSignSubmitEvent(emailField.text, usernameField.text, passwordField.text);
         }
 
         private bool CheckPassword(string p_password) {
