@@ -21,6 +21,7 @@ namespace Hsinpa.Utility {
                 request.AddHeader("Content-Type", "application/json");
                 request.RawData = Encoding.UTF8.GetBytes(rawJsonObject);
             }
+            request.IsKeepAlive = false;
             request.DisableCache = true;
 
             try

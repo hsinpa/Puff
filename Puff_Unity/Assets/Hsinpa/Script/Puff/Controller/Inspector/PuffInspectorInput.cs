@@ -1,4 +1,5 @@
 ﻿using Puff.View;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Puff.Ctrl.Utility
         private Face currentFace = Face.Front;
         private int rotDir = 1;
         private float recordRotationY;
+        private Quaternion lerpQuaterion;
 
         public enum DragDir { VerticalUp, VerticalDown, Horizontal, None };
         public enum Face { Front, RightSide, Back, LeftSide };
@@ -100,6 +102,7 @@ namespace Puff.Ctrl.Utility
             {
                 hasHitOnPuffObj = false;
                 recordRotationY = SelectedPuffObject.transform.eulerAngles.y;
+                lerpQuaterion = Quaternion.Euler(new Vector3(0, recordRotationY, 0));
                 currentFace = FindTheBestFace();
                 this.SetFaceCallback(currentFace);
 
@@ -172,23 +175,34 @@ namespace Puff.Ctrl.Utility
 
         private Face FindTheBestFace()
         {
-            float rawYRot = SelectedPuffObject.transform.rotation.eulerAngles.y;
+            float angle = GetAngle((_camera.transform.forward));
+
+            float rawYRot = (SelectedPuffObject.transform.rotation.eulerAngles.y + angle) % 360;
+
             int face = Mathf.RoundToInt(rawYRot / 90f) % 4;
+
+            if (face < 0)
+                face = 4 + face;
 
             return (Face)face;
         }
 
         private void GraudaulyFlyToCenter()
         {
-            SelectedPuffObject.transform.position = Vector3.Lerp(SelectedPuffObject.transform.position, new Vector3(0, 0, 8), 0.1f);
+            Vector3 frontPosition = _camera.transform.forward * 7.5f;
+
+            SelectedPuffObject.transform.position = Vector3.Lerp(SelectedPuffObject.transform.position, frontPosition, 0.1f);
 
         }
 
         private void GraduallyRotateToFace(Face face)
         {
-            recordRotationY = Mathf.Lerp(recordRotationY, rotDir, 0.1f);
+            float angle = GetAngle( (_camera.transform.forward));
 
-            SelectedPuffObject.transform.rotation = Quaternion.Euler(0, recordRotationY, 0);
+
+            lerpQuaterion = Quaternion.Lerp(lerpQuaterion, Quaternion.Euler(new Vector3(0, rotDir - angle, 0)), 0.1f);
+
+            SelectedPuffObject.transform.rotation = lerpQuaterion;
         }
 
         private bool HasHitUIComponent() {
@@ -199,6 +213,11 @@ namespace Puff.Ctrl.Utility
             return raycastResults.Count > 0;
         }
 
-
+        private float GetAngle(Vector3 p_direction) {
+            var angle = Mathf.Atan2(p_direction.z, p_direction.x);   //radians
+                                                      // you need to devide by PI, and MULTIPLY by 180:
+            float degrees = 180 * (angle / Mathf.PI);  //degrees
+            return degrees -90; //round number, avoid decimal fragments
+        }
     }
 }

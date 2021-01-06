@@ -69,7 +69,8 @@ namespace Puff.Ctrl {
 
         private void ProcessVertical(PuffInspectorInput.DragDir dragDir, float ratio, float offset)
         {
-            SelectedPuffObject.transform.position = new Vector3(0, offset, 8);
+            Vector3 objPos = SelectedPuffObject.transform.position;
+            SelectedPuffObject.transform.position = new Vector3(objPos.x, offset, objPos.z);
             puffInspectView.SetFunctionCanvasAlpha(ratio);
             puffInspectView.SetSemiText(dragDir == PuffInspectorInput.DragDir.VerticalDown ? GeneralFlag.String.SaveToMailbox : GeneralFlag.String.ReleaseBackToSky);
         }
