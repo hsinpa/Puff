@@ -1,8 +1,8 @@
 import AccountSchema from '../Schema/AccountSchema';
 import * as moogoose from 'mongoose';
-import {DatabaseErrorType } from '../../Utility/Flag/EventFlag';
+import {DatabaseErrorType, UniversalParameter } from '../../Utility/Flag/EventFlag';
 import {ClientSignLogType, DatabaseResultType, AccountType } from '../../Utility/Flag/TypeFlag';
-import {SHA256Hash} from '../../Utility/GeneralMethod';
+import {SHA256Hash, GenerateRandomString, GetDate } from '../../Utility/GeneralMethod';
 
 class AccountModel {
 
@@ -13,6 +13,10 @@ class AccountModel {
         this.accountSchema = schema;
     }
 
+    async LoginWithAuthkey(account_id : string, auth_key : string) {
+        let userInfo = this.GetUserInfoWithAuth(account_id, auth_key);
+    }
+
     async Login(dataset : ClientSignLogType) {
         let returnType  : DatabaseResultType = {
             status : DatabaseErrorType.Normal,
@@ -21,10 +25,16 @@ class AccountModel {
 
         let userInfoArray = await this.GetUserInfo(dataset.email, dataset.password);
         
-        if (userInfoArray.length <= 0)
+        if (userInfoArray == null)
             returnType.status = DatabaseErrorType.Account.Fail_Login_NoAccount;
         else {
-            returnType.result =JSON.stringify(userInfoArray[0]);
+            console.log("Pre authkey " + userInfoArray.auth_key);
+            userInfoArray.auth_key = GenerateRandomString(10);
+            userInfoArray.auth_expire = GetDate(UniversalParameter.AuthkeyExpireDate);
+            await userInfoArray.save();
+
+            console.log("After authkey " + userInfoArray.auth_key);
+            returnType.result = JSON.stringify(userInfoArray);
         }
 
         return returnType;
@@ -41,6 +51,7 @@ class AccountModel {
             returnType.status = DatabaseErrorType.Account.Fail_SignUp_DuplicateAccount;
         else {
             dataset.password = SHA256Hash(dataset.password + this.password_key);
+            dataset.auth_key = GenerateRandomString(10);
             let r = await this.accountSchema.create(dataset);
             r.password = undefined;
 
@@ -63,11 +74,23 @@ class AccountModel {
     async GetUserInfo(p_email : string, p_password : string) {
         let hashPassword = SHA256Hash(p_password + this.password_key);
 
-        let r = await this.accountSchema.find({
+        let r = await this.accountSchema.findOne({
             email : p_email,
             password : hashPassword
         }).
-        select("username email _id").
+        select("username email _id auth_key auth_expire").
+        exec();
+
+        return r;
+    }
+
+
+    async GetUserInfoWithAuth(p_id : string, p_auth : string) {
+        let r = await this.accountSchema.findOne({
+            _id : p_id,
+            auth_key : p_auth
+        }).
+        select("username email _id auth_key auth_expire").
         exec();
 
         return r;

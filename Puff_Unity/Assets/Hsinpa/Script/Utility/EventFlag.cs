@@ -18,5 +18,9 @@ public class EventFlag
         public enum AccountState {Normal, Fail_Login_NoAccount, Fail_SignUp_DuplicateAccount };
     }
 
+    public class PlayprefKey {
+        public const string LoginAccount = "playpref@account_id";
+    }
+
 }
 

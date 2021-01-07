@@ -1,3 +1,7 @@
+export const UniversalParameter = {
+    AuthkeyExpireDate : 30
+}
+
 export const TeacherSocketEvent = {
     CreateRoom : "event@create_room",
     StartGame : "event@start_game",

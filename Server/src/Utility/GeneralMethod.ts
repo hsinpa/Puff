@@ -20,3 +20,7 @@ export function GenerateRandomString(p_len : number) {
 export function SHA256Hash(p_input : string) {
   return createHash('sha256').update(p_input).digest('base64');
 }
+
+export function GetDate(extend_date : number) {
+  return new Date(Date.now() - extend_date*24*60*60*1000);
+}

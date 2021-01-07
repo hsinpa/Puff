@@ -15,6 +15,7 @@ export interface ClientSignLogType {
     username : string,
     email : string,
     type : number,
+    auth_key? : string
 }
 
 export interface AccountType {
