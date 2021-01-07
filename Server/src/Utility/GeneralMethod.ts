@@ -22,5 +22,5 @@ export function SHA256Hash(p_input : string) {
 }
 
 export function GetDate(extend_date : number) {
-  return new Date(Date.now() + extend_date*24*60*60*1000);
+  return new Date(Date.now() + (extend_date*24*60*60*1000));
 }

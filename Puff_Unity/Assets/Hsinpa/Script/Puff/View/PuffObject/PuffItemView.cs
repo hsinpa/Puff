@@ -8,8 +8,8 @@ namespace Puff.View {
         [SerializeField]
         private float _gravity;
 
-        private JsonTypes.PuffMessageType _puffMessageType;
-        public JsonTypes.PuffMessageType puffMessageType => _puffMessageType;
+        private string _puffID;
+        public string puffID => _puffID;
 
         public bool isLanded = false;
         public bool isBackToPosPeriod = false;
@@ -21,7 +21,7 @@ namespace Puff.View {
 
         public void SetUp(JsonTypes.PuffMessageType p_puffMessageType) {
             offsetTime = Random.Range(0.1f, 2f);
-            _puffMessageType = p_puffMessageType;
+            _puffID = p_puffMessageType._id;
             gameObject.name = p_puffMessageType.author;
         }
 

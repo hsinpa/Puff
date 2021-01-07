@@ -6,20 +6,22 @@ namespace Puff.Ctrl.Utility {
     public class PuffMsgBoardHelper
     {
 
-        public JsonTypes.PuffCommentType GetCommentType(string author_id, string body) {
+        public static JsonTypes.PuffCommentType GetCommentType(string puff_id, string author_id, string author_name, string body) {
             JsonTypes.PuffCommentType puffCommentType = new JsonTypes.PuffCommentType();
 
+            puffCommentType.message_id = puff_id;
             puffCommentType.author_id = author_id;
             puffCommentType.body = body;
+            puffCommentType.author = author_name;
 
             return puffCommentType;
         }
 
-        public JsonTypes.PuffMessageType GetCreateMessageType(string author_id, string body)
+        public static JsonTypes.PuffMessageType GetCreateMessageType(string author_id, string author_name, string body)
         {
             JsonTypes.PuffMessageType puffMessageType = new JsonTypes.PuffMessageType();
 
-            puffMessageType.author = author_id;
+            puffMessageType.author = author_name;
             puffMessageType.author_id = author_id;
             puffMessageType.body = body;
 

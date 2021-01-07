@@ -42,7 +42,7 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
   });
 
   router.post('/send_puff_comment', async function (ctx:any, next:any) {
-    let r = await mongodb.puffModel.SavePuffComment(ctx.request.body.puff_id, ctx.request.body.author_id, ctx.request.body.author, ctx.request.body.body );
+    let r = await mongodb.puffModel.SavePuffComment(ctx.request.body.message_id, ctx.request.body.author_id, ctx.request.body.author, ctx.request.body.body );
 
     ctx.body = r;
   });

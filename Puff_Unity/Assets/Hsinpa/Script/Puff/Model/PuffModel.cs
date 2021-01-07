@@ -15,7 +15,16 @@ namespace Puff.Model
 
         public System.Action<List<JsonTypes.PuffMessageType>> OnReceiveNewPuffMsgEvent;
 
-        public async Task<List<JsonTypes.PuffMessageType>> GetAllPuff() {
+        public JsonTypes.PuffMessageType GetMessageTypeByID(string id)
+        {
+            if (_puffMessageTypes.TryGetValue(id, out JsonTypes.PuffMessageType messageType))
+            {
+                return messageType;
+            }
+            return default(JsonTypes.PuffMessageType);
+        }
+
+            public async Task<List<JsonTypes.PuffMessageType>> GetAllPuff() {
 
             APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.GetAll), BestHTTP.HTTPMethods.Get);
 
@@ -31,6 +40,27 @@ namespace Puff.Model
 
             return puffArray;
         }
+
+        public async Task<APIHttpRequest.HttpResult> PushCommentToServer(JsonTypes.PuffCommentType commentType) {
+            APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffComment), 
+                                                                                BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(commentType));
+            return rawPuffMsgData;
+        }
+
+        public bool UpdateMessageComments(string msg_id, JsonTypes.PuffCommentType commentType) {
+            if (_puffMessageTypes.TryGetValue(msg_id, out JsonTypes.PuffMessageType messageType)) {
+
+                if (messageType.comments == null)
+                    messageType.comments = new List<JsonTypes.PuffCommentType>();
+
+                messageType.comments.Add(commentType);
+
+                _puffMessageTypes[msg_id] = messageType;
+                return true;
+            }
+            return false;
+        }
+       
 
         private async void RegisterNewPuffMsg(List<JsonTypes.PuffMessageType> puffArray) {
             var filterArray = await FilterExistPuffMsg(puffArray);

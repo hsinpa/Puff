@@ -4,6 +4,7 @@ const commentSchema = new Schema({
     author_id : String,
     author : String,
     body : String,
+    message_id : String,
     date : {type : Date, default :Date.now}
 });
 

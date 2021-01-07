@@ -8,6 +8,7 @@ using UnityEngine.UIElements;
 using TMPro;
 using System.Diagnostics.Tracing;
 using Puff.Ctrl.Utility;
+using Puff.Model;
 
 namespace Puff.Ctrl {
     public class PuffInspectCtrl : ObserverPattern.Observer
@@ -28,6 +29,7 @@ namespace Puff.Ctrl {
         private float DragThreshold = 0.1f;
 
         private PuffInspectorInput _puffInspectorInput;
+        private PuffModel _puffModel;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -41,6 +43,7 @@ namespace Puff.Ctrl {
 
         private void SetUp()
         {
+            _puffModel = PuffApp.Instance.models.puffModel;
             _puffInspectorInput = new PuffInspectorInput(SetCurrentSelectedObject, SetFaceInfo, ReleaseSelectObject, ProcessVertical, DragThreshold, _camera);
 
             puffHUDView.SetBottomHUD(() => {
@@ -58,7 +61,8 @@ namespace Puff.Ctrl {
         private void SetInspectViewEvent() {
             puffInspectView.SetReplyEvent(() =>
             {
-                PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg, SelectedPuffObject.puffMessageType);
+                JsonTypes.PuffMessageType messageType = this._puffModel.GetMessageTypeByID(SelectedPuffObject.puffID);
+                PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg, messageType);
             });
         }
 

@@ -21,10 +21,10 @@ class PuffModel {
     }
 
     async SavePuffComment(puff_id : string, author_id : string, author : string, body : string ) {
-        let comment_uuid = uuid.v4();
+        // let comment_uuid = uuid.v4();
         
         let puffObject = await this.puffSchema.findById(puff_id);
-        puffObject.comments.push( {_id : comment_uuid, author_id : author_id, author: author, body : body});
+        puffObject.comments.push( {author_id : author_id, author: author, body : body, message_id : puff_id});
         return await puffObject.save();
     }
 

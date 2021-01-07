@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 
 public class JsonTypes {
     [System.Serializable]
@@ -16,19 +17,23 @@ public class JsonTypes {
         public DateTime parseDate => DateTime.Parse(date);
         public DateTime parseExpire => DateTime.Parse(expire);
 
-        public PuffCommentType[] comments;
+        public List<PuffCommentType> comments;
     }
 
     [System.Serializable]
     public struct PuffCommentType
     {
         public string _id;
+        public string message_id;
         public string author_id;
         public string author;
         public string body;
 
         public string date;
         public DateTime parseDate => DateTime.Parse(date);
+
+        //Not upload to server yet
+        public bool isFake => string.IsNullOrEmpty(_id);
     }
 
     [System.Serializable]
