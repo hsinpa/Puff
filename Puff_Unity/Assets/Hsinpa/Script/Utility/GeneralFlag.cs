@@ -38,6 +38,7 @@ public class GeneralFlag
 
         public const string Login = "login";
         public const string SignUp = "sign_up";
+        public const string AuthLogin = "auth_login";
     }
 
     public static string GetFullAPIUri(string apiUrl)

@@ -15,11 +15,12 @@ public class EventFlag
     }
 
     public class DatabaseStateType {
-        public enum AccountState {Normal, Fail_Login_NoAccount, Fail_SignUp_DuplicateAccount };
+        public enum AccountState {Normal, Fail_Login_NoAccount, Fail_SignUp_DuplicateAccount, Fail_AuthLogin_NotValid };
     }
 
     public class PlayprefKey {
         public const string LoginAccount = "playpref@account_id";
+        public const string AuthKey = "playpref@auth_key";
     }
 
 }

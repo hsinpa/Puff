@@ -30,8 +30,21 @@ namespace Puff.Ctrl
             _accountModel = PuffApp.Instance.models.accountModel;
 
             //Check if is already login
-            _loginModal = Modals.instance.OpenModal<LoginModal>();
+            _loginModal = Modals.instance.GetModal<LoginModal>();
             _loginModal.SetUp(OnSignLoginEvent);
+
+            CheckAuthkeyValid();
+        }
+
+        private async void CheckAuthkeyValid() {
+
+            var r = await _accountModel.PerformAuthkeyCheck();
+            bool isAuthValid = ProcessReturnAccountInfo(r);
+
+            if (!isAuthValid) {
+                Modals.instance.OpenModal<LoginModal>();
+                _loginModal.Openpage(LoginModal.State.Login);
+            }
         }
 
         private async void OnSignLoginEvent(string email, string username, string password) {
@@ -47,23 +60,33 @@ namespace Puff.Ctrl
             _loginModal.ShowErrorMsg("");
             _loginModal.signBtn.interactable = true;
 
+            ProcessReturnAccountInfo(rawResult);
+        }
+
+        private bool ProcessReturnAccountInfo(APIHttpRequest.HttpResult rawResult) {
             //Internet Error
-            if (!rawResult.isSuccess) {
+            if (!rawResult.isSuccess)
+            {
                 _loginModal.ShowErrorMsg(StringTextAsset.Login.InternetError);
 
-                return;
+                return false;
             }
 
             //Check Server Error
             JsonTypes.DatabaseResultType databaseResultType = JsonUtility.FromJson<JsonTypes.DatabaseResultType>(rawResult.body);
-            switch (databaseResultType.status) {
+            switch (databaseResultType.status)
+            {
                 case (int)EventFlag.DatabaseStateType.AccountState.Fail_Login_NoAccount:
                     _loginModal.ShowErrorMsg(StringTextAsset.Login.DatabaseFail_Login);
-                    return;
+                    return false;
 
                 case (int)EventFlag.DatabaseStateType.AccountState.Fail_SignUp_DuplicateAccount:
                     _loginModal.ShowErrorMsg(StringTextAsset.Login.DatabaseFail_SignUp);
-                    return;
+                    return false;
+
+                //No error feedback needed
+                case (int)EventFlag.DatabaseStateType.AccountState.Fail_AuthLogin_NotValid:
+                    return false;
             }
 
             Debug.Log(databaseResultType.result);
@@ -72,6 +95,7 @@ namespace Puff.Ctrl
 
             Modals.instance.CloseAll();
             PuffApp.Instance.Notify(EventFlag.Event.LoginSuccessful);
+            return true;
         }
 
         private JsonTypes.PuffAccountLoginType GetAccountLoginStruct(string email, string username, string password, LoginModal.State type) {

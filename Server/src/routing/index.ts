@@ -21,6 +21,14 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     ctx.body = r;
   });
 
+  router.post('/auth_login', async function (ctx:any, next:any) {
+    let r = JSON.stringify(await mongodb.accountModel.LoginWithAuthkey(ctx.request.body.account_id, 
+                                                                      ctx.request.body.auth_key));
+    console.log(r);
+
+    ctx.body = r;
+  });
+
   router.post('/sign_up', async function (ctx:any, next:any) {
     let r = JSON.stringify(await mongodb.accountModel.SignUp(ctx.request.body as ClientSignLogType));
     console.log(r);
@@ -29,7 +37,6 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
 //#endregion
   router.get('/get_all', async function (ctx:any, next:any) {
     let r = JSON.stringify(await mongodb.puffModel.GetAllPuff());
-    console.log(r);
 
     ctx.body = r;
   });

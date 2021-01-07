@@ -14,7 +14,34 @@ class AccountModel {
     }
 
     async LoginWithAuthkey(account_id : string, auth_key : string) {
-        let userInfo = this.GetUserInfoWithAuth(account_id, auth_key);
+        let returnType  : DatabaseResultType = {
+            status : DatabaseErrorType.Account.Fail_AuthLogin_NotValid,
+            result : {}
+        };
+
+        console.log(`account id ${account_id}, auth_key ${auth_key}`);
+
+        let userInfo = await this.GetUserInfoWithAuth(account_id, auth_key);
+        //Find none
+        if (userInfo == null) {
+            console.log("AuthLogin Not valid");
+            return returnType;
+        }
+
+        let expireDate = new Date(userInfo.auth_expire);
+        let currentTime = new Date(Date.now());
+
+        //Is expire
+        if (expireDate < currentTime)
+            return returnType;
+
+        userInfo.auth_expire = GetDate(UniversalParameter.AuthkeyExpireDate);
+        await userInfo.save();
+
+        returnType.status = DatabaseErrorType.Normal;
+        returnType.result = JSON.stringify(userInfo);
+
+        return returnType;
     }
 
     async Login(dataset : ClientSignLogType) {
@@ -23,18 +50,18 @@ class AccountModel {
             result : {}
         };
 
-        let userInfoArray = await this.GetUserInfo(dataset.email, dataset.password);
+        let userInfo = await this.GetUserInfo(dataset.email, dataset.password);
         
-        if (userInfoArray == null)
+        if (userInfo == null)
             returnType.status = DatabaseErrorType.Account.Fail_Login_NoAccount;
         else {
-            console.log("Pre authkey " + userInfoArray.auth_key);
-            userInfoArray.auth_key = GenerateRandomString(10);
-            userInfoArray.auth_expire = GetDate(UniversalParameter.AuthkeyExpireDate);
-            await userInfoArray.save();
+            console.log("Pre authkey " + userInfo.auth_key);
+            userInfo.auth_key = GenerateRandomString(10);
+            userInfo.auth_expire = GetDate(UniversalParameter.AuthkeyExpireDate);
+            await userInfo.save();
 
-            console.log("After authkey " + userInfoArray.auth_key);
-            returnType.result = JSON.stringify(userInfoArray);
+            console.log("After authkey " + userInfo.auth_key);
+            returnType.result = JSON.stringify(userInfo);
         }
 
         return returnType;
@@ -73,7 +100,6 @@ class AccountModel {
 
     async GetUserInfo(p_email : string, p_password : string) {
         let hashPassword = SHA256Hash(p_password + this.password_key);
-
         let r = await this.accountSchema.findOne({
             email : p_email,
             password : hashPassword
@@ -84,8 +110,10 @@ class AccountModel {
         return r;
     }
 
-
     async GetUserInfoWithAuth(p_id : string, p_auth : string) {
+        if (!moogoose.isValidObjectId(p_id))
+            return null;
+
         let r = await this.accountSchema.findOne({
             _id : p_id,
             auth_key : p_auth
