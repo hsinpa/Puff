@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class GeneralFlag
 {
+    public static Vector3 SharedVectorUnit = Vector3.zero;
 
     public class RegularExpression {
         public const string Email = @"^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$";

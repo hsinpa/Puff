@@ -21,9 +21,12 @@ namespace Puff.Ctrl
         [SerializeField]
         private PuffItemManager puffItemManager;
 
-        private PuffModel _puffModel;
+        [SerializeField]
+        private int APIRequestCycleTime;
+        private float APIRequestTimeRecord;
+        private bool enableAPIRequest = false;
 
-        CancellationTokenSource tokenSource = new CancellationTokenSource();
+        private PuffModel _puffModel;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -40,7 +43,7 @@ namespace Puff.Ctrl
 
                 case EventFlag.Event.LoginSuccessful:
                     {
-                        RefreshPuffMsg();
+                        enableAPIRequest = true;
                     }
                     break;
             }
@@ -49,7 +52,15 @@ namespace Puff.Ctrl
         private void Init() {
             _puffModel = PuffApp.Instance.models.puffModel;
             _puffModel.OnReceiveNewPuffMsgEvent += RenderPuffObjectFromDatabase;
+        }
 
+        private void Update()
+        {
+            if (Time.time > APIRequestTimeRecord && enableAPIRequest) {
+
+                RefreshPuffMsg();
+                APIRequestTimeRecord = Time.time + APIRequestCycleTime;
+            }
         }
 
         private void GenerateTestPuffObject(int testNumber) {
@@ -65,20 +76,21 @@ namespace Puff.Ctrl
         }
 
         private PuffItemView GeneratePuffObjectToWorld(JsonTypes.PuffMessageType puffMsg) {
-            Vector3 originPoint = _camera.transform.forward * 25;
+            Vector3 originPoint = _camera.transform.forward * 1.5f;
 
-            float xPos = originPoint.x + Random.Range(-18.5f, 18.5f);
-            float yPos = Random.Range(18, 35f);
-            float zPos = originPoint.z + Random.Range(-18.5f, 18.5f);
+            float xPos = originPoint.x + Random.Range(-1.5f, 1.5f);
+            float yPos = Random.Range(1.5f, 4.5f);
+            float zPos = originPoint.z + Random.Range(-1.5f, 1.5f);
 
-            Vector3 randomPosition = new Vector3(xPos, yPos, zPos);
+            GeneralFlag.SharedVectorUnit.Set(xPos, yPos, zPos);
+
+            Vector3 randomPosition = GeneralFlag.SharedVectorUnit;
             return puffItemManager.GeneratePuffObject(puffMsg, randomPosition);
         }
 
         private async void RefreshPuffMsg() {
             await _puffModel.GetAllPuff();
 
-            RepeatRefreshPuffMsg(tokenSource);
         }
 
         private void RenderPuffObjectFromDatabase(List<JsonTypes.PuffMessageType> newPuffMsgArray)
@@ -88,18 +100,6 @@ namespace Puff.Ctrl
                 Debug.Log($"Body {data.body}, Author ID {data.author_id}, Date {data.parseDate}");
                 GeneratePuffObjectToWorld(data);
             }
-        }
-
-        private async void RepeatRefreshPuffMsg(CancellationTokenSource tokenSource) {
-            await Task.Delay(5000, tokenSource.Token);
-
-            if (!tokenSource.IsCancellationRequested)
-                RefreshPuffMsg();
-        }
-
-        private void OnApplicationQuit()
-        {
-            tokenSource.Cancel();
         }
     }
 }

@@ -31,6 +31,8 @@ namespace Puff.Ctrl {
         private PuffInspectorInput _puffInspectorInput;
         private PuffModel _puffModel;
 
+        private Vector3 sharedVectorUnit = new Vector3();
+
         public override void OnNotify(string p_event, params object[] p_objects)
         {
             switch (p_event) {
@@ -74,7 +76,8 @@ namespace Puff.Ctrl {
         private void ProcessVertical(PuffInspectorInput.DragDir dragDir, float ratio, float offset)
         {
             Vector3 objPos = SelectedPuffObject.transform.position;
-            SelectedPuffObject.transform.position = new Vector3(objPos.x, offset, objPos.z);
+            sharedVectorUnit.Set(objPos.x, offset, objPos.z);
+            SelectedPuffObject.transform.position = sharedVectorUnit;
             puffInspectView.SetFunctionCanvasAlpha(ratio);
             puffInspectView.SetSemiText(dragDir == PuffInspectorInput.DragDir.VerticalDown ? GeneralFlag.String.SaveToMailbox : GeneralFlag.String.ReleaseBackToSky);
         }

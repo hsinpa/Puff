@@ -296,6 +296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 334600125}
   - component: {fileID: 334600124}
+  - component: {fileID: 334600126}
   m_Layer: 0
   m_Name: AR Session Origin
   m_TagString: Untagged
@@ -331,6 +332,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &334600126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 334600123}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 728ad7fae8e460a4ba41265c7308d757, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_AnchorPrefab: {fileID: 0}
 --- !u!1 &399460964
 GameObject:
   m_ObjectHideFlags: 0
@@ -797,6 +811,7 @@ MonoBehaviour:
   _camera: {fileID: 1846505257}
   arSession: {fileID: 52185360}
   puffItemManager: {fileID: 775321333}
+  APIRequestCycleTime: 5
 --- !u!1 &1106893517
 GameObject:
   m_ObjectHideFlags: 0
@@ -978,7 +993,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fdaa196e6631e047a9f029e1e141008, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _fake_user_id: hsinpa_fake
 --- !u!1 &1268347334
 GameObject:
   m_ObjectHideFlags: 0

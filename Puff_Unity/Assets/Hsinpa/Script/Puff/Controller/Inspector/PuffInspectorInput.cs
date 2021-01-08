@@ -40,6 +40,7 @@ namespace Puff.Ctrl.Utility
         private System.Action ReleaseObjectCallback;
         private System.Action<DragDir, float, float> ProcessVerticalCallback;
 
+        private DragDir dragMode = DragDir.None;
 
         public PuffInspectorInput(System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback,
                                 System.Action<Face> SetFaceCallback,
@@ -99,19 +100,24 @@ namespace Puff.Ctrl.Utility
 
             DragDir dragDirection = FindDragDirection();
 
-            if (dragDirection == DragDir.VerticalDown || dragDirection == DragDir.VerticalUp)
+            if (dragDirection == DragDir.Horizontal && dragMode != DragDir.VerticalDown) {
+                dragMode = DragDir.Horizontal;
+                ProcessRotation();
+            }
+
+            if ((dragDirection == DragDir.VerticalDown || dragDirection == DragDir.VerticalUp) && dragMode != DragDir.Horizontal )
             {
+                dragMode = DragDir.VerticalDown;
                 ProcessVertical(dragDirection);
             }
 
-            if (dragDirection == DragDir.Horizontal)
-                ProcessRotation();
-
             if (Input.GetMouseButtonUp(0))
             {
+                dragMode = DragDir.None;
                 hasHitOnPuffObj = false;
                 recordRotationY = SelectedPuffObject.transform.eulerAngles.y;
-                lerpQuaterion = Quaternion.Euler(new Vector3(0, recordRotationY, 0));
+                GeneralFlag.SharedVectorUnit.Set(0, recordRotationY, 0);
+                lerpQuaterion = Quaternion.Euler(GeneralFlag.SharedVectorUnit);
                 currentFace = FindTheBestFace();
                 this.SetFaceCallback(currentFace);
 
@@ -130,12 +136,12 @@ namespace Puff.Ctrl.Utility
         private DragDir FindDragDirection()
         {
             //Vertical check first
-            if (absY > DragThreshold)
+            if (absY > DragThreshold && dragMode != DragDir.Horizontal)
             {
                 return (moveYDist > 0) ? DragDir.VerticalUp : DragDir.VerticalDown;
             }
 
-            if (absX > DragThreshold)
+            if (absX > DragThreshold && dragMode != DragDir.VerticalDown)
                 return DragDir.Horizontal;
 
             return DragDir.None;
@@ -153,13 +159,13 @@ namespace Puff.Ctrl.Utility
         private void ProcessVertical(DragDir dragDir)
         {
 
-            float offset = Mathf.Clamp((absY - DragThreshold) * 0.02f, -5, 5);
-            float ratio = 1 - (Mathf.Abs(offset * 2f) / 5);
+            float offset = Mathf.Clamp((absY - DragThreshold) * 0.005f, -1, 1);
+            float ratio = 1 - (Mathf.Abs(offset * 2f) / 5f);
             if (dragDir == DragDir.VerticalDown) offset *= -1;
 
             ProcessVerticalCallback(dragDir, ratio, offset);
 
-            if (ratio <= 0)
+            if (ratio <= 0.85f)
             {
                 gestureEvent = dragDir == DragDir.VerticalDown ? GestureEvent.Save : GestureEvent.Release;
             }
@@ -175,9 +181,10 @@ namespace Puff.Ctrl.Utility
             float direction = (currentStandPoint - lastStandPoint).x;
             direction = Mathf.Clamp(direction, -5, 5);
 
-            Vector3 rotation = new Vector3(0, direction, 0);
+            //Rotation
+            GeneralFlag.SharedVectorUnit.Set(0, direction, 0);
 
-            SelectedPuffObject.transform.Rotate(rotation, Space.Self);
+            SelectedPuffObject.transform.Rotate(GeneralFlag.SharedVectorUnit, Space.Self);
 
             return (direction > 0) ? 1 : -1;
         }
@@ -198,18 +205,16 @@ namespace Puff.Ctrl.Utility
 
         private void GraudaulyFlyToCenter()
         {
-            Vector3 frontPosition = _camera.transform.forward * 7.5f;
+            Vector3 frontPosition = _camera.transform.position + (_camera.transform.forward * 0.75f);
 
             SelectedPuffObject.transform.position = Vector3.Lerp(SelectedPuffObject.transform.position, frontPosition, 0.1f);
-
         }
 
         private void GraduallyRotateToFace(Face face)
         {
             float angle = GetAngle( (_camera.transform.forward));
-
-
-            lerpQuaterion = Quaternion.Lerp(lerpQuaterion, Quaternion.Euler(new Vector3(0, rotDir - angle, 0)), 0.1f);
+            GeneralFlag.SharedVectorUnit.Set(0, rotDir - angle, 0);
+            lerpQuaterion = Quaternion.Lerp(lerpQuaterion, Quaternion.Euler(GeneralFlag.SharedVectorUnit), 0.1f);
 
             SelectedPuffObject.transform.rotation = lerpQuaterion;
         }

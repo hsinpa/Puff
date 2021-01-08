@@ -7,9 +7,12 @@ public class EventFlag
     public class Event
     {
         public const string GameStart = "event@game_start";
-
         public const string OpenPuffMsg = "event@open_puff_msg";
         public const string OpenSendMsg = "event@open_send_msg";
+
+        //Generally, want to enable/disable according to wheter we need it or not;
+        public const string GameWorldUpdateEnable = "event@game_world_enable";
+        public const string GameWorldUpdateDisable = "event@game_world_disable";
 
         public const string LoginSuccessful = "event@login_success";
     }

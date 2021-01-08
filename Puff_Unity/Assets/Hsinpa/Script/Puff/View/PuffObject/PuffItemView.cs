@@ -41,7 +41,7 @@ namespace Puff.View {
 
             transform.Translate(moveVector);
 
-            if (transform.position.y < -5) {
+            if (transform.position.y < -1) {
                 isLanded = true;
             }
         }
