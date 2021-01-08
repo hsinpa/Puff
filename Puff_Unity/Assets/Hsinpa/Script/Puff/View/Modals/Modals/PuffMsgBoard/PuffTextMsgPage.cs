@@ -13,23 +13,19 @@ namespace Puff.View
         [SerializeField]
         private Button submitBtn;
 
-        [SerializeField]
-        private Button cancelBtn;
-
         public delegate void OnPuffMsgSend(string content);
 
+        public void SetUp(OnPuffMsgSend onPuffMsgSendEvent) {
 
-        public void SetUp(OnPuffMsgSend onPuffMsgSendEvent, System.Action cancelEvent) {
+            msgText.text = "";
+
             this.submitBtn.onClick.RemoveAllListeners();
             this.submitBtn.onClick.AddListener(() => {
+
+                if (string.IsNullOrEmpty(msgText.text)) return;
+
                 onPuffMsgSendEvent(msgText.text);
                 msgText.text = "";
-            });
-
-            this.cancelBtn.onClick.RemoveAllListeners();
-            this.cancelBtn.onClick.AddListener(() => {
-                msgText.text = "";
-                cancelEvent();
             });
         }
     }

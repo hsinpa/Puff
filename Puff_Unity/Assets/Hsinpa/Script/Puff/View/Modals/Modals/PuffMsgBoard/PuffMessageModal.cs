@@ -59,7 +59,7 @@ namespace Puff.View {
             if (innerPage != null) {
                 innerPage.Show(true);
 
-                puffMsgHeader.gameObject.SetActive(typeof(T) == typeof(PuffMsgFrontPage));
+                //puffMsgHeader.gameObject.SetActive(typeof(T) == typeof(PuffMsgFrontPage));
             }
 
             return innerPage;

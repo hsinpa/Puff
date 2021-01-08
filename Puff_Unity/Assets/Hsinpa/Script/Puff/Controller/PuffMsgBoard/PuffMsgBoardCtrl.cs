@@ -67,10 +67,7 @@ namespace Puff.Ctrl
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
             PuffTextMsgPage puffMsgPage = puffMessageModal.OpenPage<PuffTextMsgPage>();
 
-            puffMsgPage.SetUp(OnCreatorMessageSubmitEvent, () =>
-            {
-                Modals.instance.Close();
-            });
+            puffMsgPage.SetUp(OnCreatorMessageSubmitEvent);
 
         }
 
@@ -83,11 +80,7 @@ namespace Puff.Ctrl
             });
 
             PuffTextMsgPage puffTextMsgPage = puffMessageModal.GetPage<PuffTextMsgPage>();
-            puffTextMsgPage.SetUp(OnReviewerMessageSubmitEvent, OpenSActionPage);
-        }
-
-        private void OpenSActionPage() {
-            var page = puffMessageModal.OpenPage<PuffActionSelectPage>();
+            puffTextMsgPage.SetUp(OnReviewerMessageSubmitEvent);
         }
 
         private void OpenTextMsgPage() {
