@@ -27,6 +27,7 @@ namespace Puff.Ctrl.Utility
         private float moveYDist => (Input.mousePosition - lastStandPoint).y;
         private float absX => Mathf.Abs(moveXDist);
         private float absY => Mathf.Abs(moveYDist);
+        private Vector3 centerPosition => _camera.transform.position + (_camera.transform.forward * 0.75f);
 
         private float DragThreshold = 0.1f;
         private Camera _camera;
@@ -38,14 +39,15 @@ namespace Puff.Ctrl.Utility
         private System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback;
         private System.Action<Face> SetFaceCallback;
         private System.Action ReleaseObjectCallback;
-        private System.Action<DragDir, float, float> ProcessVerticalCallback;
+        private System.Action<DragDir, float, float, Vector3> ProcessVerticalCallback;
+
 
         private DragDir dragMode = DragDir.None;
 
         public PuffInspectorInput(System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback,
                                 System.Action<Face> SetFaceCallback,
                                 System.Action ReleaseObjectCallback,
-                                System.Action<DragDir, float, float> ProcessVerticalCallback, float dragThreshold, Camera camera) {
+                                System.Action<DragDir, float, float, Vector3> ProcessVerticalCallback, float dragThreshold, Camera camera) {
             this.SetCurrentSelectedObjectCallback = SetCurrentSelectedObjectCallback;
             this.SetFaceCallback = SetFaceCallback;
             this.ReleaseObjectCallback = ReleaseObjectCallback;
@@ -163,7 +165,7 @@ namespace Puff.Ctrl.Utility
             float ratio = 1 - (Mathf.Abs(offset * 2f) / 5f);
             if (dragDir == DragDir.VerticalDown) offset *= -1;
 
-            ProcessVerticalCallback(dragDir, ratio, offset);
+            ProcessVerticalCallback(dragDir, ratio, offset, centerPosition);
 
             if (ratio <= 0.85f)
             {

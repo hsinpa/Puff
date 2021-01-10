@@ -31,7 +31,7 @@ namespace Puff.Model
             List<JsonTypes.PuffMessageType> puffArray = new List<JsonTypes.PuffMessageType>();
 
             if (rawPuffMsgData.isSuccess) {
-                Debug.Log(rawPuffMsgData.body);
+                //Debug.Log(rawPuffMsgData.body);
 
                 puffArray = JsonHelper.FromJson<JsonTypes.PuffMessageType>(rawPuffMsgData.body).ToList();
 

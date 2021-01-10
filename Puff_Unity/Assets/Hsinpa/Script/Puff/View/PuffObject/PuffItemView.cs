@@ -37,7 +37,7 @@ namespace Puff.View {
             float offset = (Time.time * offsetTime);
             float randomTime = offset - Mathf.Floor(offset) * Mathf.PI;
 
-            moveVector.Set(Mathf.Sin(randomTime * 1f) * Time.deltaTime * 0.2f, - Time.deltaTime * _gravity, Mathf.Cos(randomTime * 1f) * Time.deltaTime * 0.2f);
+            moveVector.Set(Mathf.Sin(randomTime * 1f) * Time.deltaTime * 0.1f, - Time.deltaTime * _gravity, Mathf.Cos(randomTime * 1f) * Time.deltaTime * 0.1f);
 
             transform.Translate(moveVector);
 

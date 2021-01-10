@@ -73,10 +73,10 @@ namespace Puff.Ctrl {
             _puffInspectorInput.OnUpdate();
         }
 
-        private void ProcessVertical(PuffInspectorInput.DragDir dragDir, float ratio, float offset)
+        private void ProcessVertical(PuffInspectorInput.DragDir dragDir, float ratio, float offset, Vector3 puff_center)
         {
-            Vector3 objPos = SelectedPuffObject.transform.position;
-            sharedVectorUnit.Set(objPos.x, offset, objPos.z);
+            sharedVectorUnit.Set(puff_center.x, puff_center.y + offset, puff_center.z);
+
             SelectedPuffObject.transform.position = sharedVectorUnit;
             puffInspectView.SetFunctionCanvasAlpha(ratio);
             puffInspectView.SetSemiText(dragDir == PuffInspectorInput.DragDir.VerticalDown ? GeneralFlag.String.SaveToMailbox : GeneralFlag.String.ReleaseBackToSky);
