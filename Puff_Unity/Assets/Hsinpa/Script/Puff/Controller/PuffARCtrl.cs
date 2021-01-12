@@ -7,6 +7,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
+using Hsinpa.Utility;
 
 namespace Puff.Ctrl
 {
@@ -21,8 +22,8 @@ namespace Puff.Ctrl
         [SerializeField]
         private PuffItemManager puffItemManager;
 
-        [SerializeField]
-        private int APIRequestCycleTime;
+        [SerializeField, Range(5, 20)]
+        private int APIRequestCycleTime = 5;
         private float APIRequestTimeRecord;
         private bool enableAPIRequest = false;
 
@@ -58,7 +59,7 @@ namespace Puff.Ctrl
         {
             if (Time.time > APIRequestTimeRecord && enableAPIRequest) {
 
-                RefreshPuffMsg();
+                RefreshGPSInfo();
                 APIRequestTimeRecord = Time.time + APIRequestCycleTime;
             }
         }
@@ -88,9 +89,18 @@ namespace Puff.Ctrl
             return puffItemManager.GeneratePuffObject(puffMsg, randomPosition);
         }
 
-        private async void RefreshPuffMsg() {
-            await _puffModel.GetAllPuff();
 
+        private void RefreshGPSInfo()
+        {
+            GPSLocationService.GetGPS(this, false, (GPSLocationService.LocationInfo locationInfo) =>
+            {
+                RefreshPuffMsg(locationInfo);
+            });
+        }
+
+
+        private async void RefreshPuffMsg(GPSLocationService.LocationInfo locationInfo) {
+            await _puffModel.GetAllPuff(locationInfo);
         }
 
         private void RenderPuffObjectFromDatabase(List<JsonTypes.PuffMessageType> newPuffMsgArray)

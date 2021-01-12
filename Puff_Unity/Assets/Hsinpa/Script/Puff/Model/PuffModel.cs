@@ -24,9 +24,11 @@ namespace Puff.Model
             return default(JsonTypes.PuffMessageType);
         }
 
-            public async Task<List<JsonTypes.PuffMessageType>> GetAllPuff() {
+       public async Task<List<JsonTypes.PuffMessageType>> GetAllPuff(GPSLocationService.LocationInfo locationInfo) {
+            int defaultRadius = 10000;
+            string url = string.Format(GeneralFlag.API.GetAll, locationInfo.latitude, locationInfo.longitude, defaultRadius);
 
-            APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.GetAll), BestHTTP.HTTPMethods.Get);
+            APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Get);
 
             List<JsonTypes.PuffMessageType> puffArray = new List<JsonTypes.PuffMessageType>();
 

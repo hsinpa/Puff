@@ -12,7 +12,6 @@ namespace Puff.Model
         private AccountModel _accountModel;
         public AccountModel accountModel => _accountModel;
 
-
         public void SetUp() {
             _puffModel = new PuffModel();
             _accountModel = new AccountModel();

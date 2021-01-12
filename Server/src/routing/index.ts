@@ -35,7 +35,11 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     ctx.body = r;
   });
 //#endregion
-  router.get('/get_all', async function (ctx:any, next:any) {
+  router.get('/get_all/:latitude/:longtitude/:radius', async function (ctx:any, next:any) {
+    //ctx.params.latitude
+    //ctx.params.longtitude
+    //ctx.params.radius
+
     let r = JSON.stringify(await mongodb.puffModel.GetAllPuff());
 
     ctx.body = r;

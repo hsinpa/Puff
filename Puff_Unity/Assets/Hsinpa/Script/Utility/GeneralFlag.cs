@@ -33,7 +33,7 @@ public class GeneralFlag
 
     public class API
     {
-        public const string GetAll = "get_all";
+        public const string GetAll = "get_all/{0}/{1}/{2}";
         public const string SendPuffComment = "send_puff_comment";
         public const string SendPuffMsg = "send_puff_msg";
 
