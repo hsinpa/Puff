@@ -13,6 +13,12 @@ namespace Puff.View {
         private Text title;
 
         [SerializeField]
+        private Text author;
+
+        [SerializeField]
+        private Text create_date;
+
+        [SerializeField]
         private Text Description;
 
         [SerializeField]
@@ -31,6 +37,8 @@ namespace Puff.View {
 
         public void SetContent(JsonTypes.PuffMessageType puffMsgType, System.Action<string> ReplyBtnEvent) {
             title.text = puffMsgType.author;
+            author.text = puffMsgType.author;
+            create_date.text = puffMsgType.parseDate.ToString("MM/dd/yyyy hh:mm tt");
             Description.text = puffMsgType.body;
 
             _ReplyInputfield.text = "";

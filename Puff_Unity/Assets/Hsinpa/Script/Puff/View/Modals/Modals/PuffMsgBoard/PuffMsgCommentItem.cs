@@ -14,9 +14,13 @@ namespace Puff.View
         [SerializeField]
         private Text commentContent;
 
+        [SerializeField]
+        private Text createTime;
+
         public void SetComment(JsonTypes.PuffCommentType commentType) {
             this.commentAuthor.text = commentType.author;
             this.commentContent.text = commentType.body;
+            this.createTime.text = commentType.date;
         }
 
     }
