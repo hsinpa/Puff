@@ -1,11 +1,16 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Hsinpa.Utility;
 
 namespace Puff.Model
 {
     public class ModelsManager : MonoBehaviour
     {
+        [SerializeField]
+        private ColorItemSObj _colorSetting;
+        public ColorItemSObj colorSetting => _colorSetting;
+
         private PuffModel _puffModel;
         public PuffModel puffModel => _puffModel;
 
