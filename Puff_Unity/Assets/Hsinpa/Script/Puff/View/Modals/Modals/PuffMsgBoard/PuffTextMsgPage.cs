@@ -3,51 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Hsinpa.Utility;
+using System.Linq;
 
 namespace Puff.View
 {
     public class PuffTextMsgPage : PuffMsgInnerPage
     {
         [SerializeField]
+        private InputField titleText;
+
+        [SerializeField]
         private InputField msgText;
 
         [SerializeField]
         private Button submitBtn;
 
+        [SerializeField]
+        private PuffMsgReivewModule reviewModule;
+
         [Header("Tab")]
         [SerializeField]
-        private RectTransform tabHolder;
+        private PuffMsgTabModule typeTabHolder;
+        public enum Tabs { Story, Review, Event, Survey};
 
-        private PuffMsgTabBtn[] tabButtons;
-        public enum Tabs {Event, Review, Story, Survey};
-
-
-        private Tabs currentTabs = Tabs.Event;
         private ColorItemSObj colorSetting;
-        private Dictionary<Tabs, System.Action> TabActionDictTable = new Dictionary<Tabs, System.Action>();
+        private Dictionary<int, System.Action> TabActionDictTable = new Dictionary<int, System.Action>();
 
         public delegate void OnPuffMsgSend(string content);
 
         private void Start()
         {
-            colorSetting = PuffApp.Instance.models.colorSetting;
-            tabButtons = tabHolder.GetComponentsInChildren<PuffMsgTabBtn>();
-            foreach (var t in tabButtons) {
-                t.puffButton.onClick.RemoveAllListeners();
-                t.puffButton.onClick.AddListener(() =>
-                {
-                    OnTabClick(t);
-                });
-            }
+            colorSetting = PuffApp.Instance.models.colorSetting;       
 
-            TabActionDictTable.Add(Tabs.Event, SetEventLayout);
-            TabActionDictTable.Add(Tabs.Review, SetReviewLayout);
-            TabActionDictTable.Add(Tabs.Story, SetStoryLayout);
+            TabActionDictTable.Add((int)Tabs.Event, SetEventLayout);
+            TabActionDictTable.Add((int)Tabs.Review, SetReviewLayout);
+            TabActionDictTable.Add((int)Tabs.Story, SetStoryLayout);
+
+            typeTabHolder.SetUp(colorSetting, TabActionDictTable);
         }
 
         public void SetUp(OnPuffMsgSend onPuffMsgSendEvent) {
-
-            msgText.text = "";
+            CleanContent();
+            typeTabHolder.SetClickTab((int)Tabs.Story);
 
             this.submitBtn.onClick.RemoveAllListeners();
             this.submitBtn.onClick.AddListener(() => {
@@ -59,19 +56,6 @@ namespace Puff.View
             });
         }
 
-        private void OnTabClick(PuffMsgTabBtn btn) {
-            foreach (var tab in tabButtons) {
-                tab.puffButton.image.color = colorSetting.TextUnSelectedColor;
-
-                if (btn.tabType == tab.tabType)
-                    tab.puffButton.image.color = colorSetting.TextHighlightColor;
-            }
-
-            if (TabActionDictTable.TryGetValue(btn.tabType, out System.Action p_action)) {
-                p_action();
-            }
-        }
-
         #region Tab Layout
         private void SetEventLayout() { 
         
@@ -79,13 +63,20 @@ namespace Puff.View
 
         private void SetReviewLayout()
         {
-
+            reviewModule.gameObject.SetActive(true);
         }
 
         private void SetStoryLayout()
         {
-
+            reviewModule.gameObject.SetActive(false);
         }
         #endregion
+
+        private void CleanContent()
+        {
+            msgText.text = "";
+            titleText.text = "";
+            reviewModule.SetScore(0);
+        }
     }
 }
