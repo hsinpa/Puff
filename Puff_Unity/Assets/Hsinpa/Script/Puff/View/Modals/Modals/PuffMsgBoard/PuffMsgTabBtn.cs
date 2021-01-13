@@ -11,7 +11,5 @@ namespace Puff.View
         [SerializeField]
         private Button _puffButton;
         public Button puffButton => _puffButton;
-
-        public PuffTextMsgPage.Tabs tabType;
     }
 }

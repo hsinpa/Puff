@@ -7,6 +7,9 @@ namespace Puff.View
 {
     public class PuffMsgTabModule : MonoBehaviour
     {
+        [SerializeField]
+        private RectTransform tabHolder;
+
         private PuffMsgTabBtn[] tabButtons;
         private int currentIndex;
 
@@ -19,7 +22,7 @@ namespace Puff.View
             this._tabActionDictTable = tabActionDictTable;
             this.colorSetting = colorSetting;
 
-            tabButtons = this.GetComponentsInChildren<PuffMsgTabBtn>();
+            tabButtons = tabHolder.GetComponentsInChildren<PuffMsgTabBtn>();
 
             foreach (var t in tabButtons)
             {
@@ -42,17 +45,18 @@ namespace Puff.View
             {
                 tab.puffButton.targetGraphic.color = colorSetting.TextUnSelectedColor;
 
-                if (btn.tabType == tab.tabType)
+                if (btn.name == tab.name)
                     tab.puffButton.targetGraphic.color = colorSetting.TextHighlightColor;
             }
 
             int btnIndex = btn.transform.GetSiblingIndex();
+            this.currentIndex = btnIndex;
 
-            if (_tabActionDictTable.TryGetValue(btnIndex, out System.Action p_action))
+            if (_tabActionDictTable != null && _tabActionDictTable.TryGetValue(btnIndex, out System.Action p_action))
             {
-                currentIndex = btnIndex; 
                 p_action();
             }
+
         }
 
     }
