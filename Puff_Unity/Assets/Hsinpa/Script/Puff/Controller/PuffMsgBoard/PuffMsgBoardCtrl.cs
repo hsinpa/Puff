@@ -11,6 +11,9 @@ namespace Puff.Ctrl
 {
     public class PuffMsgBoardCtrl : ObserverPattern.Observer
     {
+        [SerializeField]
+        private ARCameraController _arCameraCtrl;
+
         private PuffMessageModal puffMessageModal;
         private GeneralFlag.PuffMsgBoardState _puffMsgBoardState;
         private PuffMsgBoardHelper _puffMsgBoardHelper;
@@ -18,6 +21,7 @@ namespace Puff.Ctrl
         private PuffModel _puffModel;
 
         private JsonTypes.PuffMessageType _currentPuffMsg;
+
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -67,7 +71,13 @@ namespace Puff.Ctrl
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
             PuffTextMsgPage puffMsgPage = puffMessageModal.OpenPage<PuffTextMsgPage>();
 
-            puffMsgPage.SetUp(_accountModel, OnCreatorMessageSubmitEvent);
+            puffMsgPage.SetUp(_accountModel, OnCreatorMessageSubmitEvent, () => {
+
+                var screenshot = _arCameraCtrl.TakeScreenShot();
+
+                if (screenshot != null)
+                    puffMsgPage.cameraModule.AssignRawImage(screenshot);
+            });
 
         }
 

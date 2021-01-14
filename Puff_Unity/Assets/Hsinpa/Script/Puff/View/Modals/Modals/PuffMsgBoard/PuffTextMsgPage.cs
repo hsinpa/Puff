@@ -25,6 +25,10 @@ namespace Puff.View
         [SerializeField]
         private PuffMsgReivewModule reviewModule;
 
+        [SerializeField]
+        private PuffMsgCameraModule _cameraModule;
+        public PuffMsgCameraModule cameraModule => _cameraModule;
+
         [Header("Tab")]
         [SerializeField]
         private PuffMsgTabModule typeTabHolder;
@@ -47,6 +51,7 @@ namespace Puff.View
         public delegate void OnPuffMsgSend(JsonTypes.PuffMessageType content);
         private OnPuffMsgSend OnPuffMsgSendCallback;
 
+
         private void Start()
         {
             colorSetting = PuffApp.Instance.models.colorSetting;       
@@ -67,7 +72,7 @@ namespace Puff.View
             });
         }
 
-        public void SetUp(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent) {
+        public void SetUp(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent, System.Action OnCameraClick) {
             this.accountModel = accountModel;
             this.OnPuffMsgSendCallback = onPuffMsgSendEvent;
 
@@ -75,6 +80,8 @@ namespace Puff.View
             typeTabHolder.SetClickTab((int)Tabs.Story);
             privacyTabHolder.SetClickTab((int)Privacy.Public);
             durationTabHolder.SetClickTab((int)Duration.Date);
+
+            cameraModule.SetUp(OnCameraClick);
 
             this.submitBtn.onClick.RemoveAllListeners();
             this.submitBtn.onClick.AddListener(() => {
