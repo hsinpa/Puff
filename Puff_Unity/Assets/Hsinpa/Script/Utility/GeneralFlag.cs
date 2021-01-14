@@ -44,6 +44,6 @@ public class GeneralFlag
 
     public static string GetFullAPIUri(string apiUrl)
     {
-        return Domain.GoogleServer + apiUrl;
+        return Domain.LocalHost + apiUrl;
     }
 }

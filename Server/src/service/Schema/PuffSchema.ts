@@ -12,9 +12,16 @@ const puffSchema = new Schema({
     author_id : String,
     author : String,
     body : String,
+    title : String,
+    type: Number,
+    duration : Number,
+    privacy : Number,
+    latitude : Number,
+    longitude : Number,
+    images : [String],
     comments : [commentSchema],
     date : {type : Date, default :Date.now},
-    expire : {type:Date, default :Date.now}
+    expire : {type: Date}
 });
 
 export default puffSchema;

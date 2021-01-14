@@ -1,7 +1,9 @@
 import PuffSchema from '../Schema/PuffSchema';
 import * as moogoose from 'mongoose';
-import {PuffCommentType, PuffMessageType } from '../../Utility/Flag/TypeFlag';
+import {PuffCommentType, PuffMessageType, Duration } from '../../Utility/Flag/TypeFlag';
 import * as uuid from 'uuid';
+import {GetDate } from '../../Utility/GeneralMethod';
+
 
 class PuffModel {
 
@@ -17,7 +19,29 @@ class PuffModel {
     }
 
     async SavePuffRecord(puffMsg : PuffMessageType) {
+        puffMsg.date = new Date(Date.now());
+        puffMsg.expire = this.AddNumberToDate(puffMsg.date, puffMsg.duration);
+        
         return await this.puffSchema.create(puffMsg );
+    }
+
+    private AddNumberToDate(date : Date, appendDate : number) : Date {
+        let expireDate = new Date();
+        switch(appendDate as Duration) {
+            case Duration.Day :
+                expireDate = GetDate(1);
+                break;
+
+            case Duration.Week :
+                expireDate = GetDate(7);
+                break;
+
+            case Duration.Month :
+                expireDate = GetDate(30);
+                break;
+        }
+
+        return (expireDate);
     }
 
     async SavePuffComment(puff_id : string, author_id : string, author : string, body : string ) {

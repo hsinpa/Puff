@@ -17,13 +17,20 @@ namespace Puff.Ctrl.Utility {
             return puffCommentType;
         }
 
-        public static JsonTypes.PuffMessageType GetCreateMessageType(string author_id, string author_name, string body)
+        public static JsonTypes.PuffMessageType GetCreateMessageType(string author_id, string author_name, string body, string title,
+            int type, int privacy, int duration, float distance)
         {
             JsonTypes.PuffMessageType puffMessageType = new JsonTypes.PuffMessageType();
 
             puffMessageType.author = author_name;
             puffMessageType.author_id = author_id;
             puffMessageType.body = body;
+            puffMessageType.title = title;
+
+            puffMessageType.type = type;
+            puffMessageType.privacy = privacy;
+            puffMessageType.duration = duration;
+            puffMessageType.distance = distance;
 
             return puffMessageType;
         }

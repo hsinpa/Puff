@@ -24,4 +24,8 @@ public class StringTextAsset
         public const string InternetError = "Fail to establish connection to server; Please check internet visibility";
     }
 
+
+    public class Messaging {
+        public const string DurationText = "Until {0}";
+    }
 }

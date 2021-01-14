@@ -35,10 +35,25 @@ export interface PuffMessageType {
     author_id : string,
     author : string,
     body : string,
-    comments : string[]
+    title : string,
+    type : number,
+    duration : number,
+    privacy : number,
+
+    latitude : number,
+    longitude : number,
+    images : string[],
+    comments : string[],
+
+    date : Date,
+    expire : Date
 }
 
 export interface DatabaseResultType {
     status : number,
     result? : any
+}
+
+export enum Duration {
+    Day = 0, Week, Month
 }

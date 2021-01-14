@@ -67,7 +67,7 @@ namespace Puff.Ctrl
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
             PuffTextMsgPage puffMsgPage = puffMessageModal.OpenPage<PuffTextMsgPage>();
 
-            puffMsgPage.SetUp(OnCreatorMessageSubmitEvent);
+            puffMsgPage.SetUp(_accountModel, OnCreatorMessageSubmitEvent);
 
         }
 
@@ -78,9 +78,6 @@ namespace Puff.Ctrl
             {
                 PushCommentToServer(frontPage, puffMessageType._id, replayMsg);
             });
-
-            PuffTextMsgPage puffTextMsgPage = puffMessageModal.GetPage<PuffTextMsgPage>();
-            puffTextMsgPage.SetUp(OnReviewerMessageSubmitEvent);
         }
 
         private void OpenTextMsgPage() {
@@ -103,22 +100,16 @@ namespace Puff.Ctrl
             frontPage.EnableReplyInput(true);
         }
 
-        private void OnCreatorMessageSubmitEvent(string p_message)
+        private void OnCreatorMessageSubmitEvent(JsonTypes.PuffMessageType puffMessage)
         {
-            JsonTypes.PuffMessageType msgType = PuffMsgBoardHelper.GetCreateMessageType(this._accountModel.puffAccountType._id, 
-                                                                                        this._accountModel.puffAccountType.username, p_message);
+            //JsonTypes.PuffMessageType msgType = PuffMsgBoardHelper.GetCreateMessageType(this._accountModel.puffAccountType._id, 
+            //                                                                            this._accountModel.puffAccountType.username, p_message);
             string url = GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffMsg);
 
-            _ = APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(msgType));
+            _ = APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
 
             Modals.instance.Close();
         }
-
-        private void OnReviewerMessageSubmitEvent(string p_message)
-        {
-            OpenFrontPage(this._currentPuffMsg);
-        }
-
         #endregion
 
     }

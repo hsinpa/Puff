@@ -10,6 +10,15 @@ public class JsonTypes {
         public string author_id;
         public string author;
         public string body;
+        public string title;
+
+        public int type;
+        public int privacy;
+        public int duration;
+
+        public float distance;
+        public float latitude;
+        public float longitude;
 
         public string date;
         public string expire;
@@ -18,6 +27,7 @@ public class JsonTypes {
         public DateTime parseExpire => DateTime.Parse(expire);
 
         public List<PuffCommentType> comments;
+        public List<string> images;
     }
 
     [System.Serializable]

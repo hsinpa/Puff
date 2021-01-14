@@ -45,6 +45,11 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     ctx.body = r;
   });
 
+  router.get('/get_all', async function (ctx:any, next:any) {
+    let r = JSON.stringify(await mongodb.puffModel.GetAllPuff());
+    ctx.body = r;
+  });
+
   router.post('/send_puff_comment', async function (ctx:any, next:any) {
     let r = await mongodb.puffModel.SavePuffComment(ctx.request.body.message_id, ctx.request.body.author_id, ctx.request.body.author, ctx.request.body.body );
 
@@ -52,12 +57,15 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
   });
 
   router.post('/send_puff_msg', async function (ctx:any, next:any) {
-    let msgType : PuffMessageType = {
-      author : ctx.request.body['author'],
-      author_id : ctx.request.body['author_id'],
-      body : ctx.request.body['body'],
-      comments : []
-    }
+    // let msgType : PuffMessageType = {
+    //   author : ctx.request.body['author'],
+    //   author_id : ctx.request.body['author_id'],
+    //   body : ctx.request.body['body'],
+    //   comments : []
+    // }
+
+    delete ctx.request.body['_id'];
+    let msgType : PuffMessageType = ctx.request.body;
 
     let result = await mongodb.puffModel.SavePuffRecord(msgType);
 
