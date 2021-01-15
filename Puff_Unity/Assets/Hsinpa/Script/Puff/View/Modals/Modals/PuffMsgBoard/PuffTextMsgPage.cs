@@ -48,7 +48,7 @@ namespace Puff.View
         private AccountModel accountModel;
         private Dictionary<int, System.Action> TabActionDictTable = new Dictionary<int, System.Action>();
 
-        public delegate void OnPuffMsgSend(JsonTypes.PuffMessageType content);
+        public delegate void OnPuffMsgSend(JsonTypes.PuffMessageType content, List<byte[]> bytes);
         private OnPuffMsgSend OnPuffMsgSendCallback;
 
 
@@ -81,7 +81,7 @@ namespace Puff.View
             privacyTabHolder.SetClickTab((int)Privacy.Public);
             durationTabHolder.SetClickTab((int)Duration.Date);
 
-            cameraModule.SetUp(maxImageCount : 3, OnCameraClick);
+            cameraModule.SetUp(OnCameraClick);
 
             this.submitBtn.onClick.RemoveAllListeners();
             this.submitBtn.onClick.AddListener(() => {
@@ -97,11 +97,13 @@ namespace Puff.View
         private void SetReviewLayout()
         {
             reviewModule.gameObject.SetActive(true);
+            _cameraModule.gameObject.SetActive(false);
         }
 
         private void SetStoryLayout()
         {
             reviewModule.gameObject.SetActive(false);
+            _cameraModule.gameObject.SetActive(true);
         }
 
         private void SetPrivacyLayout() {
@@ -119,6 +121,8 @@ namespace Puff.View
             privacyTabHolder.gameObject.SetActive(!enable);
             durationTabHolder.gameObject.SetActive(!enable);
             buttonModule.gameObject.SetActive(!enable);
+
+            _cameraModule.gameObject.SetActive(false);
         }
 
         private void BackToPreviousPage() {
@@ -132,7 +136,14 @@ namespace Puff.View
         private void OnSubmitButtonClick() {
             if (string.IsNullOrEmpty(msgText.text)) return;
 
-            if (privacyTabHolder.gameObject.activeSelf) {
+
+            var allImageBytes = cameraModule.GetTextureBytes();
+
+            //if (allImageBytes.Count > 0)
+            //APIHttpRequest.CurlIMGBB(allImageBytes[0]);
+
+            if (privacyTabHolder.gameObject.activeSelf)
+            {
 
                 var puffMsgType = PuffMsgBoardHelper.GetCreateMessageType(
                     this.accountModel.puffAccountType._id,
@@ -145,7 +156,7 @@ namespace Puff.View
                     10
                 );
 
-                this.OnPuffMsgSendCallback(puffMsgType);
+                this.OnPuffMsgSendCallback(puffMsgType, allImageBytes);
                 msgText.text = "";
 
                 return;
@@ -153,7 +164,7 @@ namespace Puff.View
 
             SetPrivacyLayout();
         }
-
+       
         private void CleanContent()
         {
             FrontPageBasicLayout(true);
@@ -165,6 +176,8 @@ namespace Puff.View
             privacyTabHolder.gameObject.SetActive(false);
             durationTabHolder.gameObject.SetActive(false);
             buttonModule.gameObject.SetActive(false);
+
+            _cameraModule.CleanUp();
         }
     }
 }

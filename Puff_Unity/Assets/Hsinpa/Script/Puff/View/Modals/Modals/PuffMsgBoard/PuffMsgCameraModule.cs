@@ -17,15 +17,22 @@ namespace Puff.View
         [SerializeField]
         private Text indictator;
 
-        private int _maxImageCount;
+        [SerializeField]
+        private PuffMsgScreenshotItem PrefabScreenshotItem;
 
-        private List<Texture> holdImages = new List<Texture>();
+        [SerializeField]
+        private Texture DebugTexture;
 
-        private string indicatorText => string.Format(StringTextAsset.Messaging.CameraIndicator, holdImages.Count.ToString(), _maxImageCount.ToString());
+        private const int _maxImageCount = 3;
 
-        public void SetUp(int maxImageCount, System.Action OnCameraBtnClick) {
-            this._maxImageCount = maxImageCount;
-            
+        private List<Texture> _textureList = new List<Texture>();
+        public List<Texture> textureList => _textureList;
+
+        private string indicatorText => string.Format(StringTextAsset.Messaging.CameraIndicator, _textureList.Count.ToString(), _maxImageCount.ToString());
+
+        public bool isTakePhotoAvailable => _textureList.Count < _maxImageCount;
+
+        public void SetUp(System.Action OnCameraBtnClick) {            
             cameraBtn.onClick.RemoveAllListeners();
             cameraBtn.onClick.AddListener(() =>
             {
@@ -36,24 +43,53 @@ namespace Puff.View
         public void CleanUp() {
             UtilityMethod.ClearChildObject(screenshotHolder, indictator.name);
 
-            foreach (Texture t in holdImages) { 
+            foreach (Texture t in _textureList) { 
                 if (t != null)
                     UtilityMethod.SafeDestroy(t);
             }
 
-            holdImages.Clear();
+            _textureList.Clear();
 
             indictator.text = indicatorText;
         }
 
         public void AssignRawImage(Texture p_texuture) {
 
-            if (p_texuture != null) { 
+            PuffMsgScreenshotItem screenshotItem = UtilityMethod.CreateObjectToParent<PuffMsgScreenshotItem>(screenshotHolder, PrefabScreenshotItem.gameObject);
+
+            screenshotItem.SetUp(p_texuture, OnImageItemClick, OnImageItemRemove);
+
+            screenshotItem.transform.SetSiblingIndex(0);
             
+            _textureList.Add(p_texuture);
+            indictator.text = indicatorText;
+        }
+
+        private void OnImageItemClick(PuffMsgScreenshotItem p_item) {
+            int index = p_item.transform.GetSiblingIndex();
+        }
+
+        private void OnImageItemRemove(PuffMsgScreenshotItem p_item) {
+            int index = p_item.transform.GetSiblingIndex();
+
+            _textureList.RemoveAt(index);
+
+            UtilityMethod.SafeDestroy(p_item.gameObject);
+
+            indictator.text = indicatorText;
+        }
+
+        public List<byte[]> GetTextureBytes() {
+            List<byte[]> bytesList = new List<byte[]>();
+
+            foreach (Texture t in textureList) {
+                if (t != null)
+                    bytesList.Add(TextureUtility.TextureToTexture2D(t).EncodeToJPG());
             }
 
-            holdImages.Add(p_texuture);
-            indictator.text = indicatorText;
+            //bytesList.Add(TextureUtility.TextureToTexture2D(DebugTexture).EncodeToJPG());
+
+            return bytesList;
         }
 
     }

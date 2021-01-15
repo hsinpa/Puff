@@ -6,6 +6,7 @@ using UnityEngine;
 using Puff.Ctrl.Utility;
 using Hsinpa.Utility;
 using Puff.Model;
+using System.Threading.Tasks;
 
 namespace Puff.Ctrl
 {
@@ -79,7 +80,8 @@ namespace Puff.Ctrl
                 //if (screenshot != null)
                 //    puffMsgPage.cameraModule.AssignRawImage(screenshot);
 
-                PuffApp.Instance.Notify(EventFlag.Event.EnterCameraMode);
+                if (puffMsgPage.cameraModule.isTakePhotoAvailable)
+                    PuffApp.Instance.Notify(EventFlag.Event.EnterCameraMode);
             });
         }
 
@@ -112,15 +114,16 @@ namespace Puff.Ctrl
             frontPage.EnableReplyInput(true);
         }
 
-        private void OnCreatorMessageSubmitEvent(JsonTypes.PuffMessageType puffMessage)
+        private async void OnCreatorMessageSubmitEvent(JsonTypes.PuffMessageType puffMessage, List<byte[]> textureBytes)
         {
-            //JsonTypes.PuffMessageType msgType = PuffMsgBoardHelper.GetCreateMessageType(this._accountModel.puffAccountType._id, 
-            //                                                                            this._accountModel.puffAccountType.username, p_message);
+            Modals.instance.Close();
+
+            List<string> rawIMGBBResult = await _puffModel.UploadTextureToIMGBB(textureBytes);
+            puffMessage.images = rawIMGBBResult;
+
             string url = GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffMsg);
 
-            _ = APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
-
-            Modals.instance.Close();
+            await APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
         }
 
         private void OnCameraScreenShot(Texture renderTexture) {
@@ -129,8 +132,7 @@ namespace Puff.Ctrl
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
             PuffTextMsgPage puffMsgPage = puffMessageModal.GetPage<PuffTextMsgPage>();
 
-            if (renderTexture != null)
-                puffMsgPage.cameraModule.AssignRawImage(renderTexture);
+            puffMsgPage.cameraModule.AssignRawImage(renderTexture);
         }
         #endregion
 

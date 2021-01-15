@@ -71,7 +71,7 @@ public class TextureUtility
         return renderer;
     }
 
-    private Texture2D TextureToTexture2D(Texture texture)
+    public static Texture2D TextureToTexture2D(Texture texture)
     {
         Texture2D texture2D = new Texture2D(texture.width, texture.height, TextureFormat.RGBA32, false);
         RenderTexture currentRT = RenderTexture.active;

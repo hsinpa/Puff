@@ -67,8 +67,7 @@ namespace Puff.View {
         }
 
         public void InsertNewComments(JsonTypes.PuffCommentType comment) {
-            GameObject commentObject = UtilityMethod.CreateObjectToParent(commentsHolder, commentItemPrefab.gameObject);
-            PuffMsgCommentItem commentItem = commentObject.GetComponent<PuffMsgCommentItem>();
+            PuffMsgCommentItem commentItem = UtilityMethod.CreateObjectToParent<PuffMsgCommentItem>(commentsHolder, commentItemPrefab.gameObject);
 
             commentItem.name = comment._id;
             commentItem.SetComment(comment);

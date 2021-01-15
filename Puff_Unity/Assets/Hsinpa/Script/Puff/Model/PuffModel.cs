@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
+using SimpleJSON;
 
 namespace Puff.Model
 {
@@ -33,7 +34,6 @@ namespace Puff.Model
             List<JsonTypes.PuffMessageType> puffArray = new List<JsonTypes.PuffMessageType>();
 
             if (rawPuffMsgData.isSuccess) {
-                //Debug.Log(rawPuffMsgData.body);
 
                 puffArray = JsonHelper.FromJson<JsonTypes.PuffMessageType>(rawPuffMsgData.body).ToList();
 
@@ -47,6 +47,46 @@ namespace Puff.Model
             APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffComment), 
                                                                                 BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(commentType));
             return rawPuffMsgData;
+        }
+
+        public async Task<List<string>> UploadTextureToIMGBB(List<byte[]> texBytes) {
+            int taskCount = texBytes.Count;
+            Task<string>[] waitingTask = new Task<string>[taskCount];
+
+            for (int i = 0; i < taskCount; i++) {
+                waitingTask[i] = APIHttpRequest.CurlIMGBB(texBytes[i]);
+            }
+
+            var imgbbResults =  await Task.WhenAll(waitingTask);
+
+            return ParseIMGBBData(imgbbResults);
+        }
+
+        private List<string> ParseIMGBBData(string[] imgbbResults) {
+
+            List<string> results = new List<string>();
+
+            try
+            {
+                for (int i = 0; i < imgbbResults.Length; i++)
+                {
+
+                    Debug.Log(imgbbResults[i]);
+
+                    JSONNode json = JSONNode.Parse(imgbbResults[i]);
+
+                    bool success = json["success"].AsBool;
+
+                    if (success)
+                        results.Add(json["data"]["url"]);
+                }
+            }
+            catch {
+                Debug.LogError("ParseIMGBBData Error");
+            }
+
+
+            return results;
         }
 
         public bool UpdateMessageComments(string msg_id, JsonTypes.PuffCommentType commentType) {

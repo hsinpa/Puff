@@ -42,8 +42,12 @@ public class GeneralFlag
         public const string AuthLogin = "auth_login";
     }
 
+    public class IMGBB {
+        public const string API_KEY = "6c02340a0965edd308b94dc05669f294";
+    }
+
     public static string GetFullAPIUri(string apiUrl)
     {
-        return Domain.GoogleServer + apiUrl;
+        return Domain.LocalHost + apiUrl;
     }
 }

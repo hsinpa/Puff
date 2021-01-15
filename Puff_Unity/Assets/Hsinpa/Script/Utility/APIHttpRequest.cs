@@ -41,6 +41,32 @@ namespace Hsinpa.Utility {
             return _httpResult;
         }
 
+        public static async Task<string> CurlIMGBB(byte[] texBytes) {
+            string url = "https://api.imgbb.com/1/upload";
+            var request = new HTTPRequest(new System.Uri(url), HTTPMethods.Post);
+
+            request.AddBinaryData("image", texBytes);
+            request.AddField("key", GeneralFlag.IMGBB.API_KEY);
+
+            request.IsKeepAlive = false;
+            request.DisableCache = true;
+
+            string returnText = "";
+            try
+            {
+                returnText = await request.GetAsStringAsync();
+            }
+            catch (System.Exception ex)
+            {
+                _httpResult.isSuccess = false;
+                Debug.LogException(ex);
+            }
+
+            request.Dispose();
+
+            return returnText;
+        }
+
         //public static IEnumerator NativeCurl(string url, string httpMethods, string rawJsonObject, System.Action<string> success_callback, System.Action fail_callback)
         //{
         //    using (UnityWebRequest webRequest = UnityWebRequest.Get(url))

@@ -74,4 +74,13 @@ public class JsonTypes {
         public int status;
         public string result;
     }
+
+    public struct IMGBBType {
+        public IMGBBDataType data;
+        public bool success;
+    }
+
+    public struct IMGBBDataType {
+        public string url;
+    }
 }
