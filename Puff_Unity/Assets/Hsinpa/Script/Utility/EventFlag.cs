@@ -10,6 +10,9 @@ public class EventFlag
         public const string OpenPuffMsg = "event@open_puff_msg";
         public const string OpenSendMsg = "event@open_send_msg";
 
+        public const string EnterCameraMode = "event@enter_camera_mode";
+        public const string ExitCameraMode = "event@exit_camera_mode";
+
         //Generally, want to enable/disable according to wheter we need it or not;
         public const string GameWorldUpdateEnable = "event@game_world_enable";
         public const string GameWorldUpdateDisable = "event@game_world_disable";

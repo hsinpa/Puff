@@ -81,7 +81,7 @@ namespace Puff.View
             privacyTabHolder.SetClickTab((int)Privacy.Public);
             durationTabHolder.SetClickTab((int)Duration.Date);
 
-            cameraModule.SetUp(OnCameraClick);
+            cameraModule.SetUp(maxImageCount : 3, OnCameraClick);
 
             this.submitBtn.onClick.RemoveAllListeners();
             this.submitBtn.onClick.AddListener(() => {

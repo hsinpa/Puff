@@ -26,8 +26,13 @@ namespace Hsinpa.Utility {
 		/// Clear every child gameobject
 		/// </summary>
 		/// <param name="parent"></param>
-		public static void ClearChildObject(Transform parent) {
-			foreach (Transform t in parent) {
+		public static void ClearChildObject(Transform parent, string execptionObj = "")
+		{
+			foreach (Transform t in parent)
+			{
+				if (execptionObj != null && t.name == execptionObj)
+					continue;
+
 				GameObject.Destroy(t.gameObject);
 			}
 		}

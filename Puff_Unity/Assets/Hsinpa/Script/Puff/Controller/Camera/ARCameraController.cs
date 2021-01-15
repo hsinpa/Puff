@@ -21,9 +21,12 @@ namespace Puff.Ctrl
         [SerializeField]
         private ARCameraBackground arCameraBG;
 
-        private DeviceOrientation _deviceOrientation;
+        [SerializeField]
+        private PuffHUDVIew _puffHUDView;
 
         private CommandBuffer commandBuffer;
+
+        public System.Action<Texture> OnScreenShotIsDone;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -37,9 +40,22 @@ namespace Puff.Ctrl
 
                 case EventFlag.Event.LoginSuccessful:
                     {
-
+                        _puffHUDView.EnableMode(PuffHUDVIew.HUDMode.Normal);
                     }
                     break;
+
+                case EventFlag.Event.EnterCameraMode:
+                    {
+                        _puffHUDView.EnableMode(PuffHUDVIew.HUDMode.Camera);
+                    }
+                    break;
+
+                case EventFlag.Event.ExitCameraMode:
+                    {
+                        _puffHUDView.EnableMode(PuffHUDVIew.HUDMode.Normal);
+                    }
+                    break;
+
             }
         }
 
@@ -47,7 +63,13 @@ namespace Puff.Ctrl
             commandBuffer = new CommandBuffer();
             commandBuffer.name = "AR Camera Background Blit Pass";
 
-            _deviceOrientation = Input.deviceOrientation;
+            _puffHUDView.SetCameraEvent(() =>
+            {
+                var render = TakeScreenShot();
+
+                if (OnScreenShotIsDone != null)
+                    OnScreenShotIsDone(render);
+            });
         }
 
         public Texture TakeScreenShot() {

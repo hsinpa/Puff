@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Hsinpa.View;
 
 namespace Puff.View
 {
@@ -14,8 +15,24 @@ namespace Puff.View
         [SerializeField]
         private Button SendMsgBtn;
 
+        [SerializeField]
+        private Button CameraTakePicBtn;
+
+        public enum HUDMode {Normal, Camera};
+
+        public void SetCameraEvent(System.Action SendMsgEvent) {
+            AssignBtnEvent(CameraTakePicBtn, SendMsgEvent);
+        }
+
         public void SetBottomHUD(System.Action SendMsgEvent) {
             AssignBtnEvent(SendMsgBtn, SendMsgEvent);
+        }
+
+        public void EnableMode(HUDMode p_mode) {
+            Modals.instance.CloseAll();
+
+            ButtonHUDView.gameObject.SetActive(p_mode == HUDMode.Normal);
+            CameraTakePicBtn.gameObject.SetActive(p_mode == HUDMode.Camera);
         }
 
         private void AssignBtnEvent(Button btn, System.Action SimpleEvent) {

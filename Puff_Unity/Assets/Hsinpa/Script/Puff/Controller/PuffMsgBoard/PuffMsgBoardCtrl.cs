@@ -56,6 +56,7 @@ namespace Puff.Ctrl
             this.puffMessageModal = Modals.instance.GetModal<PuffMessageModal>();
             this._accountModel = PuffApp.Instance.models.accountModel;
             this._puffModel = PuffApp.Instance.models.puffModel;
+            this._arCameraCtrl.OnScreenShotIsDone += OnCameraScreenShot;
 
             puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, () => OpenFrontPage(_currentPuffMsg));
         }
@@ -73,12 +74,13 @@ namespace Puff.Ctrl
 
             puffMsgPage.SetUp(_accountModel, OnCreatorMessageSubmitEvent, () => {
 
-                var screenshot = _arCameraCtrl.TakeScreenShot();
+                //var screenshot = _arCameraCtrl.TakeScreenShot();
 
-                if (screenshot != null)
-                    puffMsgPage.cameraModule.AssignRawImage(screenshot);
+                //if (screenshot != null)
+                //    puffMsgPage.cameraModule.AssignRawImage(screenshot);
+
+                PuffApp.Instance.Notify(EventFlag.Event.EnterCameraMode);
             });
-
         }
 
         private void OpenFrontPage(JsonTypes.PuffMessageType puffMessageType) {
@@ -119,6 +121,16 @@ namespace Puff.Ctrl
             _ = APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
 
             Modals.instance.Close();
+        }
+
+        private void OnCameraScreenShot(Texture renderTexture) {
+            PuffApp.Instance.Notify(EventFlag.Event.ExitCameraMode);
+
+            PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
+            PuffTextMsgPage puffMsgPage = puffMessageModal.GetPage<PuffTextMsgPage>();
+
+            if (renderTexture != null)
+                puffMsgPage.cameraModule.AssignRawImage(renderTexture);
         }
         #endregion
 
