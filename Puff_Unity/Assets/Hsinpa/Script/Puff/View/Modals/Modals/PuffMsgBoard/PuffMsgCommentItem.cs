@@ -20,7 +20,7 @@ namespace Puff.View
         public void SetComment(JsonTypes.PuffCommentType commentType) {
             this.commentAuthor.text = commentType.author;
             this.commentContent.text = commentType.body;
-            this.createTime.text = commentType.date;
+            this.createTime.text = commentType.parseDate.ToString("MM/dd/yyyy");
         }
 
     }

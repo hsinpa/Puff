@@ -40,6 +40,18 @@ namespace Puff.Ctrl {
                         SetUp();
                 }
                 break;
+
+                case EventFlag.Event.EnterCameraMode:
+                {
+                        ShowInspectorUI(false);
+                }
+                break;
+
+                case EventFlag.Event.ExitCameraMode:
+                {
+                        ShowInspectorUI(true);
+                }
+                break;
             }
         }
 
@@ -111,6 +123,12 @@ namespace Puff.Ctrl {
             }
 
             Debug.Log("Released");
+        }
+
+        private void ShowInspectorUI(bool isShow) {
+            puffInspectView.Show(isShow);
+            if (SelectedPuffObject != null)
+                SelectedPuffObject.gameObject.SetActive(isShow);
         }
     }
 }

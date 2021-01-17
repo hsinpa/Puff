@@ -28,8 +28,6 @@ namespace Puff.View
 
             tabButtons = tabHolder.GetComponentsInChildren<PuffMsgTabBtn>(includeInactive:true);
 
-            Debug.Log(tabButtons.Length);
-
             foreach (var t in tabButtons)
             {
                 t.puffButton.onClick.RemoveAllListeners();
