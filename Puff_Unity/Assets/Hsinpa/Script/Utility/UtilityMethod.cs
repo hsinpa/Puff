@@ -160,6 +160,18 @@ namespace Hsinpa.Utility {
 			return default_value;
 		}
 
+		public static Dictionary<string, T> SaveFromDict<T>(Dictionary<string, T> dict, string key, T default_value)
+		{
+			if (dict.ContainsKey(key))
+			{
+				dict[key] = default_value;
+			}
+
+			dict.Add(key, default_value);
+
+			return dict;
+		}
+
 		public static async Task DoDelayWork(float p_delay, System.Action p_action)
 		{
 			await Task.Delay(System.TimeSpan.FromSeconds(p_delay));

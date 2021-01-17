@@ -1,6 +1,7 @@
 ﻿using Hsinpa.Utility;
 using Hsinpa.View;
 using LitJson;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,19 +30,41 @@ namespace Puff.View {
         private Button _ReplyBtn;
         private Button ReplyBtn => _ReplyBtn;
 
+        [Header("Comment")]
         [SerializeField]
         private RectTransform commentsHolder;
 
         [SerializeField]
         private PuffMsgCommentItem commentItemPrefab;
 
+        [Header("Thumb Photo")]
+        [SerializeField]
+        private RectTransform thumbHolder;
+
+        [SerializeField]
+        private PuffMsgThumbItem thumbItemPrefab;
+
+        [SerializeField]
+        private Material cropMat;
+
+        private List<PuffMsgThumbItem> cacheThumbItems = new List<PuffMsgThumbItem>();
+
+        private List<RenderTexture> cacheThumbs = new List<RenderTexture>();
+        private int thumbSize = 256;
+
+        public override void SetUp() {
+            PrepareCacheTexture(maxThumb: 4);
+        }
+
         public void SetContent(JsonTypes.PuffMessageType puffMsgType, System.Action<string> ReplyBtnEvent) {
-            title.text = puffMsgType.author;
+            title.text = puffMsgType.title;
             author.text = puffMsgType.author;
             create_date.text = puffMsgType.parseDate.ToString("MM/dd/yyyy hh:mm tt");
             Description.text = puffMsgType.body;
 
             _ReplyInputfield.text = "";
+
+            CleanThumbnails();
 
             _ReplyBtn.onClick.RemoveAllListeners();
             _ReplyBtn.onClick.AddListener(() => {
@@ -51,6 +74,9 @@ namespace Puff.View {
 
             if (puffMsgType.comments != null)
                 GenerateComments(puffMsgType.comments);
+
+            if (puffMsgType.images != null)
+                GenerateThumbnails(puffMsgType.images);
         }
 
         private void GenerateComments(List<JsonTypes.PuffCommentType> commentList) {
@@ -79,6 +105,62 @@ namespace Puff.View {
             if (enable) {
                 _ReplyInputfield.text = "";
             }
+        }
+
+        private void GenerateThumbnails(List<string> urls) {
+            int urlCount = urls.Count;
+            int maxCount = cacheThumbItems.Count;
+
+
+            for (int i = 0; i < urlCount; i++) {
+                if (i < maxCount && !string.IsNullOrEmpty(urls[i])) {
+                    GenerateThumbnail(cacheThumbItems[i], i, urls[i]);
+                }
+            }
+        }
+
+        private void GenerateThumbnail(PuffMsgThumbItem item, int index, string url)
+        {
+            TextureUtility.GetTexture(url, (Texture2D texture) => {
+                item.gameObject.SetActive(true);
+
+                TextureUtility.TextureStructure textureStructure = TextureUtility.GrabTextureRadius(texture.width, texture.height, 1);
+                Texture cropThumbnail = TextureUtility.RotateAndScaleImage(texture, cacheThumbs[index], cropMat, textureStructure, 0);
+
+                item.SetThumbnail(cropThumbnail, url);
+            });
+        }
+
+        private void CleanThumbnails() {
+            foreach (Transform t in thumbHolder.transform) {
+                t.gameObject.SetActive(false);
+            }
+        }
+
+        private void PrepareCacheTexture(int maxThumb)
+        {
+            for (int i = 0; i < maxThumb; i++) {
+                cacheThumbs.Add(
+                    TextureUtility.GetRenderTexture(thumbSize)
+                );
+
+                PuffMsgThumbItem thumbItem = UtilityMethod.CreateObjectToParent<PuffMsgThumbItem>(thumbHolder, thumbItemPrefab.gameObject);
+
+                thumbItem.SetUp(OnThumbnailClick);
+                thumbItem.gameObject.SetActive(false);
+                cacheThumbItems.Add(thumbItem);
+            }
+        }
+
+        private void OnThumbnailClick(PuffMsgThumbItem p_item) {
+            GalleryModal gallery = Modals.instance.OpenModal<GalleryModal>();
+
+            TextureUtility.GetTexture(p_item.texture_id, (Texture2D t) => {
+                gallery.SetUp(new List<Texture>() { t }, () => {
+                    Modals.instance.Close();
+                    Modals.instance.OpenModal<PuffMessageModal>(); 
+                });
+            });
         }
     }
 }

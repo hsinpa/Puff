@@ -27,6 +27,9 @@ namespace Puff.View {
         {
             base.Start();
             this.pages = GetComponentsInChildren<PuffMsgInnerPage>(includeInactive: true);
+
+            foreach (var page in pages)
+                page.SetUp();
         }
 
 

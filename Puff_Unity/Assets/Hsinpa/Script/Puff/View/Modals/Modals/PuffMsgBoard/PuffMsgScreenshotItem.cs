@@ -17,6 +17,8 @@ namespace Puff.View
         [SerializeField]
         private RawImage image;
 
+        public Texture rawTexture => image.texture;
+
         public void SetUp(Texture p_texture, System.Action<PuffMsgScreenshotItem> OnImageClick, System.Action<PuffMsgScreenshotItem> OnCloseBtnClick) {
 
             if (p_texture != null)

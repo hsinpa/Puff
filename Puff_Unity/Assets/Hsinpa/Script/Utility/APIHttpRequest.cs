@@ -67,6 +67,18 @@ namespace Hsinpa.Utility {
             return returnText;
         }
 
+
+        public static void CurlTexture(string url, System.Action<Texture2D> callback) {            
+            new HTTPRequest(new System.Uri(url), (request, response) =>
+            {
+                var tex = new Texture2D(0, 0);
+                tex.LoadImage(response.Data);
+
+                if (callback != null)
+                    callback(tex);
+            }).Send();
+        }
+
         //public static IEnumerator NativeCurl(string url, string httpMethods, string rawJsonObject, System.Action<string> success_callback, System.Action fail_callback)
         //{
         //    using (UnityWebRequest webRequest = UnityWebRequest.Get(url))

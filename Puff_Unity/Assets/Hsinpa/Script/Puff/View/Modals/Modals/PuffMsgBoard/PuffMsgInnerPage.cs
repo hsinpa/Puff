@@ -9,5 +9,9 @@ namespace Puff.View
         public void Show(bool isDisplay) {
             this.gameObject.SetActive(isDisplay);
         }
+
+        public virtual void SetUp() { 
+        
+        }
     }
 }

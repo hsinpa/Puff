@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using Hsinpa.Utility;
 using System.Linq;
 using Puff.Ctrl.Utility;
+using System.Runtime.CompilerServices;
 
 namespace Puff.View
 {
@@ -29,6 +30,9 @@ namespace Puff.View
         private PuffMsgCameraModule _cameraModule;
         public PuffMsgCameraModule cameraModule => _cameraModule;
 
+        [SerializeField]
+        private PuffMsgSliderModule sliderModule;
+
         [Header("Tab")]
         [SerializeField]
         private PuffMsgTabModule typeTabHolder;
@@ -43,6 +47,7 @@ namespace Puff.View
         public enum Tabs { Story, Review, Event, Survey, Privacy};
         public enum Privacy { Public, Friend, Private };
         public enum Duration { Date, Week, Month };
+        public enum Distance { Near = 0, Medium, Far, World};
 
         private ColorItemSObj colorSetting;
         private AccountModel accountModel;
@@ -51,8 +56,7 @@ namespace Puff.View
         public delegate void OnPuffMsgSend(JsonTypes.PuffMessageType content, List<byte[]> bytes);
         private OnPuffMsgSend OnPuffMsgSendCallback;
 
-
-        private void Start()
+        public override void SetUp()
         {
             colorSetting = PuffApp.Instance.models.colorSetting;       
 
@@ -64,6 +68,8 @@ namespace Puff.View
             privacyTabHolder.SetUp(colorSetting, null);
             durationTabHolder.SetUp(colorSetting, null);
 
+            sliderModule.SetSlider(0, 0, 3, true, OnDistanceSliderChange);
+
             buttonModule.SetUp(new System.Action[] {
 
                 () => {
@@ -72,7 +78,7 @@ namespace Puff.View
             });
         }
 
-        public void SetUp(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent, System.Action OnCameraClick) {
+        public void SetContent(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent, System.Action OnCameraClick) {
             this.accountModel = accountModel;
             this.OnPuffMsgSendCallback = onPuffMsgSendEvent;
 
@@ -121,6 +127,7 @@ namespace Puff.View
             privacyTabHolder.gameObject.SetActive(!enable);
             durationTabHolder.gameObject.SetActive(!enable);
             buttonModule.gameObject.SetActive(!enable);
+            sliderModule.gameObject.SetActive(!enable);
 
             _cameraModule.gameObject.SetActive(false);
         }
@@ -153,7 +160,7 @@ namespace Puff.View
                     typeTabHolder.CurrentIndex,
                     privacyTabHolder.CurrentIndex,
                     durationTabHolder.CurrentIndex,
-                    10
+                    (int)sliderModule.sliderValue
                 );
 
                 this.OnPuffMsgSendCallback(puffMsgType, allImageBytes);
@@ -163,6 +170,22 @@ namespace Puff.View
             }
 
             SetPrivacyLayout();
+        }
+
+        private void OnDistanceSliderChange(float p_index) {
+            int index = (int)p_index;
+
+            Dictionary<int, string> distTable = new Dictionary<int, string>()
+            {
+                { (int)Distance.Near, string.Format(StringTextAsset.Messaging.DistanceNear, 100) },
+                { (int)Distance.Medium, string.Format(StringTextAsset.Messaging.DistanceMedium, 1) },
+                { (int)Distance.Far, string.Format(StringTextAsset.Messaging.DistanceFar, 10) },
+                { (int)Distance.World, string.Format(StringTextAsset.Messaging.DistanceWorld) }
+            };
+
+            if (distTable.TryGetValue(index, out string text)) {
+                sliderModule.SetSliderField(text);   
+            }
         }
        
         private void CleanContent()
@@ -176,6 +199,7 @@ namespace Puff.View
             privacyTabHolder.gameObject.SetActive(false);
             durationTabHolder.gameObject.SetActive(false);
             buttonModule.gameObject.SetActive(false);
+            OnDistanceSliderChange(0);
 
             _cameraModule.CleanUp();
         }

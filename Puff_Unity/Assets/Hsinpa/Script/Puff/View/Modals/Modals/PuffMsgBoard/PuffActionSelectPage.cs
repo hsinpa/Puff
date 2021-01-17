@@ -15,7 +15,7 @@ namespace Puff.View
 
         [SerializeField]
         private Button BackBtn;
-    
+
         public void SetUp(System.Action textBtnEvent, System.Action imageBtnEvent, System.Action backBtnEvent)
         {
             TextBtn.onClick.AddListener(() => textBtnEvent());

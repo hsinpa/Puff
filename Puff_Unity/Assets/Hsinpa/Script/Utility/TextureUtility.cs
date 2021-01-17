@@ -1,16 +1,17 @@
-﻿using System.Collections;
+﻿using Hsinpa.Utility;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class TextureUtility
 {
-    Dictionary<string, Texture> textureDict = new Dictionary<string, Texture>();
+    private static Dictionary<string, Texture2D> textureDict = new Dictionary<string, Texture2D>();
 
-    TextureStructure _textureStructure = new TextureStructure();
+    private static TextureStructure _textureStructure = new TextureStructure();
 
     private const float degreeToRadian = Mathf.PI / 180;
 
-    public TextureStructure GrabTextureRadius(int p_width, int p_height, float ratio)
+    public static TextureStructure GrabTextureRadius(int p_width, int p_height, float ratio)
     {
         int criteria = (p_width > p_height) ? p_height : p_width;
         int radius = (int)((criteria * ratio) / 2f);
@@ -46,13 +47,13 @@ public class TextureUtility
 
     public static RenderTexture GetRenderTexture(int size)
     {
-        return GetRenderTexture(size, size, depth:0);
+        return GetRenderTexture(size, size, depth: 0);
     }
 
     public static RenderTexture GetRenderTexture(int width, int height, int depth)
     {
         var rt = new RenderTexture(width, height, depth, RenderTextureFormat.ARGB32);
-        
+
         rt.Create();
         return rt;
     }
@@ -85,7 +86,31 @@ public class TextureUtility
         RenderTexture.active = currentRT;
         RenderTexture.ReleaseTemporary(renderTexture);
 
+        
         return texture2D;
+    }
+
+    public static void GetTexture(string url, System.Action<Texture2D> callback) {
+
+        if (textureDict.TryGetValue(url, out Texture2D cacheTexture)) {
+
+            callback(cacheTexture);
+            
+            return;
+        }
+
+
+        APIHttpRequest.CurlTexture(url, (Texture2D p_texture) => {
+            if (p_texture != null) {
+                textureDict = UtilityMethod.SaveFromDict<Texture2D>(textureDict, url, p_texture);
+
+                callback(p_texture);
+            }
+        });        
+    }
+
+    public static void CleanCacheTexture() { 
+        
     }
 
     public struct RaycastResult

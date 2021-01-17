@@ -26,7 +26,9 @@ namespace Puff.View
             this._tabActionDictTable = tabActionDictTable;
             this.colorSetting = colorSetting;
 
-            tabButtons = tabHolder.GetComponentsInChildren<PuffMsgTabBtn>();
+            tabButtons = tabHolder.GetComponentsInChildren<PuffMsgTabBtn>(includeInactive:true);
+
+            Debug.Log(tabButtons.Length);
 
             foreach (var t in tabButtons)
             {

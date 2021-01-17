@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using Hsinpa.Utility;
+using Hsinpa.View;
 
 namespace Puff.View
 {
@@ -66,7 +67,12 @@ namespace Puff.View
         }
 
         private void OnImageItemClick(PuffMsgScreenshotItem p_item) {
-            int index = p_item.transform.GetSiblingIndex();
+            GalleryModal gallery = Modals.instance.OpenModal<GalleryModal>();
+
+            gallery.SetUp(new List<Texture>() { p_item.rawTexture }, () => {
+                Modals.instance.Close();
+                Modals.instance.OpenModal<PuffMessageModal>();
+            });
         }
 
         private void OnImageItemRemove(PuffMsgScreenshotItem p_item) {

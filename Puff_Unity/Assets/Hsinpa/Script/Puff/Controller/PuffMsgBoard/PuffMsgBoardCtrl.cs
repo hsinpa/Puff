@@ -59,7 +59,7 @@ namespace Puff.Ctrl
             this._puffModel = PuffApp.Instance.models.puffModel;
             this._arCameraCtrl.OnScreenShotIsDone += OnCameraScreenShot;
 
-            puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, () => OpenFrontPage(_currentPuffMsg));
+            //puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, () => OpenFrontPage(_currentPuffMsg));
         }
 
         #region UI Event
@@ -73,7 +73,7 @@ namespace Puff.Ctrl
             PuffMessageModal puffMessageModal = Modals.instance.OpenModal<PuffMessageModal>();
             PuffTextMsgPage puffMsgPage = puffMessageModal.OpenPage<PuffTextMsgPage>();
 
-            puffMsgPage.SetUp(_accountModel, OnCreatorMessageSubmitEvent, () => {
+            puffMsgPage.SetContent(_accountModel, OnCreatorMessageSubmitEvent, () => {
 
                 //var screenshot = _arCameraCtrl.TakeScreenShot();
 

@@ -29,5 +29,9 @@ public class StringTextAsset
         public const string DurationText = "Until {0}";
         public const string CameraIndicator = "{0}/{1}";
 
+        public const string DistanceNear = "Near({0}M)";
+        public const string DistanceMedium = "Medium({0}KM)";
+        public const string DistanceFar = "Far({0}KM)";
+        public const string DistanceWorld = "World";
     }
 }
