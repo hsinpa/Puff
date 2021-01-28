@@ -1,9 +1,11 @@
 import * as moogoose from 'mongoose';
 import PuffSchema from './Schema/PuffSchema';
 import AccountSchema from './Schema/AccountSchema';
+import FriendSchema from './Schema/FriendSchema';
 
-import PuffModel from './Model/PuffModel';
 import AccountModel from './Model/AccountModel';
+import PuffModel from './Model/PuffModel';
+import FriendModel from './Model/FriendModel';
 
 class MongoDB {
     private config = {};
@@ -12,9 +14,11 @@ class MongoDB {
 
     private puffSchema : typeof moogoose.Model;
     private accountSchema : typeof moogoose.Model;
+    private friendSchema : typeof moogoose.Model;
 
     puffModel : PuffModel;
     accountModel : AccountModel;
+    friendModel : FriendModel;
 
     constructor(env : NodeJS.ProcessEnv, callback :  (db : MongoDB )=> void) {
         this.config = {
@@ -36,13 +40,15 @@ class MongoDB {
     }
 
     RegisterAllSchema() {
-        this.puffSchema = this.moogoseDB.model("puff_record", PuffSchema);
-        this.accountSchema = this.moogoseDB.model("puff_account", AccountSchema);
+        this.puffSchema = this.moogoseDB.model("puff_records", PuffSchema);
+        this.accountSchema = this.moogoseDB.model("puff_accounts", AccountSchema);
+        this.friendSchema = this.moogoseDB.model("puff_friends", FriendSchema);
     }
 
     RegisterAllModel() {
         this.accountModel = new AccountModel(this.accountSchema);
         this.puffModel = new PuffModel(this.puffSchema);
+        this.friendModel = new FriendModel(this.accountSchema, this.friendSchema);
     }
 
 }

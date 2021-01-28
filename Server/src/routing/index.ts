@@ -2,6 +2,8 @@
 import * as path from 'path';
 import * as Router from 'koa-router';
 import MongoDB from '../service/MongoDB';
+import {FriendRouter} from './FriendRouter';
+
 import {PuffMessageType, ClientSignLogType} from '../Utility/Flag/TypeFlag';
 import bodyParser = require('koa-bodyparser');
 
@@ -72,5 +74,10 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     ctx.body = result;
   });
 
+  router.get('/friends/:account_id', async function (ctx:any, next:any) {
+    let r = await mongodb.friendModel.GetFriends(ctx.params.account_id);
+    ctx.body = r;
+  });
+  //FriendRouter(router, mongodb);
 
 }
