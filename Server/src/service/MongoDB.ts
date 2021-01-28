@@ -48,7 +48,7 @@ class MongoDB {
     RegisterAllModel() {
         this.accountModel = new AccountModel(this.accountSchema);
         this.puffModel = new PuffModel(this.puffSchema);
-        this.friendModel = new FriendModel(this.accountSchema, this.friendSchema);
+        this.friendModel = new FriendModel(this.accountModel, this.accountSchema, this.friendSchema);
     }
 
 }

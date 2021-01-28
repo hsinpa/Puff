@@ -1,15 +1,4 @@
 
-export interface UserComponentType {
-    socket_id : string
-    name : string,
-    user_id : string,
-    room_id : string,
-    connection : boolean,
-    
-    //Only teacher might have this value
-    mobilephone? : number,
-}
-
 export interface ClientSignLogType { 
     password : string,
     username : string,
@@ -56,4 +45,15 @@ export interface DatabaseResultType {
 
 export enum Duration {
     Day = 0, Week, Month
+}
+
+export enum FriendStatus {
+    Friend = 0,
+    Pending, Block
+}
+
+export interface FriendComponentType {
+    requester: string,
+    recipient: string,
+    status: number
 }

@@ -27,5 +27,9 @@ export const DatabaseErrorType = {
         Fail_Login_NoAccount : 1,
         Fail_SignUp_DuplicateAccount : 2,
         Fail_AuthLogin_NotValid : 3
+    },
+
+    Friend : {
+        Fail_WhatEverTheReason : 1
     }
 }

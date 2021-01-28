@@ -68,7 +68,7 @@ class AccountModel {
     }
 
     async SignUp(dataset : ClientSignLogType) {
-        let isUnique = await this.IsAccountExist(dataset.email);
+        let isUnique = await this.IsAccountNoExist(dataset.email);
         let returnType  : DatabaseResultType = {
             status : DatabaseErrorType.Normal,
             result : {}
@@ -88,7 +88,7 @@ class AccountModel {
         return returnType;
     }
 
-    async IsAccountExist(p_email : string) : Promise<boolean>  {
+    async IsAccountNoExist(p_email : string) : Promise<boolean>  {
         let r = await this.accountSchema.find({
             email : p_email
         }).

@@ -74,10 +74,7 @@ module.exports =  (router : Router, mongodb:MongoDB) => {
     ctx.body = result;
   });
 
-  router.get('/friends/:account_id', async function (ctx:any, next:any) {
-    let r = await mongodb.friendModel.GetFriends(ctx.params.account_id);
-    ctx.body = r;
-  });
-  //FriendRouter(router, mongodb);
+
+  FriendRouter(router, mongodb);
 
 }

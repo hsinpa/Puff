@@ -9,11 +9,13 @@ export let FriendRouter = function (router : Router, mongodb:MongoDB) {
     router.get('/friends/:account_id', async function (ctx:any, next:any) {
         let r = await mongodb.friendModel.GetFriends(ctx.params.account_id);
         
-        ctx.body = "dfdf";
+        ctx.body = r;
     });
 
-    router.post('/friends/request_friend/', async function (ctx:any, next:any) {
-        await ctx.render('index', {title: "HSINPA"});
+    router.post('/friends/request_friend', async function (ctx:any, next:any) {
+        let r = await mongodb.friendModel.RequestFriend(ctx.request.body.account_id, ctx.request.body.target_id ,ctx.request.body.auth_key);
+
+        ctx.body = r;
     });
 
     router.post('/friends/response_friend/', async function (ctx:any, next:any) {
