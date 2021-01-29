@@ -3,6 +3,7 @@ import * as moogoose from 'mongoose';
 import {DatabaseErrorType, UniversalParameter } from '../../Utility/Flag/EventFlag';
 import {ClientSignLogType, DatabaseResultType, AccountType } from '../../Utility/Flag/TypeFlag';
 import {SHA256Hash, GenerateRandomString, GetDate } from '../../Utility/GeneralMethod';
+import {FriendQuery} from './Query/AccountQuery';
 
 class AccountModel {
 
@@ -68,7 +69,7 @@ class AccountModel {
     }
 
     async SignUp(dataset : ClientSignLogType) {
-        let isUnique = await this.IsAccountNoExist(dataset.email);
+        let isUnique = await this.IsEmailNoExist(dataset.email);
         let returnType  : DatabaseResultType = {
             status : DatabaseErrorType.Normal,
             result : {}
@@ -88,7 +89,7 @@ class AccountModel {
         return returnType;
     }
 
-    async IsAccountNoExist(p_email : string) : Promise<boolean>  {
+    async IsEmailNoExist(p_email : string) : Promise<boolean>  {
         let r = await this.accountSchema.find({
             email : p_email
         }).
@@ -97,6 +98,13 @@ class AccountModel {
 
         return r.length <= 0;
     }
+
+    async IsAccountExist(account_id : string) : Promise<boolean>  {
+        let r = await this.accountSchema.findById(account_id).exec();
+
+        return r != null;
+    }
+
 
     async GetUserInfo(p_email : string, p_password : string) {
         let hashPassword = SHA256Hash(p_password + this.password_key);
@@ -122,6 +130,17 @@ class AccountModel {
         exec();
 
         return r;
+    }
+
+    async GetFriendInfo(p_id : string) {
+        return await FriendQuery(this.accountSchema, p_id).exec();
+    }
+
+    async InsertFriendInfo(p_id : string, friend_id : string) {
+        let puffObject = await this.accountSchema.findById(p_id);
+
+        puffObject.friends.push(friend_id);
+        return await puffObject.save();
     }
 
 }

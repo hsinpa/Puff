@@ -7,6 +7,8 @@ import AccountModel from './Model/AccountModel';
 import PuffModel from './Model/PuffModel';
 import FriendModel from './Model/FriendModel';
 
+import {DatabaseTableName} from '../Utility/Flag/EventFlag'
+
 class MongoDB {
     private config = {};
     private dburi : string;
@@ -40,9 +42,9 @@ class MongoDB {
     }
 
     RegisterAllSchema() {
-        this.puffSchema = this.moogoseDB.model("puff_records", PuffSchema);
-        this.accountSchema = this.moogoseDB.model("puff_accounts", AccountSchema);
-        this.friendSchema = this.moogoseDB.model("puff_friends", FriendSchema);
+        this.puffSchema = this.moogoseDB.model(DatabaseTableName.Message, PuffSchema);
+        this.accountSchema = this.moogoseDB.model(DatabaseTableName.Account, AccountSchema);
+        this.friendSchema = this.moogoseDB.model(DatabaseTableName.Friend, FriendSchema);
     }
 
     RegisterAllModel() {

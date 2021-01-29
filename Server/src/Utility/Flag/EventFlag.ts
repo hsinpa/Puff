@@ -20,6 +20,12 @@ export const UniversalSocketEvent = {
 
 }
 
+export const DatabaseTableName = {
+    Account : "puff_accounts",
+    Message : "puff_records",
+    Friend : "puff_friends"
+}
+
 export const DatabaseErrorType = {
     Normal : 0,
 

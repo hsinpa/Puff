@@ -49,11 +49,11 @@ export enum Duration {
 
 export enum FriendStatus {
     Friend = 0,
-    Pending, Block
+    Invite, Receive, Block
 }
 
 export interface FriendComponentType {
-    requester: string,
+    account: string,
     recipient: string,
     status: number
 }
