@@ -8,27 +8,33 @@ class FriendModel {
     private friendSchema : typeof moogoose.Model;
     private accountModel : AccountModel;
 
+    private errorMessage : any;
+
     constructor(accountModel : AccountModel, accountSchema : typeof moogoose.Model, friendSchema : typeof moogoose.Model) {
         this.accountModel = accountModel;
         this.accountSchema = accountSchema;
         this.friendSchema = friendSchema;
+        this.errorMessage = {status : DatabaseErrorType.Friend.Fail_WhatEverTheReason};
     }
 
     async GetFriends(account_id : string) : Promise<any> {
         if (!moogoose.isValidObjectId(account_id))
-            return null;
+            return this.errorMessage;
 
         let r = await this.accountModel.GetFriendInfo(account_id);
 
-        return r;
+        if (r.length > 0)
+            return r[0];
+
+        return this.errorMessage;
     }
 
     async RequestFriend(account_id : string, target_id : string, auth_key : string) : Promise<DatabaseResultType> {
         let targetValid = await this.accountModel.IsAccountExist(target_id);
-        let userInfo = await this.accountModel.GetUserInfoWithAuth(account_id, auth_key);
+        let isUserAuthValid = await this.accountModel.IsUserValidWithAuth(account_id, auth_key);
         let relationExist = await this.IsRelationExist(account_id, target_id);
 
-        if (userInfo != null && targetValid && !relationExist) {
+        if (isUserAuthValid != null && targetValid && !relationExist) {
             let friendRequest : FriendComponentType = {
                 account : account_id,
                 recipient : target_id,
@@ -53,7 +59,12 @@ class FriendModel {
         return { status : DatabaseErrorType.Friend.Fail_WhatEverTheReason };
     }
 
-    async AcceptFriend(account_id : string, target_id : string) {
+    async AcceptFriend(account_id : string, target_id : string, auth_key : string) : Promise<DatabaseResultType> {
+        let isUserAuthValid = await this.accountModel.IsUserValidWithAuth(account_id, auth_key);
+
+        if (!isUserAuthValid)
+            return { status : DatabaseErrorType.Friend.Fail_WhatEverTheReason };
+
         let r = await this.FindFColumnWithBothID(account_id, target_id);
         let rLength = r.length;
 
@@ -61,15 +72,30 @@ class FriendModel {
             r[i].status = DatabaseErrorType.Normal;
             r[i].save();
         }
+        return { status : DatabaseErrorType.Normal };
     }
 
-    async DenyFriend() {
+    async RejectFriend(account_id : string, target_id : string, auth_key : string) {
+        let isUserAuthValid = await this.accountModel.IsUserValidWithAuth(account_id, auth_key);
 
-    }
+        if (!isUserAuthValid)
+            return { status : DatabaseErrorType.Friend.Fail_WhatEverTheReason };
+        
+        let r = await this.FindFColumnWithBothID(account_id, target_id);
+        let rLength = r.length;
+    
+        //Remove friend from account array
+        for(let i = 0; i < rLength; i++) {
+            this.accountModel.RemoveFriend(r[i].account, r[i]._id);
+            this.accountModel.RemoveFriend(r[i].recipient, r[i]._id);
+        }
 
-    private async FindFColumnWithAccountID(account_id : string, target_id : string) {
-        return await this.friendSchema.findOne({'account':account_id, 'recipient' : target_id}).
-        exec();
+        this.friendSchema.deleteMany({
+            $or:[ {'account':account_id , 'recipient':target_id},
+            {'account':target_id , 'recipient':account_id}] 
+        }).exec();
+
+        return { status : DatabaseErrorType.Normal };
     }
 
     private async FindFColumnWithBothID(account_id : string, target_id : string) {

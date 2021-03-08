@@ -14,6 +14,56 @@ class AccountModel {
         this.accountSchema = schema;
     }
 
+//#region Utility Functions
+async IsEmailNoExist(p_email : string) : Promise<boolean>  {
+    let r = await this.accountSchema.find({
+        email : p_email
+    }).
+    select({ name: 1 }).
+    exec();
+
+    return r.length <= 0;
+}
+
+async IsAccountExist(account_id : string) : Promise<boolean>  {
+    let r = await this.accountSchema.findById(account_id).exec();
+
+    return r != null;
+}
+
+
+async GetUserInfo(p_email : string, p_password : string) {
+    let hashPassword = SHA256Hash(p_password + this.password_key);
+    let r = await this.accountSchema.findOne({
+        email : p_email,
+        password : hashPassword
+    }).
+    select("username email _id auth_key auth_expire").
+    exec();
+
+    return r;
+}
+
+async IsUserValidWithAuth(p_id : string, p_auth : string) {
+    return (await this.GetUserInfoWithAuth(p_id, p_auth)) != null;
+}
+
+async GetUserInfoWithAuth(p_id : string, p_auth : string) {
+    if (!moogoose.isValidObjectId(p_id))
+        return null;
+
+    let r = await this.accountSchema.findOne({
+        _id : p_id,
+        auth_key : p_auth
+    }).
+    select("username email _id auth_key auth_expire").
+    exec();
+
+    return r;
+}
+//#endregion
+
+//#region Login SignUp
     async LoginWithAuthkey(account_id : string, auth_key : string) {
         let returnType  : DatabaseResultType = {
             status : DatabaseErrorType.Account.Fail_AuthLogin_NotValid,
@@ -88,60 +138,28 @@ class AccountModel {
 
         return returnType;
     }
+//#endregion
 
-    async IsEmailNoExist(p_email : string) : Promise<boolean>  {
-        let r = await this.accountSchema.find({
-            email : p_email
-        }).
-        select({ name: 1 }).
-        exec();
-
-        return r.length <= 0;
-    }
-
-    async IsAccountExist(account_id : string) : Promise<boolean>  {
-        let r = await this.accountSchema.findById(account_id).exec();
-
-        return r != null;
-    }
-
-
-    async GetUserInfo(p_email : string, p_password : string) {
-        let hashPassword = SHA256Hash(p_password + this.password_key);
-        let r = await this.accountSchema.findOne({
-            email : p_email,
-            password : hashPassword
-        }).
-        select("username email _id auth_key auth_expire").
-        exec();
-
-        return r;
-    }
-
-    async GetUserInfoWithAuth(p_id : string, p_auth : string) {
-        if (!moogoose.isValidObjectId(p_id))
-            return null;
-
-        let r = await this.accountSchema.findOne({
-            _id : p_id,
-            auth_key : p_auth
-        }).
-        select("username email _id auth_key auth_expire").
-        exec();
-
-        return r;
-    }
-
+//#region Friend Relate
     async GetFriendInfo(p_id : string) {
         return await FriendQuery(this.accountSchema, p_id).exec();
     }
 
-    async InsertFriendInfo(p_id : string, friend_id : string) {
+    async InsertFriendInfo(p_id : string, relation_id : string) {
         let puffObject = await this.accountSchema.findById(p_id);
 
-        puffObject.friends.push(friend_id);
+        puffObject.friends.push(relation_id);
         return await puffObject.save();
     }
+
+    async RemoveFriend(p_id : string, relation_id : string) {
+        let puffObject = await this.accountSchema.findById(p_id);
+        let ObjectRID =  moogoose.Types.ObjectId(relation_id);
+
+        puffObject.friends.pull(ObjectRID);
+        return await puffObject.save();
+    }
+//#endregion
 
 }
 

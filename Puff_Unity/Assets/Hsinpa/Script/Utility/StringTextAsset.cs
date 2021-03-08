@@ -24,6 +24,14 @@ public class StringTextAsset
         public const string InternetError = "Fail to establish connection to server; Please check internet visibility";
     }
 
+    public class Friend {
+        public const string FriendTitleCount = "Friends {0}";
+
+        public const string FriendBtnConfirm = "Accept";
+        public const string FriendBtnInvite = "Invite";
+        public const string FriendBtnReject = "Reject";
+        public const string FriendBtnPending = "Pending";
+    }
 
     public class Messaging {
         public const string DurationText = "Until {0}";

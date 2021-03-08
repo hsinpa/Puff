@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using UnityEngine;
 
-public class AccountModel : MonoBehaviour
+public class AccountModel
 {
     private JsonTypes.PuffAccountType _puffAccountType;
     public JsonTypes.PuffAccountType puffAccountType => _puffAccountType;

@@ -18,7 +18,16 @@ export let FriendRouter = function (router : Router, mongodb:MongoDB) {
         ctx.body = r;
     });
 
-    router.post('/friends/response_friend/', async function (ctx:any, next:any) {
-        await ctx.render('index', {title: "HSINPA"});
+    router.post('/friends/accept_friend', async function (ctx:any, next:any) {
+        let r = await mongodb.friendModel.AcceptFriend(ctx.request.body.account_id, ctx.request.body.target_id ,ctx.request.body.auth_key);
+
+        ctx.body = r;
     });
+
+    router.post('/friends/reject_friend', async function (ctx:any, next:any) {
+        let r = await mongodb.friendModel.RejectFriend(ctx.request.body.account_id, ctx.request.body.target_id ,ctx.request.body.auth_key);
+
+        ctx.body = r;
+    });
+
 }

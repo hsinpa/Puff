@@ -16,6 +16,9 @@ namespace Puff.View
         private Button SendMsgBtn;
 
         [SerializeField]
+        private Button ProfileBtn;
+
+        [SerializeField]
         private Button CameraTakePicBtn;
 
         public enum HUDMode {Normal, Camera};
@@ -24,8 +27,9 @@ namespace Puff.View
             AssignBtnEvent(CameraTakePicBtn, SendMsgEvent);
         }
 
-        public void SetBottomHUD(System.Action SendMsgEvent) {
+        public void SetBottomHUD(System.Action SendMsgEvent, System.Action ProfileOpenEvent) {
             AssignBtnEvent(SendMsgBtn, SendMsgEvent);
+            AssignBtnEvent(ProfileBtn, ProfileOpenEvent);
         }
 
         public void EnableMode(HUDMode p_mode) {

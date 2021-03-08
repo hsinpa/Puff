@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 
 public class JsonTypes {
+
     [System.Serializable]
     public struct PuffMessageType
     {
@@ -54,6 +55,7 @@ public class JsonTypes {
         public int type;
     }
 
+    [System.Serializable]
     public struct PuffAccountType
     {
         public string _id;
@@ -61,6 +63,32 @@ public class JsonTypes {
         public string email;
         public string auth_key;
         public bool isValid => !string.IsNullOrEmpty(_id);
+    }
+
+    [System.Serializable]
+    public struct FriendListType {
+        public string _id;
+        public string email;
+
+        public FriendType[] friend_info;
+    }
+
+    public enum FriendStatus { Friends = 0, RequestFriend, ReceiveRequest, Block }
+
+    [System.Serializable]
+    public struct FriendType {
+        public string _id;
+        public string email;
+        public string username;
+        public FriendStatus status;
+    }
+
+    [System.Serializable]
+    public struct FriendActionJson
+    {
+        public string account_id;
+        public string target_id;
+        public string auth_key;
     }
 
     public struct AuthLoginType

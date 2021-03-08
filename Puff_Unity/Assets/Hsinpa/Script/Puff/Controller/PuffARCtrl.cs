@@ -105,11 +105,11 @@ namespace Puff.Ctrl
 
         private void RenderPuffObjectFromDatabase(List<JsonTypes.PuffMessageType> newPuffMsgArray)
         {
-            foreach (var data in newPuffMsgArray)
-            {
-                Debug.Log($"Body {data.body}, Author ID {data.author_id}, Date {data.parseDate}");
-                GeneratePuffObjectToWorld(data);
-            }
+            //foreach (var data in newPuffMsgArray)
+            //{
+            //    Debug.Log($"Body {data.body}, Author ID {data.author_id}, Date {data.parseDate}");
+            //    GeneratePuffObjectToWorld(data);
+            //}
         }
     }
 }

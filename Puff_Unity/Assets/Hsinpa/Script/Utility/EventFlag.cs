@@ -13,6 +13,8 @@ public class EventFlag
         public const string EnterCameraMode = "event@enter_camera_mode";
         public const string ExitCameraMode = "event@exit_camera_mode";
 
+        public const string OnProfileOpen = "event@profile_page_open";
+
         //Generally, want to enable/disable according to wheter we need it or not;
         public const string GameWorldUpdateEnable = "event@game_world_enable";
         public const string GameWorldUpdateDisable = "event@game_world_disable";

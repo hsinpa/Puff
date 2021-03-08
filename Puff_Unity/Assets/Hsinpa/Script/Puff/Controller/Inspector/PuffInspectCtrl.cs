@@ -62,6 +62,9 @@ namespace Puff.Ctrl {
 
             puffHUDView.SetBottomHUD(() => {
                 PuffApp.Instance.Notify(EventFlag.Event.OpenSendMsg);
+            }, () =>
+            {
+                PuffApp.Instance.Notify(EventFlag.Event.OnProfileOpen);
             });
 
             puffInspectView.Show(false);

@@ -33,13 +33,22 @@ public class GeneralFlag
 
     public class API
     {
+        //Messages
         public const string GetAll = "get_all/{0}/{1}/{2}";
         public const string SendPuffComment = "send_puff_comment";
         public const string SendPuffMsg = "send_puff_msg";
 
+        //Account
         public const string Login = "login";
         public const string SignUp = "sign_up";
         public const string AuthLogin = "auth_login";
+
+        //Friend
+        public const string GetFriends = "friends/{0}";
+        //Post
+        public const string AddFriends = "friends/request_friend";
+        public const string AcceptFriend = "friends/accept_friend";
+        public const string RejectFriend = "friends/reject_friend";
     }
 
     public class IMGBB {
@@ -48,6 +57,6 @@ public class GeneralFlag
 
     public static string GetFullAPIUri(string apiUrl)
     {
-        return Domain.GoogleServer + apiUrl;
+        return Domain.LocalHost + apiUrl;
     }
 }
