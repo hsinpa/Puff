@@ -1,4 +1,5 @@
-﻿using Hsinpa.Utility;
+﻿using DG.Tweening;
+using Hsinpa.Utility;
 using Hsinpa.View;
 using LitJson;
 using System;
@@ -29,6 +30,15 @@ namespace Puff.View {
         [SerializeField]
         private Button _ReplyBtn;
         private Button ReplyBtn => _ReplyBtn;
+
+        [SerializeField]
+        private Button RotateBtn;
+
+        [SerializeField]
+        private Transform FrontMsgPage;
+
+        [SerializeField]
+        private Transform BackMsgPage;
 
         [Header("Comment")]
         [SerializeField]
@@ -77,6 +87,9 @@ namespace Puff.View {
 
             if (puffMsgType.images != null)
                 GenerateThumbnails(puffMsgType.images);
+
+            RotateBtn.onClick.RemoveAllListeners();
+            RotateBtn.onClick.AddListener(OnRotation);
         }
 
         private void GenerateComments(List<JsonTypes.PuffCommentType> commentList) {
@@ -160,6 +173,21 @@ namespace Puff.View {
                     Modals.instance.Close();
                     Modals.instance.OpenModal<PuffMessageModal>(); 
                 });
+            });
+        }
+
+        private void OnRotation() {
+            Vector3 startRot = new Vector3(0, 90, 0);
+            Vector3 returnRot = new Vector3(0, 0, 0);
+
+            this.transform.DORotate(startRot, 0.3f);
+
+            _ = UtilityMethod.DoDelayWork(0.55f, () =>
+            {
+                this.transform.DORotate(returnRot, 0.5f);
+
+                this.FrontMsgPage.gameObject.SetActive(!this.FrontMsgPage.gameObject.activeInHierarchy);
+                this.BackMsgPage.gameObject.SetActive(!this.BackMsgPage.gameObject.activeInHierarchy);
             });
         }
     }
