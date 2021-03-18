@@ -70,12 +70,12 @@ namespace Puff.View
 
             sliderModule.SetSlider(0, 0, 3, true, OnDistanceSliderChange);
 
-            buttonModule.SetUp(new System.Action[] {
+            //buttonModule.SetUp(new System.Action[] {
 
-                () => {
-                    BackToPreviousPage();
-                }
-            });
+            //    () => {
+            //        BackToPreviousPage();
+            //    }
+            //});
         }
 
         public void SetContent(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent, System.Action OnCameraClick) {
@@ -198,7 +198,7 @@ namespace Puff.View
 
             privacyTabHolder.gameObject.SetActive(false);
             durationTabHolder.gameObject.SetActive(false);
-            buttonModule.gameObject.SetActive(false);
+            //buttonModule.gameObject.SetActive(false);
             OnDistanceSliderChange(0);
 
             _cameraModule.CleanUp();

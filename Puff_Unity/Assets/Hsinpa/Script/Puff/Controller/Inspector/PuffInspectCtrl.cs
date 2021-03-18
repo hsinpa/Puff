@@ -61,8 +61,15 @@ namespace Puff.Ctrl {
             _puffInspectorInput = new PuffInspectorInput(SetCurrentSelectedObject, SetFaceInfo, ReleaseSelectObject, ProcessVertical, DragThreshold, _camera);
 
             puffHUDView.SetBottomHUD(() => {
+                puffHUDView.EnableMode(PuffHUDVIew.HUDMode.Normal);
+            },
+            () => {
                 PuffApp.Instance.Notify(EventFlag.Event.OpenSendMsg);
-            }, () =>
+            },
+            () => {
+
+            },
+            () =>
             {
                 PuffApp.Instance.Notify(EventFlag.Event.OnProfileOpen);
             });
@@ -95,6 +102,8 @@ namespace Puff.Ctrl {
             SelectedPuffObject.transform.position = sharedVectorUnit;
             puffInspectView.SetFunctionCanvasAlpha(ratio);
             puffInspectView.SetSemiText(dragDir == PuffInspectorInput.DragDir.VerticalDown ? GeneralFlag.String.SaveToMailbox : GeneralFlag.String.ReleaseBackToSky);
+            puffInspectView.SetSaveSmokeVisualEffect(offset);
+            //Debug.Log("Vertical ratio " + ratio + ", offset "+ offset);
         }
 
         private bool SetCurrentSelectedObject(PuffItemView puffItem) {
@@ -102,8 +111,6 @@ namespace Puff.Ctrl {
             if (SelectedPuffObject != null && SelectedPuffObject.name == puffItem.name) {
                 return false;
             } 
-
-            Debug.Log("Hit something new");
 
             SelectedPuffObject = puffItem;
             SelectedPuffObject.CatchToFront();
@@ -115,17 +122,22 @@ namespace Puff.Ctrl {
             return true;
         }
 
-        private void ReleaseSelectObject() {
-            puffInspectView.Show(false);
+        private void ReleaseSelectObject(bool releaseBool) {
 
-            if (SelectedPuffObject != null) {
-                SelectedPuffObject.Dismiss();
-                SelectedPuffObject = null;
+            if (releaseBool) {
+                puffInspectView.Show(false);
 
-                _puffInspectorInput.SetInputSelectObject(SelectedPuffObject);
+                if (SelectedPuffObject != null)
+                {
+                    SelectedPuffObject.Dismiss();
+                    SelectedPuffObject = null;
+
+                    _puffInspectorInput.SetInputSelectObject(SelectedPuffObject);
+                }
             }
 
-            Debug.Log("Released");
+            //0 = hide
+            puffInspectView.SetSaveSmokeVisualEffect(offset: 0);
         }
 
         private void ShowInspectorUI(bool isShow) {

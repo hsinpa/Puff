@@ -36,7 +36,8 @@ namespace Hsinpa.Utility {
                 Debug.LogException(ex);
             }
 
-            request.Dispose();
+            if (request != null)
+                request.Dispose();
 
             return _httpResult;
         }

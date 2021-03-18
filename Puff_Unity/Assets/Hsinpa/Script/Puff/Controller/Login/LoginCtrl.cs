@@ -48,8 +48,6 @@ namespace Puff.Ctrl
         }
 
         private async void OnSignLoginEvent(string email, string username, string password) {
-            Debug.Log("OnSignLoginEvent");
-
             _loginModal.signBtn.interactable = false;
 
             //Prepare and curl request

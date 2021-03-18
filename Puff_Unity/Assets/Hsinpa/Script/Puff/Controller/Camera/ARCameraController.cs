@@ -40,6 +40,8 @@ namespace Puff.Ctrl
 
                 case EventFlag.Event.LoginSuccessful:
                     {
+                        _puffHUDView.Show(true);
+
                         _puffHUDView.EnableMode(PuffHUDVIew.HUDMode.Normal);
                     }
                     break;
@@ -60,6 +62,8 @@ namespace Puff.Ctrl
         }
 
         private void Init() {
+            _puffHUDView.Show(false);
+
             commandBuffer = new CommandBuffer();
             commandBuffer.name = "AR Camera Background Blit Pass";
 
