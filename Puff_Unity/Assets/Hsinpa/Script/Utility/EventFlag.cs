@@ -31,5 +31,10 @@ public class EventFlag
         public const string AuthKey = "playpref@auth_key";
     }
 
+    public class ModuleActionButton {
+        public const string CameraBtn = "CameraBtn";
+        public const string ReviewBtn = "ReviewBtn";
+    }
+
 }
 

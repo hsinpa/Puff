@@ -6,6 +6,7 @@ using Hsinpa.Utility;
 using System.Linq;
 using Puff.Ctrl.Utility;
 using System.Runtime.CompilerServices;
+using Hsinpa.View;
 
 namespace Puff.View
 {
@@ -49,10 +50,10 @@ namespace Puff.View
         private PuffMsgAddModulePanel addModulePanel;
 
         //Privacy is hidden page
-        public enum Tabs { Story, Review, Event, Survey, Privacy};
+        public enum Tabs { Story, Review, Event, Survey, Privacy };
         public enum Privacy { Public, Friend, Private };
         public enum Duration { Date, Week, Month };
-        public enum Distance { Near = 0, Medium, Far, World};
+        public enum Distance { Near = 0, Medium, Far, World };
 
         private ColorItemSObj colorSetting;
         private AccountModel accountModel;
@@ -69,6 +70,7 @@ namespace Puff.View
 
             sliderModule.SetSlider(0, 0, 3, true, OnDistanceSliderChange);
 
+            addModulePanel.SetUp(OnModuleIsAppended);
             UtilityMethod.SetSimpleBtnEvent(addModuleBtn, OnAddModulePanelExpand);
         }
 
@@ -79,7 +81,6 @@ namespace Puff.View
             CleanContent();
             privacyTabHolder.SetClickTab((int)Privacy.Public);
             durationTabHolder.SetClickTab((int)Duration.Date);
-
 
             cameraModule.SetUp(OnCameraClick);
 
@@ -125,8 +126,11 @@ namespace Puff.View
 
         #endregion
         private void OnSubmitButtonClick() {
-            if (string.IsNullOrEmpty(msgText.text)) return;
+            if (string.IsNullOrEmpty(msgText.text) || string.IsNullOrEmpty(titleText.text)) {
+                HUDPopupView.instance.ShowMessage(StringTextAsset.Messaging.WarningNoMessageOrTitle, 4);
 
+                return;
+            }
 
             var allImageBytes = cameraModule.GetTextureBytes();
 
@@ -167,22 +171,33 @@ namespace Puff.View
             };
 
             if (distTable.TryGetValue(index, out string text)) {
-                sliderModule.SetSliderField(text);   
+                sliderModule.SetSliderField(text);
             }
-        }
-
-        private void OnAddModuleClick(Button btn) {
-            btn.interactable = false;
-
-
         }
 
         private void OnAddModulePanelExpand()
         {
-            bool isExpand = !addModulePanel.gameObject.activeSelf;
+            bool isExpand = !addModulePanel.isActive;
 
             addModulePanel.Show(isExpand);
 
+        }
+
+        private void OnModuleIsAppended(Button btn)
+        {
+            btn.interactable = false;
+
+            switch (btn.name) {
+                case EventFlag.ModuleActionButton.CameraBtn:
+                    cameraModule.gameObject.SetActive(true);
+                    break;
+
+                case EventFlag.ModuleActionButton.ReviewBtn:
+                    reviewModule.gameObject.SetActive(true);
+                    break;
+            }
+
+            addModulePanel.Show(false);
         }
 
         private void CleanContent()
@@ -198,6 +213,8 @@ namespace Puff.View
             //buttonModule.gameObject.SetActive(false);
             OnDistanceSliderChange(0);
 
+            addModulePanel.Show(false);
+            addModulePanel.ResetButtons();
             _cameraModule.CleanUp();
         }
     }
