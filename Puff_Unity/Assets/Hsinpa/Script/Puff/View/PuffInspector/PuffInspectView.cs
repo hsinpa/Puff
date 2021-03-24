@@ -24,6 +24,10 @@ namespace Puff.View
         [SerializeField]
         private CanvasGroup functionalPanelCanvas;
 
+        [SerializeField]
+        private IrrigatePanelView _irrigatePanelView;
+        public IrrigatePanelView irrigatePanelView => _irrigatePanelView;
+
         private Vector2 cacheVector = Vector2.zero;
         private Color cacheColor = Color.white;
 
@@ -35,6 +39,7 @@ namespace Puff.View
             titleTxt.text = title;
             SetSemiText(semiTitle);
 
+            _irrigatePanelView.Show(false);
         }
 
         public void SetSemiText(string semiText) {

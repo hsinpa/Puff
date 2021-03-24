@@ -2500,10 +2500,12 @@ MonoBehaviour:
   create_date: {fileID: 1885652831893930208}
   Description: {fileID: 2766038936324504836}
   _ReplyInputfield: {fileID: 1720863805364946032}
-  _ReplyBtn: {fileID: 2766038935912314081}
-  RotateBtn: {fileID: 234936846302459771}
   FrontMsgPage: {fileID: 7835894620791956371}
   BackMsgPage: {fileID: 2086512869098166741}
+  _ReplyBtn: {fileID: 2766038935912314081}
+  RotateBtn: {fileID: 234936846302459771}
+  IrrigateBtn: {fileID: 7527026151923416766}
+  ProfileBtn: {fileID: 17345496469958339}
   commentsHolder: {fileID: 1611255705890586810}
   commentItemPrefab: {fileID: 8597919377421383269, guid: 41e3b0f5b92b1ed4baf621b94d9cdaa4,
     type: 3}
@@ -9210,6 +9212,12 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: aa7699c45ec304504923f29555e307f1, type: 3}
+--- !u!224 &7003876873727009443 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 873610024432997387, guid: aa7699c45ec304504923f29555e307f1,
+    type: 3}
+  m_PrefabInstance: {fileID: 7867062153539155624}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &8272645628989533630 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: -6925625803971159274, guid: aa7699c45ec304504923f29555e307f1,
@@ -9222,9 +9230,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!224 &7003876873727009443 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 873610024432997387, guid: aa7699c45ec304504923f29555e307f1,
-    type: 3}
-  m_PrefabInstance: {fileID: 7867062153539155624}
-  m_PrefabAsset: {fileID: 0}

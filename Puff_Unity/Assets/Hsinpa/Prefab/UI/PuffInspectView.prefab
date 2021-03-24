@@ -86,6 +86,7 @@ GameObject:
   - component: {fileID: 6376423476325357595}
   - component: {fileID: 4662220742668698717}
   - component: {fileID: 101408328518508355}
+  - component: {fileID: 7138101775130459712}
   m_Layer: 5
   m_Name: irrigates_panel
   m_TagString: Untagged
@@ -147,7 +148,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.39607844, g: 0.39607844, b: 0.39607844, a: 0.11372549}
+  m_Color: {r: 0.39607844, g: 0.39607844, b: 0.39607844, a: 1}
   m_RaycastTarget: 1
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -163,6 +164,23 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 3.5
+--- !u!114 &7138101775130459712
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 474883389382185745}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 69f3e4779150f834884aabe072c1fffe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canvasGroup: {fileID: 4662220742668698717}
+  expSlider: {fileID: 5995088611183855738}
+  expText: {fileID: 5797351589354501658}
+  subMessasge: {fileID: 8117138113955834760}
+  irrigateSprite: {fileID: 388959058413282880}
 --- !u!1 &1513620390597740753
 GameObject:
   m_ObjectHideFlags: 0
@@ -1855,7 +1873,7 @@ CanvasGroup:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6722792066349823031}
   m_Enabled: 1
-  m_Alpha: 1
+  m_Alpha: 0.56
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
@@ -1877,6 +1895,7 @@ MonoBehaviour:
   saveSmokeEffect: {fileID: 2623370987963392636}
   ReplyButton: {fileID: 6722792064414835354}
   functionalPanelCanvas: {fileID: 308572078}
+  _irrigatePanelView: {fileID: 7138101775130459712}
 --- !u!1 &6722792066403571281
 GameObject:
   m_ObjectHideFlags: 0

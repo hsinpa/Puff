@@ -6,6 +6,12 @@ public class GeneralFlag
 {
     public static Vector3 SharedVectorUnit = Vector3.zero;
 
+    public class Colors { 
+        public static readonly Color HideColor = new Color(1,1,1,0);
+        public static readonly Color DisplayColor = new Color(1,1,1,1);
+
+    }
+
     public class RegularExpression {
         public const string Email = @"^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$";
         public const string UniversalSyntaxRex = @"^.{6,30}$";

@@ -28,6 +28,13 @@ namespace Puff.View {
         private InputField ReplyInputfield => _ReplyInputfield;
 
         [SerializeField]
+        private Transform FrontMsgPage;
+
+        [SerializeField]
+        private Transform BackMsgPage;
+
+        [Header("Action Buttons")]
+        [SerializeField]
         private Button _ReplyBtn;
         private Button ReplyBtn => _ReplyBtn;
 
@@ -35,10 +42,10 @@ namespace Puff.View {
         private Button RotateBtn;
 
         [SerializeField]
-        private Transform FrontMsgPage;
+        private Button IrrigateBtn;
 
         [SerializeField]
-        private Transform BackMsgPage;
+        private Button ProfileBtn;
 
         [Header("Comment")]
         [SerializeField]
@@ -66,7 +73,7 @@ namespace Puff.View {
             PrepareCacheTexture(maxThumb: 4);
         }
 
-        public void SetContent(JsonTypes.PuffMessageType puffMsgType, System.Action<string> ReplyBtnEvent) {
+        public void SetContent(JsonTypes.PuffMessageType puffMsgType, System.Action IrrigateBtnEvent, System.Action<string> ReplyBtnEvent) {
             title.text = puffMsgType.title;
             author.text = puffMsgType.author;
             create_date.text = puffMsgType.parseDate.ToString("MM/dd/yyyy hh:mm tt");
@@ -90,6 +97,8 @@ namespace Puff.View {
 
             RotateBtn.onClick.RemoveAllListeners();
             RotateBtn.onClick.AddListener(OnRotation);
+
+            UtilityMethod.SetSimpleBtnEvent(IrrigateBtn, IrrigateBtnEvent);
         }
 
         private void GenerateComments(List<JsonTypes.PuffCommentType> commentList) {

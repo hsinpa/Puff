@@ -15,6 +15,9 @@ namespace Puff.Ctrl
         [SerializeField]
         private ARCameraController _arCameraCtrl;
 
+        [SerializeField]
+        private PuffInspectView _puffInspectView;
+
         private PuffMessageModal puffMessageModal;
         private GeneralFlag.PuffMsgBoardState _puffMsgBoardState;
         private PuffMsgBoardHelper _puffMsgBoardHelper;
@@ -22,7 +25,6 @@ namespace Puff.Ctrl
         private PuffModel _puffModel;
 
         private JsonTypes.PuffMessageType _currentPuffMsg;
-
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -88,7 +90,7 @@ namespace Puff.Ctrl
         private void OpenFrontPage(JsonTypes.PuffMessageType puffMessageType) {
             PuffMsgFrontPage frontPage = puffMessageModal.OpenPage<PuffMsgFrontPage>();
 
-            frontPage.SetContent(puffMessageType, (string replayMsg) =>
+            frontPage.SetContent(puffMessageType, onIrrigateButtonClick, (string replayMsg) =>
             {
                 PushCommentToServer(frontPage, puffMessageType._id, replayMsg);
             });
@@ -133,6 +135,24 @@ namespace Puff.Ctrl
             PuffTextMsgPage puffMsgPage = puffMessageModal.GetPage<PuffTextMsgPage>();
 
             puffMsgPage.cameraModule.AssignRawImage(renderTexture);
+        }
+
+        private void onIrrigateButtonClick() {
+            puffMessageModal.Show(false);
+            Modals.instance.EnableBackgroundImg(false);
+
+            _puffInspectView.SetFunctionCanvasAlpha(0);
+
+            _puffInspectView.irrigatePanelView.SetContent("Fake exp +5%", "Total 50% exp reached", () =>
+            {
+                _puffInspectView.SetFunctionCanvasAlpha(1);
+                Modals.instance.EnableBackgroundImg(true);
+                puffMessageModal.Show(true);
+            });
+        }
+
+        private void OnProfileButtonClick() { 
+        
         }
         #endregion
 

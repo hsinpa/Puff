@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,7 +12,8 @@ namespace Hsinpa.View
         Image background;
 
         [SerializeField]
-        bool hasBackground;
+        private bool _hasBackground;
+        public bool hasBackground => _hasBackground;
 
         BaseView[] modals;
 
@@ -73,7 +73,7 @@ namespace Hsinpa.View
 
             currentModals = targetModal as T;
 
-            background.enabled = (hasBackground);
+            background.enabled = (_hasBackground);
 
             return targetModal as T;
         }
@@ -87,7 +87,7 @@ namespace Hsinpa.View
             }
 
             currentModals = (openModals.Count > 0) ? openModals[openModals.Count - 1] : null;
-            background.enabled = (currentModals != null && hasBackground);
+            background.enabled = (currentModals != null && _hasBackground);
         }
 
         public void CloseAll()
@@ -101,6 +101,10 @@ namespace Hsinpa.View
 
             background.enabled = false;
             openModals.Clear();
+        }
+
+        public void EnableBackgroundImg(bool p_enable) {
+            background.enabled = p_enable;
         }
     }
 }

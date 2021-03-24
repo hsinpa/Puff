@@ -68,7 +68,7 @@ Material:
     - _Cutoff: 0.5
     - _DstBlend: 0
     - _EnlargeX: 1
-    - _EnlargeY: 0.49202734
+    - _EnlargeY: 0.46205357
     - _EnvironmentReflections: 1
     - _GlossMapScale: 0
     - _Glossiness: 0
