@@ -34,7 +34,7 @@ namespace Puff.View
         private PuffMsgTabModule privacyTabHolder;
 
         [SerializeField]
-        private PuffMsgTabModule durationTabHolder;
+        private PuffMsgDurationModule durationTabHolder;
 
         [Header("Action Buttons")]
         [SerializeField]
@@ -66,12 +66,13 @@ namespace Puff.View
             colorSetting = PuffApp.Instance.models.colorSetting;
 
             privacyTabHolder.SetUp(colorSetting, null);
-            durationTabHolder.SetUp(colorSetting, null);
 
             sliderModule.SetSlider(0, 0, 3, true, OnDistanceSliderChange);
 
             addModulePanel.SetUp(OnModuleIsAppended);
             UtilityMethod.SetSimpleBtnEvent(addModuleBtn, OnAddModulePanelExpand);
+            UtilityMethod.SetSimpleBtnEvent(backBtn, BackToPreviousPage);
+
         }
 
         public void SetContent(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent, System.Action OnCameraClick) {
@@ -80,7 +81,7 @@ namespace Puff.View
 
             CleanContent();
             privacyTabHolder.SetClickTab((int)Privacy.Public);
-            durationTabHolder.SetClickTab((int)Duration.Date);
+            durationTabHolder.SetValue(append_date: 3);
 
             cameraModule.SetUp(OnCameraClick);
 
@@ -95,14 +96,17 @@ namespace Puff.View
         #region Tab Layout
         private void SetStoryLayout()
         {
-            reviewModule.gameObject.SetActive(false);
-            _cameraModule.gameObject.SetActive(false);
+            reviewModule.gameObject.SetActive(reviewModule.score > 0);
+            _cameraModule.gameObject.SetActive(_cameraModule.textureList.Count > 0);
+
+            addModulePanel.ResetButtons();
         }
 
         private void SetPrivacyLayout() {
             FrontPageBasicLayout(false);
-
+        
             reviewModule.gameObject.SetActive(false);
+            _cameraModule.gameObject.SetActive(false);
         }
 
         private void FrontPageBasicLayout(bool enable)
@@ -113,11 +117,14 @@ namespace Puff.View
             privacyTabHolder.gameObject.SetActive(!enable);
             durationTabHolder.gameObject.SetActive(!enable);
             sliderModule.gameObject.SetActive(!enable);
-
-            _cameraModule.gameObject.SetActive(false);
+            addModuleBtn.gameObject.SetActive(enable);
+            backBtn.gameObject.SetActive(!enable);
         }
 
         private void BackToPreviousPage() {
+            FrontPageBasicLayout(true);
+            SetStoryLayout();
+
             //if (TabActionDictTable.TryGetValue(typeTabHolder.CurrentIndex, out System.Action tabAction)) {
             //    FrontPageBasicLayout(true);
             //    tabAction();
@@ -146,7 +153,7 @@ namespace Puff.View
                     msgText.text,
                     titleText.text,
                     privacyTabHolder.CurrentIndex,
-                    durationTabHolder.CurrentIndex,
+                    durationTabHolder.date,
                     (int)sliderModule.sliderValue
                 );
 

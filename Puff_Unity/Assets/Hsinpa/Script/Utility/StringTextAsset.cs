@@ -35,6 +35,8 @@ public class StringTextAsset
 
     public class Messaging {
         public const string DurationText = "Until {0}";
+        public const string DurationCues = "{0} \nDay";
+
         public const string CameraIndicator = "{0}/{1}";
 
         public const string DistanceNear = "Near({0}M)";
