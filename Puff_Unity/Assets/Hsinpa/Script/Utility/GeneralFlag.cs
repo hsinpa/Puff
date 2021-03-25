@@ -45,9 +45,12 @@ public class GeneralFlag
         public const string SendPuffMsg = "send_puff_msg";
 
         //Account
-        public const string Login = "login";
-        public const string SignUp = "sign_up";
-        public const string AuthLogin = "auth_login";
+        public const string Login = "account/login";
+        public const string SignUp = "account/sign_up";
+        public const string AuthLogin = "account/auth_login";
+        
+        public const string SavePuffMsg = "account/save_puff_msg";
+        public const string RemovePuffMsg = "account/release_puff_msg";
 
         //Friend
         public const string GetFriends = "friends/{0}";

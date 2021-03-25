@@ -1,9 +1,6 @@
 
-import * as path from 'path';
 import * as Router from 'koa-router';
 import MongoDB from '../service/MongoDB';
-import {PuffMessageType, ClientSignLogType} from '../Utility/Flag/TypeFlag';
-import bodyParser = require('koa-bodyparser');
 
 export let FriendRouter = function (router : Router, mongodb:MongoDB) {
     router.get('/friends/:account_id', async function (ctx:any, next:any) {
@@ -29,5 +26,4 @@ export let FriendRouter = function (router : Router, mongodb:MongoDB) {
 
         ctx.body = r;
     });
-
 }

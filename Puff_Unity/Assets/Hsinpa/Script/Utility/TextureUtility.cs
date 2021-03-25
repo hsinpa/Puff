@@ -53,7 +53,7 @@ public class TextureUtility
     public static RenderTexture GetRenderTexture(int width, int height, int depth)
     {
         var rt = new RenderTexture(width, height, depth, RenderTextureFormat.ARGB32);
-
+        rt.antiAliasing = 1;
         rt.Create();
         return rt;
     }
