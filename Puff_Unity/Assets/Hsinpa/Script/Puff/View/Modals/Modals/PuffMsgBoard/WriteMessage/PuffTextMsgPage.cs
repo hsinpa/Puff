@@ -12,6 +12,9 @@ namespace Puff.View
 {
     public class PuffTextMsgPage : PuffMsgInnerPage
     {
+        [Header("Puff type selection page")]
+        private PuffMsgTypePanel puffMsgTypePanel;
+
         [Header("Modules")]
         [SerializeField]
         private InputField titleText;
@@ -50,9 +53,7 @@ namespace Puff.View
         private PuffMsgAddModulePanel addModulePanel;
 
         //Privacy is hidden page
-        public enum Tabs { Story, Review, Event, Survey, Privacy };
         public enum Privacy { Public, Friend, Private };
-        public enum Duration { Date, Week, Month };
         public enum Distance { Near = 0, Medium, Far, World };
 
         private ColorItemSObj colorSetting;

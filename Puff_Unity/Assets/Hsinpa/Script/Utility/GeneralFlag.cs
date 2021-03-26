@@ -9,7 +9,7 @@ public class GeneralFlag
     public class Colors { 
         public static readonly Color HideColor = new Color(1,1,1,0);
         public static readonly Color DisplayColor = new Color(1,1,1,1);
-
+        public static readonly Color HighLightColor = new Color(0.976f, 0.913f, 0.8196f, 1);
     }
 
     public class RegularExpression {

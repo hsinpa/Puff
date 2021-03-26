@@ -75,8 +75,6 @@ public class JsonTypes {
         public FriendType[] friend_info;
     }
 
-    public enum FriendStatus { Friends = 0, RequestFriend, ReceiveRequest, Block }
-
     [System.Serializable]
     public struct FriendType {
         public string _id;
@@ -113,4 +111,11 @@ public class JsonTypes {
     public struct IMGBBDataType {
         public string url;
     }
+
+    #region Enum 
+    public enum PuffTypes { FloatSeed = 0, Plant }
+    
+    public enum FriendStatus { Friends = 0, RequestFriend, ReceiveRequest, Block }
+
+    #endregion
 }
