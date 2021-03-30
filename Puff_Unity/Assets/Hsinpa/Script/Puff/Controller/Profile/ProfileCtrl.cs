@@ -36,10 +36,16 @@ namespace Puff.Ctrl
 
         private void OnProfileOpenEvent() {
             ProfileModal profileModal = Modals.instance.OpenModal<ProfileModal>();
-            profileModal.SetUp(this._accountModel, this._friendModel);
+            profileModal.SetUp(this._accountModel, this._friendModel, OnFriendAcceptEvent, OnFriendRejectEvent);
         }
 
+        private async void OnFriendAcceptEvent(JsonTypes.FriendType friendType) {
+            await _friendModel.AcceptFriend( _friendModel.GetActionJSON(_accountModel.puffAccountType._id, friendType._id, _accountModel.puffAccountType.auth_key) );
+        }
 
-
+        private async void OnFriendRejectEvent(JsonTypes.FriendType friendType)
+        {
+            await _friendModel.RejectFriend(_friendModel.GetActionJSON(_accountModel.puffAccountType._id, friendType._id, _accountModel.puffAccountType.auth_key));
+        }
     }
 }

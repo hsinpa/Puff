@@ -37,7 +37,7 @@ namespace Puff.View
             SetActionBtnName(actionBtn, friendActionBtnName);
 
             //Reject
-            actionBtn.gameObject.SetActive(friendType.status == JsonTypes.FriendStatus.ReceiveRequest);
+            rejectBtn.gameObject.SetActive(friendType.status == JsonTypes.FriendStatus.ReceiveRequest);
             SetActionBtnName(rejectBtn, StringTextAsset.Friend.FriendBtnReject);
         }
 
@@ -47,10 +47,25 @@ namespace Puff.View
         }
 
         private void SetActionBtnName(Button p_btn, string nameString) {
-            actionBtn.interactable = nameString != StringTextAsset.Friend.FriendBtnPending;
+            p_btn.interactable = nameString != StringTextAsset.Friend.FriendBtnPending;
 
             Text btnName = p_btn.GetComponentInChildren<Text>();
             btnName.text = nameString;
+        }
+
+        public void ModifyStatusUI(JsonTypes.FriendStatus status) {
+            switch (status)
+            {
+                case JsonTypes.FriendStatus.Friends:
+                    actionBtn.gameObject.SetActive(false);
+                    rejectBtn.gameObject.SetActive(false);
+                    break;
+
+
+                case JsonTypes.FriendStatus.Block:
+                    this.gameObject.SetActive(false);
+                    break;
+            }
         }
 
         public static string GetActionBtnNameByStatus(JsonTypes.FriendStatus status) {
@@ -69,5 +84,7 @@ namespace Puff.View
         {
             return (status != JsonTypes.FriendStatus.Friends);
         }
+
+
     }
 }

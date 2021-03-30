@@ -26,14 +26,19 @@ namespace Puff.View
 
         Task<JsonTypes.FriendListType> friendsTask;
 
+        private System.Action<JsonTypes.FriendType> FriendAcceptCallback;
+        private System.Action<JsonTypes.FriendType> FriendRejectCallback;
+
         public override void Show(bool isShow)
         {
             base.Show(isShow);
         }
 
-        public void SetUp(AccountModel accountModel, FriendModel friendModel) {
+        public void SetUp(AccountModel accountModel, FriendModel friendModel, System.Action<JsonTypes.FriendType> FriendAcceptCallback, System.Action<JsonTypes.FriendType> FriendRejectCallback) {
             this.accountModel = accountModel;
             this.friendModel = friendModel;
+            this.FriendAcceptCallback = FriendAcceptCallback;
+            this.FriendRejectCallback = FriendRejectCallback;
 
             if (this.accountModel.puffAccountType.isValid)
             {
@@ -41,7 +46,10 @@ namespace Puff.View
             }
         }
 
-        private async void DisplayFriendList(JsonTypes.PuffAccountType account) {
+
+        #region Friend Panel
+        private async void DisplayFriendList(JsonTypes.PuffAccountType account)
+        {
             //Its is still running
             if (friendsTask != null) return;
 
@@ -57,23 +65,49 @@ namespace Puff.View
             friendsTask = null;
         }
 
-        private void GenerateFriendItem(JsonTypes.FriendType friend) {
+        private void GenerateFriendItem(JsonTypes.FriendType friend)
+        {
             FriendItemView friendItemView = UtilityMethod.CreateObjectToParent<FriendItemView>(FriendItemHHolder, FriendItemPrefab.gameObject);
             friendItemView.SetInfo(friend);
 
             friendItemView.SetActionEvent(OnFriendAccept, OnFriendReject);
         }
 
-        private void OnFriendAccept(FriendItemView friendItem) {
-            Debug.Log("Friend Accept : " + friendItem.friendType.username);
+        private void OnFriendAccept(FriendItemView friendItem)
+        {
+
+            var dialogueModal = Modals.instance.OpenModal<DialogueModal>();
+
+            string[] btnStringArray = new string[] { StringTextAsset.DialogueBox.Confirm, StringTextAsset.DialogueBox.Cancel };
+            dialogueModal.SetDialogue(StringTextAsset.Friend.FriendDialogueBoxTitle,
+                string.Format(StringTextAsset.Friend.FriendAcceptMessage, friendItem.friendType.username), btnStringArray, (int index) => {
+                    Debug.Log("Friend Accept : " + friendItem.friendType.username);
+
+                    if (index == 0 && FriendAcceptCallback != null)
+                    {
+                        FriendAcceptCallback(friendItem.friendType);
+                        friendItem.ModifyStatusUI(JsonTypes.FriendStatus.Friends);
+                    }
+                });
         }
 
         private void OnFriendReject(FriendItemView friendItem)
         {
-            Debug.Log("Friend Reject : " + friendItem.friendType.username);
+
+            var dialogueModal = Modals.instance.OpenModal<DialogueModal>();
+
+            string[] btnStringArray = new string[] { StringTextAsset.DialogueBox.Confirm, StringTextAsset.DialogueBox.Cancel };
+            dialogueModal.SetDialogue(StringTextAsset.Friend.FriendDialogueBoxTitle,
+                string.Format(StringTextAsset.Friend.FriendRejectMessage, friendItem.friendType.username), btnStringArray, (int index) => {
+                    Debug.Log("Friend Reject : " + friendItem.friendType.username);
+
+                    if (index == 0 && FriendAcceptCallback != null)
+                    {
+                        FriendRejectCallback(friendItem.friendType);
+                        friendItem.ModifyStatusUI(JsonTypes.FriendStatus.Block);
+                    }
+                });
         }
-
-
-
+        #endregion
     }
 }

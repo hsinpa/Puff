@@ -31,6 +31,17 @@ public class StringTextAsset
         public const string FriendBtnInvite = "Invite";
         public const string FriendBtnReject = "Reject";
         public const string FriendBtnPending = "Pending";
+
+        public const string FriendDialogueBoxTitle = "Friend Management";
+        public const string FriendAcceptMessage = "Accept friend request from {0}";
+        public const string FriendRejectMessage = "Do you wish to reject friend offer from {0}";
+
+        public const string FriendOperationSuccess = "Operation successful";
+    }
+
+    public class DialogueBox {
+        public const string Confirm = "<color=#16a2ff>Proceed</color>";
+        public const string Cancel = "<color=#ff4823>Cancel</color>";
     }
 
     public class Messaging {
@@ -40,8 +51,8 @@ public class StringTextAsset
         public const string CameraIndicator = "{0}/{1}";
 
         public const string DistanceNear = "Near({0}M)";
-        public const string DistanceMedium = "Medium({0}KM)";
-        public const string DistanceFar = "Far({0}KM)";
+        public const string DistanceMedium = "City"; // Medium({0}KM)
+        public const string DistanceFar = "Country"; // Far({0}KM)
         public const string DistanceWorld = "World";
 
         public const string WarningNoMessageOrTitle = "Please fulfill title and message box to proceed";

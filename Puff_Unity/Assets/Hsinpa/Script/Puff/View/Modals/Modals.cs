@@ -45,7 +45,7 @@ namespace Hsinpa.View
             return modals.First(x=> typeof(T) == x.GetType()) as T;
         }
 
-        public T OpenModal<T>() where T : Modal
+        public T OpenModal<T>(bool hideOthers = false) where T : Modal
         {
             if (modals == null) return null;
 
@@ -53,7 +53,6 @@ namespace Hsinpa.View
 
             foreach (Modal modal in modals)
             {
-
                 if (typeof(T) == modal.GetType())
                 {
                     targetModal = modal;
@@ -61,13 +60,13 @@ namespace Hsinpa.View
                 }
                 else
                 {
-                    modal.Show(false);
-                }
+                    if (hideOthers)
+                        modal.Show(false);
+                }            
             }
 
-            int modalIndex = openModals.FindIndex(x => x.GetType() == typeof(T));
-
-            if (modalIndex < 0) {
+            bool isModalDuplicate = openModals.FindIndex(x => x.GetType() == typeof(T)) < 0;
+            if (isModalDuplicate) {
                 openModals.Add(targetModal as T);
             }
 
@@ -85,6 +84,8 @@ namespace Hsinpa.View
             if (openModals.Count > 0) {
                 openModals.RemoveAt(openModals.Count - 1);
             }
+
+            Debug.Log("Modal Close " + currentModals.name);
 
             currentModals = (openModals.Count > 0) ? openModals[openModals.Count - 1] : null;
             background.enabled = (currentModals != null && _hasBackground);
