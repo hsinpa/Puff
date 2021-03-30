@@ -17,7 +17,7 @@ namespace Puff.Ctrl.Utility {
             return puffCommentType;
         }
 
-        public static JsonTypes.PuffMessageType GetCreateMessageType(string author_id, string author_name, string body, string title,
+        public static JsonTypes.PuffMessageType GetCreateMessageType(int type, string author_id, string author_name, string body, string title,
             int privacy, int duration, float distance)
         {
             JsonTypes.PuffMessageType puffMessageType = new JsonTypes.PuffMessageType();
@@ -27,7 +27,7 @@ namespace Puff.Ctrl.Utility {
             puffMessageType.body = body;
             puffMessageType.title = title;
 
-            puffMessageType.type = 0;
+            puffMessageType.type = type;
             puffMessageType.privacy = privacy;
             puffMessageType.duration = duration;
             puffMessageType.distance = distance;

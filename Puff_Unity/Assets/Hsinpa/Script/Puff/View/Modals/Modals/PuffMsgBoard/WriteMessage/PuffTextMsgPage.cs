@@ -13,9 +13,13 @@ namespace Puff.View
     public class PuffTextMsgPage : PuffMsgInnerPage
     {
         [Header("Puff type selection page")]
+        [SerializeField]
         private PuffMsgTypePanel puffMsgTypePanel;
 
         [Header("Modules")]
+        [SerializeField]
+        private Transform moduleContainer;
+
         [SerializeField]
         private InputField titleText;
 
@@ -41,7 +45,7 @@ namespace Puff.View
 
         [Header("Action Buttons")]
         [SerializeField]
-        private Button submitBtn;
+        private CustomButton submitBtn;
 
         [SerializeField]
         private Button backBtn;
@@ -55,9 +59,11 @@ namespace Puff.View
         //Privacy is hidden page
         public enum Privacy { Public, Friend, Private };
         public enum Distance { Near = 0, Medium, Far, World };
+        private enum Page {TypeSelection, MainContent, SideContent }
 
         private ColorItemSObj colorSetting;
         private AccountModel accountModel;
+        private Page currentPage = Page.TypeSelection;
 
         public delegate void OnPuffMsgSend(JsonTypes.PuffMessageType content, List<byte[]> bytes);
         private OnPuffMsgSend OnPuffMsgSendCallback;
@@ -91,23 +97,38 @@ namespace Puff.View
                 OnSubmitButtonClick();
             });
 
-            SetStoryLayout();
+            //SetStoryLayout();
+            SetSelectTypePage();
         }
 
         #region Tab Layout
-        private void SetStoryLayout()
-        {
+        private void SetSelectTypePage() {
+            currentPage = Page.TypeSelection;
+            submitBtn.SetTitle(StringTextAsset.Messaging.SubmitBtnNext);
+            moduleContainer.gameObject.SetActive(false);
+            addModuleBtn.gameObject.SetActive(false);
+            puffMsgTypePanel.Show(true);
+        }
+
+        private void SetStoryLayout() {
+            currentPage = Page.MainContent;
+            puffMsgTypePanel.Show(false);
+            moduleContainer.gameObject.SetActive(true);
             reviewModule.gameObject.SetActive(reviewModule.score > 0);
             _cameraModule.gameObject.SetActive(_cameraModule.textureList.Count > 0);
+            submitBtn.SetTitle(StringTextAsset.Messaging.SubmitBtnNext);
 
+            addModuleBtn.gameObject.SetActive(true);
             addModulePanel.ResetButtons();
         }
 
         private void SetPrivacyLayout() {
+            currentPage = Page.SideContent;
             FrontPageBasicLayout(false);
         
             reviewModule.gameObject.SetActive(false);
             _cameraModule.gameObject.SetActive(false);
+            submitBtn.SetTitle(StringTextAsset.Messaging.SubmitBtnShare);
         }
 
         private void FrontPageBasicLayout(bool enable)
@@ -125,46 +146,55 @@ namespace Puff.View
         private void BackToPreviousPage() {
             FrontPageBasicLayout(true);
             SetStoryLayout();
-
-            //if (TabActionDictTable.TryGetValue(typeTabHolder.CurrentIndex, out System.Action tabAction)) {
-            //    FrontPageBasicLayout(true);
-            //    tabAction();
-            //}
         }
 
         #endregion
         private void OnSubmitButtonClick() {
-            if (string.IsNullOrEmpty(msgText.text) || string.IsNullOrEmpty(titleText.text)) {
-                HUDPopupView.instance.ShowMessage(StringTextAsset.Messaging.WarningNoMessageOrTitle, 4);
 
-                return;
+
+            switch (currentPage) {
+
+                case Page.TypeSelection:
+                {
+                    SetStoryLayout();
+                }
+                break;
+
+                case Page.MainContent:
+                {
+                    if (string.IsNullOrEmpty(msgText.text) || string.IsNullOrEmpty(titleText.text))
+                    {
+                        HUDPopupView.instance.ShowMessage(StringTextAsset.Messaging.WarningNoMessageOrTitle, 4);
+
+                        return;
+                    }
+
+                    SetPrivacyLayout();
+                }
+                break;
+
+                case Page.SideContent:
+                    {
+                        var allImageBytes = cameraModule.GetTextureBytes();
+
+                        var puffMsgType = PuffMsgBoardHelper.GetCreateMessageType(
+                            (int)this.puffMsgTypePanel.SelectedType,
+                            this.accountModel.puffAccountType._id,
+                            this.accountModel.puffAccountType.username,
+                            msgText.text,
+                            titleText.text,
+                            privacyTabHolder.CurrentIndex,
+                            durationTabHolder.date,
+                            (int)sliderModule.sliderValue
+                        );
+
+                        this.OnPuffMsgSendCallback(puffMsgType, allImageBytes);
+                        msgText.text = "";
+
+
+                    }
+                    break;
             }
-
-            var allImageBytes = cameraModule.GetTextureBytes();
-
-            //if (allImageBytes.Count > 0)
-            //APIHttpRequest.CurlIMGBB(allImageBytes[0]);
-
-            if (privacyTabHolder.gameObject.activeSelf)
-            {
-
-                var puffMsgType = PuffMsgBoardHelper.GetCreateMessageType(
-                    this.accountModel.puffAccountType._id,
-                    this.accountModel.puffAccountType.username,
-                    msgText.text,
-                    titleText.text,
-                    privacyTabHolder.CurrentIndex,
-                    durationTabHolder.date,
-                    (int)sliderModule.sliderValue
-                );
-
-                this.OnPuffMsgSendCallback(puffMsgType, allImageBytes);
-                msgText.text = "";
-
-                return;
-            }
-
-            SetPrivacyLayout();
         }
 
         private void OnDistanceSliderChange(float p_index) {
@@ -220,6 +250,7 @@ namespace Puff.View
             durationTabHolder.gameObject.SetActive(false);
             //buttonModule.gameObject.SetActive(false);
             OnDistanceSliderChange(0);
+            puffMsgTypePanel.SetPuffType(JsonTypes.PuffTypes.FloatSeed);
 
             addModulePanel.Show(false);
             addModulePanel.ResetButtons();

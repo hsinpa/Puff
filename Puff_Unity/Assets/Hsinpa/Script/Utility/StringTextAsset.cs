@@ -46,5 +46,7 @@ public class StringTextAsset
 
         public const string WarningNoMessageOrTitle = "Please fulfill title and message box to proceed";
 
+        public const string SubmitBtnShare = "Share";
+        public const string SubmitBtnNext = "Next step";
     }
 }
