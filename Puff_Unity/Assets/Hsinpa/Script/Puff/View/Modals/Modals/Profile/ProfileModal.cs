@@ -12,8 +12,13 @@ namespace Puff.View
 {
     public class ProfileModal : Modal
     {
+
+        [Header("Friend Panel")]
         [SerializeField]
         private FriendAccordionView FriendAccordionView;
+
+        [SerializeField]
+        private Button SearchFriendBtn;
 
         [SerializeField]
         private FriendItemView FriendItemPrefab;
@@ -29,16 +34,22 @@ namespace Puff.View
         private System.Action<JsonTypes.FriendType> FriendAcceptCallback;
         private System.Action<JsonTypes.FriendType> FriendRejectCallback;
 
+
         public override void Show(bool isShow)
         {
             base.Show(isShow);
         }
 
-        public void SetUp(AccountModel accountModel, FriendModel friendModel, System.Action<JsonTypes.FriendType> FriendAcceptCallback, System.Action<JsonTypes.FriendType> FriendRejectCallback) {
+        public void SetUp(AccountModel accountModel, FriendModel friendModel,
+            System.Action AddNewFriendCallback,
+            System.Action<JsonTypes.FriendType> FriendAcceptCallback, System.Action<JsonTypes.FriendType> FriendRejectCallback) {
             this.accountModel = accountModel;
             this.friendModel = friendModel;
+
             this.FriendAcceptCallback = FriendAcceptCallback;
             this.FriendRejectCallback = FriendRejectCallback;
+
+            UtilityMethod.SetSimpleBtnEvent(SearchFriendBtn, AddNewFriendCallback);
 
             if (this.accountModel.puffAccountType.isValid)
             {

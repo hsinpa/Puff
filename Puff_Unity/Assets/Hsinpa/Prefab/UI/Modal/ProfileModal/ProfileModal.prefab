@@ -1474,6 +1474,7 @@ MonoBehaviour:
   canvasGroup: {fileID: 7446363177082260071}
   CloseBtn: {fileID: 7446363176626339137}
   FriendAccordionView: {fileID: 4330876357179000543}
+  SearchFriendBtn: {fileID: 7446363175503275999}
   FriendItemPrefab: {fileID: 1026315561282759602, guid: 25501249c845f4d479e0d7797b746620,
     type: 3}
   FriendItemHHolder: {fileID: 7446363177426540895}

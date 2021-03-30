@@ -8,6 +8,7 @@ using Hsinpa.Utility;
 using Puff.Model;
 using System.Threading.Tasks;
 using Hsinpa.Model;
+using LitJson;
 
 namespace Puff.Ctrl
 {
@@ -36,7 +37,33 @@ namespace Puff.Ctrl
 
         private void OnProfileOpenEvent() {
             ProfileModal profileModal = Modals.instance.OpenModal<ProfileModal>();
-            profileModal.SetUp(this._accountModel, this._friendModel, OnFriendAcceptEvent, OnFriendRejectEvent);
+            profileModal.SetUp(this._accountModel, this._friendModel, OnAddNewFriendtEvent, OnFriendAcceptEvent, OnFriendRejectEvent);
+        }
+
+        private async void OnAddNewFriendtEvent()
+        {
+            FindFriendModal findFriendModal = Modals.instance.OpenModal<FindFriendModal>();
+
+            findFriendModal.SetSearchPanel(OnFriendSearchtEvent);
+        }
+
+        private async void OnFriendSearchtEvent(string email)
+        {
+            if (string.IsNullOrEmpty(email)) return;
+
+            FindFriendModal findFriendModal = Modals.instance.GetModal<FindFriendModal>();
+
+            var fakeJSON = new JsonTypes.FriendType();
+            fakeJSON.username = "Fake";
+            fakeJSON._id = "dfasdfh";
+
+            findFriendModal.SetFriendInvitePanel(fakeJSON, OnFriendInviteEvent);
+        }
+
+        private async void OnFriendInviteEvent(string user_id)
+        {
+            Debug.Log("OnFriendInviteEvent : " + user_id);
+            Modals.instance.Close();
         }
 
         private async void OnFriendAcceptEvent(JsonTypes.FriendType friendType) {
