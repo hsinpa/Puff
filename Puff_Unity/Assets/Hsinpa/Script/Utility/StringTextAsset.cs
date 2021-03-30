@@ -48,5 +48,7 @@ public class StringTextAsset
 
         public const string SubmitBtnShare = "Share";
         public const string SubmitBtnNext = "Next step";
+
+        public const string SubmitSuccess = "Message is made!";
     }
 }

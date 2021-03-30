@@ -126,6 +126,8 @@ namespace Puff.Ctrl
             string url = GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffMsg);
 
             await APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
+
+            HUDToastView.instance.SendMessage(StringTextAsset.Messaging.SubmitSuccess, 3);
         }
 
         private void OnCameraScreenShot(Texture renderTexture) {

@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 
 namespace Hsinpa.View {
-    public class HUDPopupView : MonoBehaviour
+    public class HUDToastView : MonoBehaviour
     {
 
         [SerializeField]
@@ -14,15 +14,15 @@ namespace Hsinpa.View {
         [SerializeField]
         private Text messageText;
 
-        private static HUDPopupView _instance;
+        private static HUDToastView _instance;
 
-        public static HUDPopupView instance
+        public static HUDToastView instance
         {
             get
             {
                 if (_instance == null)
                 {
-                    _instance = FindObjectOfType<HUDPopupView>();
+                    _instance = FindObjectOfType<HUDToastView>();
                 }
                 return _instance;
             }

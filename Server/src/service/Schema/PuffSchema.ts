@@ -13,7 +13,7 @@ const puffSchema = new Schema({
     author : String,
     body : String,
     title : String,
-    type: Number,
+    type: Number, //0 = floating seed, 1 = plant
     duration : Number,
     privacy : Number,
     latitude : Number,

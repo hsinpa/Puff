@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: ColorSettingSRP
   m_EditorClassIdentifier: Assembly-CSharp::MissionItemSObj
   TextNormalColor: {r: 1, g: 1, b: 1, a: 1}
-  TextHighlightColor: {r: 0.6156863, g: 0.80784315, b: 0.78039217, a: 1}
-  TextUnSelectedColor: {r: 0.5372549, g: 0.5372549, b: 0.5372549, a: 1}
+  TextHighlightColor: {r: 0.9764706, g: 0.9137255, b: 0.81960785, a: 1}
+  TextUnSelectedColor: {r: 0.9764706, g: 0.9137255, b: 0.81960785, a: 0}
