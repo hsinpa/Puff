@@ -8,6 +8,7 @@ const accountschema = new Schema({
     password : String,
     email : String,
     auth_key : String,
+    save_puffMsgs : [String],
     friends : [{ type: Schema.Types.ObjectId, ref: DatabaseTableName.Friend}],
     auth_expire : {type : Date, default : GetDate(UniversalParameter.AuthkeyExpireDate)},
     create_date : {type : Date, default :Date.now},

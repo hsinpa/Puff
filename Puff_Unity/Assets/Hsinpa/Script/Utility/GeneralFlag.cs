@@ -40,9 +40,9 @@ public class GeneralFlag
     public class API
     {
         //Messages
-        public const string GetAll = "get_all/{0}/{1}/{2}";
-        public const string SendPuffComment = "send_puff_comment";
-        public const string SendPuffMsg = "send_puff_msg";
+        public const string GetAll = "puff/get_all/{0}/{1}/{2}";
+        public const string SendPuffComment = "puff/send_puff_comment";
+        public const string SendPuffMsg = "puff/send_puff_msg";
 
         //Account
         public const string Login = "account/login";

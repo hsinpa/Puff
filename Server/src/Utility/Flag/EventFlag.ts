@@ -26,6 +26,11 @@ export const DatabaseTableName = {
     Friend : "puff_friends"
 }
 
+export const AccountSchemeTableKey = {
+    SavePuffMsgList : "save_puffMsgs"
+
+}
+
 export const DatabaseErrorType = {
     Normal : 0,
 
