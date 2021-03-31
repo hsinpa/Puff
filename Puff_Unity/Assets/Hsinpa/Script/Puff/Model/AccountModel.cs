@@ -2,6 +2,7 @@
 using Puff.View;
 using System.Collections;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -17,6 +18,11 @@ public class AccountModel
             PlayerPrefs.SetString(EventFlag.PlayprefKey.LoginAccount, _puffAccountType._id);
             PlayerPrefs.SetString(EventFlag.PlayprefKey.AuthKey, _puffAccountType.auth_key);
         }
+    }
+
+    public async Task<APIHttpRequest.HttpResult> FindAccountByEmail(string email) {
+        string url = string.Format(GeneralFlag.API.AccountByEmail, email);
+        return await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Get);
     }
 
     public async Task<APIHttpRequest.HttpResult> PerformSignLogin(JsonTypes.PuffAccountLoginType loginJsonType) {
@@ -48,5 +54,15 @@ public class AccountModel
 
     public void ReleasePuffMsg() { 
     
+    }
+
+    public static bool CheckPassword(string p_password)
+    {
+        return Regex.Match(p_password, GeneralFlag.RegularExpression.UniversalSyntaxRex).Success;
+    }
+
+    public static bool CheckEmail(string p_email)
+    {
+        return Regex.Match(p_email, GeneralFlag.RegularExpression.Email).Success;
     }
 }

@@ -44,11 +44,13 @@ public class GeneralFlag
         public const string SendPuffComment = "puff/send_puff_comment";
         public const string SendPuffMsg = "puff/send_puff_msg";
 
+
         //Account
         public const string Login = "account/login";
         public const string SignUp = "account/sign_up";
         public const string AuthLogin = "account/auth_login";
-        
+        public const string AccountByEmail = "account/email/{0}";
+
         public const string SavePuffMsg = "account/save_puff_msg";
         public const string RemovePuffMsg = "account/release_puff_msg";
 

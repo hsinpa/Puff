@@ -49,15 +49,31 @@ namespace Puff.Ctrl
 
         private async void OnFriendSearchtEvent(string email)
         {
-            if (string.IsNullOrEmpty(email)) return;
+            if (!AccountModel.CheckEmail(email)) {
+                Debug.Log("Wrong Email Format " + email);
+                HUDToastView.instance.ShowMessage(StringTextAsset.Login.EmailWrongFormat, 3);
+                return;
+            }
 
-            FindFriendModal findFriendModal = Modals.instance.GetModal<FindFriendModal>();
+            var r = await _accountModel.FindAccountByEmail(email);
 
-            var fakeJSON = new JsonTypes.FriendType();
-            fakeJSON.username = "Fake";
-            fakeJSON._id = "dfasdfh";
+            if (r.isSuccess) {
 
-            findFriendModal.SetFriendInvitePanel(fakeJSON, OnFriendInviteEvent);
+                JsonTypes.DatabaseResultType databaseResultType = JsonUtility.FromJson<JsonTypes.DatabaseResultType>(r.body);
+
+                if (databaseResultType.status == (int)EventFlag.DatabaseStateType.AccountState.Fail_Login_NoAccount) {
+                    Debug.Log("No Account");
+                    HUDToastView.instance.ShowMessage(StringTextAsset.Login.DatabaseFail_Login, 3);
+
+                    return;
+                }
+
+                JsonTypes.FriendType friendJSON = JsonUtility.FromJson<JsonTypes.FriendType>(databaseResultType.result);
+
+                FindFriendModal findFriendModal = Modals.instance.GetModal<FindFriendModal>();
+
+                findFriendModal.SetFriendInvitePanel(friendJSON, OnFriendInviteEvent);
+            }
         }
 
         private async void OnFriendInviteEvent(string user_id)

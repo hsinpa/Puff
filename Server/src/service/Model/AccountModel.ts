@@ -15,12 +15,16 @@ class AccountModel {
     }
 
 //#region Utility Functions
-async IsEmailNoExist(p_email : string) : Promise<boolean>  {
-    let r = await this.accountSchema.find({
+async GetAccountByEmail(p_email : string) {
+    return await this.accountSchema.find({
         email : p_email
     }).
-    select({ name: 1 }).
+    select("username _id email").
     exec();
+}
+
+async IsEmailNoExist(p_email : string) : Promise<boolean>  {
+    let r = await this.GetAccountByEmail(p_email);
 
     return r.length <= 0;
 }
@@ -30,7 +34,6 @@ async IsAccountExist(account_id : string) : Promise<boolean>  {
 
     return r != null;
 }
-
 
 async GetUserInfo(p_email : string, p_password : string) {
     let hashPassword = SHA256Hash(p_password + this.password_key);

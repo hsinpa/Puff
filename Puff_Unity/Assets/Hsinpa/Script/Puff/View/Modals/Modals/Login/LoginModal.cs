@@ -111,10 +111,10 @@ namespace Puff.View
 
             string errorMessage = "";
 
-            if (!CheckEmail(emailField.text) && errorMessage == "")
+            if (! AccountModel.CheckEmail(emailField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.EmailWrongFormat;
 
-            if (!CheckPassword(passwordField.text) && errorMessage == "")
+            if (!AccountModel.CheckPassword(passwordField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.PasswordWrongFormat; 
 
             errorTips.text = errorMessage;
@@ -131,10 +131,10 @@ namespace Puff.View
             if (string.IsNullOrEmpty(usernameField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.UserWrongFormat;
 
-            if (!CheckEmail(emailField.text) && errorMessage == "")
+            if (!AccountModel.CheckEmail(emailField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.EmailWrongFormat;
 
-            if (!CheckPassword(passwordField.text) && errorMessage == "")
+            if (!AccountModel.CheckPassword(passwordField.text) && errorMessage == "")
                 errorMessage = StringTextAsset.Login.PasswordWrongFormat;
 
             if (passwordField.text != confirmPasswordField.text && errorMessage == "")
@@ -147,13 +147,6 @@ namespace Puff.View
 
             if (errorMessage == "")
                 OnSignSubmitEvent(emailField.text, usernameField.text, passwordField.text);
-        }
-
-        private bool CheckPassword(string p_password) {
-            return Regex.Match(p_password, GeneralFlag.RegularExpression.UniversalSyntaxRex).Success;
-        }
-        private bool CheckEmail(string p_email) {
-            return Regex.Match(p_email, GeneralFlag.RegularExpression.Email).Success;
         }
 
     }

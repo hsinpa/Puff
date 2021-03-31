@@ -17,9 +17,13 @@ namespace Hsinpa.View.Friend
         public void SetUp(System.Action<string> Callback) {
             this.gameObject.SetActive(true);
 
-            this.SearchInputField.text = "";
+            ActionBtn.onClick.RemoveAllListeners();
+            ActionBtn.onClick.AddListener(() =>
+            {
+                Callback(SearchInputField.text);
+            });
 
-            UtilityMethod.SetSimpleBtnEvent<string>(ActionBtn, Callback, SearchInputField.text);
+            this.SearchInputField.text = "";
         }
     }
 }

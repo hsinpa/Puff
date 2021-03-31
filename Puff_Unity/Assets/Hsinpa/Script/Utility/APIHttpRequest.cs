@@ -33,6 +33,7 @@ namespace Hsinpa.Utility {
             catch (System.Exception ex)
             {
                 _httpResult.isSuccess = false;
+                Debug.Log("failed url " + url);
                 Debug.LogException(ex);
             }
 

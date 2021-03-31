@@ -2,9 +2,22 @@
 import * as path from 'path';
 import * as Router from 'koa-router';
 import MongoDB from '../service/MongoDB';
-import {ClientSignLogType} from '../Utility/Flag/TypeFlag';
+import {ClientSignLogType, DatabaseResultType} from '../Utility/Flag/TypeFlag';
+import {DatabaseErrorType } from '../Utility/Flag/EventFlag';
 
 export let AccountRouter = function (router : Router, mongodb:MongoDB) {
+
+    router.get('/account/email/:email', async function (ctx:any, next:any) {
+      let r = (await mongodb.accountModel.GetAccountByEmail(ctx.params.email));
+
+      let returnType  : DatabaseResultType = {
+        status : (r.length > 0) ? DatabaseErrorType.Normal : DatabaseErrorType.Account.Fail_Login_NoAccount,
+        result :  JSON.stringify((r.length > 0) ? r[0] : {})
+      };
+
+      ctx.body = JSON.stringify(returnType);
+    });
+
     router.post('/account/login', async function (ctx:any, next:any) {
         let r = JSON.stringify(await mongodb.accountModel.Login(ctx.request.body as ClientSignLogType));
         console.log(r);
