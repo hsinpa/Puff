@@ -50,6 +50,12 @@ namespace Puff.Ctrl
                         OnCreatePuffMsg();
                     }
                     break;
+
+                case EventFlag.Event.LoginSuccessful:
+                    {
+                        RefreshSaveLibraryPuff();
+                    }
+                    break;
             }
         }
 
@@ -62,6 +68,10 @@ namespace Puff.Ctrl
             this._arCameraCtrl.OnScreenShotIsDone += OnCameraScreenShot;
 
             //puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, () => OpenFrontPage(_currentPuffMsg));
+        }
+
+        private void RefreshSaveLibraryPuff() {
+            _ = this._puffModel.puffSaveMsgUtility.GetSaveMsgFromServer(PuffSaveMsgUtility.GetPuffSaveActionType(this._accountModel.puffAccountType._id));
         }
 
         #region UI Event

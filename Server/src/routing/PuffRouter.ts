@@ -20,12 +20,6 @@ export let PuffRouter = function (router : Router, mongodb:MongoDB) {
     let r = JSON.stringify(await mongodb.puffModel.GetAllPuff());
     ctx.body = r;
   });
-
-  router.post('/puff/get_all_self_msg', async function (ctx:any, next:any) {
-    let r = await mongodb.puffModel.GetAllSelfSavePuffMsg(ctx.request.body.account_id);
-  
-    ctx.body = r;
-  });
   
   router.post('/puff/send_puff_comment', async function (ctx:any, next:any) {
     let r = await mongodb.puffModel.SavePuffComment(ctx.request.body.message_id, ctx.request.body.author_id, ctx.request.body.author, ctx.request.body.body );
@@ -51,6 +45,12 @@ export let PuffRouter = function (router : Router, mongodb:MongoDB) {
 //#endregion
 
 //#region Save Messages to personal library
+  router.post('/puff/get_all_self_msg', async function (ctx:any, next:any) {
+    let r = await mongodb.puffModel.GetAllSelfSavePuffMsg(ctx.request.body.account_id);
+
+    ctx.body = r;
+  });
+
   router.post('/puff/save_puff_to_library', async function (ctx:any, next:any) {
     let r = await mongodb.puffModel.SavePuffMsgToLibrary(ctx.request.body.puff_id, ctx.request.body.account_id);
   

@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 
 public class JsonTypes {
-
     [System.Serializable]
     public struct PuffMessageType
     {
@@ -64,6 +63,14 @@ public class JsonTypes {
         public string auth_key;
 
         public bool isValid => !string.IsNullOrEmpty(_id);
+    }
+
+    [System.Serializable]
+    public struct PuffSaveLibAction
+    {
+        public string account_id;
+        public string puff_id;
+        public string auth_key;
     }
 
     [System.Serializable]

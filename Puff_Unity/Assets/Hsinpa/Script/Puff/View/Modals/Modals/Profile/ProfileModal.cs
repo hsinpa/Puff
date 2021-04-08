@@ -7,11 +7,29 @@ using Hsinpa.Model;
 using Hsinpa.Utility;
 using System.Threading;
 using System.Threading.Tasks;
+using Puff.Model;
+using LitJson;
 
 namespace Puff.View
 {
     public class ProfileModal : Modal
     {
+        [SerializeField]
+        ColorItemSObj colorSetting;
+
+        [Header("Tab")]
+        [SerializeField]
+        private PuffMsgTabModule puffMsgTabModule; 
+
+        [Header("SelfSaveMsg Panel")]
+        [SerializeField]
+        private Transform SelfSaveMsgHolder;
+
+        [SerializeField]
+        private Button SelfMsgBtn;
+
+        [SerializeField]
+        private Button SaveMsgBtn;
 
         [Header("Friend Panel")]
         [SerializeField]
@@ -26,28 +44,35 @@ namespace Puff.View
         [SerializeField]
         private Transform FriendItemHHolder;
 
+        [Header("Library")]
+        [SerializeField]
+        private ProfileLibraryView libraryView;
+            
         private AccountModel accountModel;
         private FriendModel friendModel;
+        private PuffSaveMsgUtility puffSaveUtility;
 
         Task<JsonTypes.FriendListType> friendsTask;
 
         private System.Action<JsonTypes.FriendType> FriendAcceptCallback;
         private System.Action<JsonTypes.FriendType> FriendRejectCallback;
-
+        private System.Action<JsonTypes.PuffMessageType> OnLibraryPuffCallback;
 
         public override void Show(bool isShow)
         {
             base.Show(isShow);
         }
 
-        public void SetUp(AccountModel accountModel, FriendModel friendModel,
+        public void SetUp(AccountModel accountModel, FriendModel friendModel, PuffSaveMsgUtility puffSaveUtility,
             System.Action AddNewFriendCallback,
-            System.Action<JsonTypes.FriendType> FriendAcceptCallback, System.Action<JsonTypes.FriendType> FriendRejectCallback) {
+            System.Action<JsonTypes.FriendType> FriendAcceptCallback, System.Action<JsonTypes.FriendType> FriendRejectCallback, System.Action<JsonTypes.PuffMessageType> OnLibraryPuffCallback) {
             this.accountModel = accountModel;
             this.friendModel = friendModel;
+            this.puffSaveUtility = puffSaveUtility;
 
             this.FriendAcceptCallback = FriendAcceptCallback;
             this.FriendRejectCallback = FriendRejectCallback;
+            this.OnLibraryPuffCallback = OnLibraryPuffCallback;
 
             UtilityMethod.SetSimpleBtnEvent(SearchFriendBtn, AddNewFriendCallback);
 
@@ -55,8 +80,41 @@ namespace Puff.View
             {
                 DisplayFriendList(this.accountModel.puffAccountType);
             }
+
+            UtilityMethod.SetSimpleBtnEvent(SelfMsgBtn, OnSelfPuffClick);
+            UtilityMethod.SetSimpleBtnEvent(SaveMsgBtn, OnSavePuffClick);
+
+            puffMsgTabModule.SetUp(colorSetting, new Dictionary<int, System.Action>()
+            {
+                {(int)Tab.Library, OnSelfSaveTabClick},
+                {(int)Tab.Friend, OnFriendTabClick}
+            });
+
+            puffMsgTabModule.SetClickTab((int)Tab.Friend);
         }
 
+        #region Button Action
+        private void OnSelfSaveTabClick() {
+            FriendItemHHolder.gameObject.SetActive(false);
+            SelfSaveMsgHolder.gameObject.SetActive(true);
+            libraryView.gameObject.SetActive(false);
+        }
+
+        private void OnFriendTabClick()
+        {
+            FriendItemHHolder.gameObject.SetActive(true);
+            SelfSaveMsgHolder.gameObject.SetActive(false);
+            libraryView.gameObject.SetActive(false);
+        }
+
+        private void OnSelfPuffClick() {
+            libraryView.Generate(puffSaveUtility.GetFilterCacheMsg(PuffSaveMsgUtility.State.Self, this.accountModel.puffAccountType._id), this.OnLibraryPuffCallback);
+        }
+
+        private void OnSavePuffClick() {
+            libraryView.Generate(puffSaveUtility.GetFilterCacheMsg(PuffSaveMsgUtility.State.Other, this.accountModel.puffAccountType._id), this.OnLibraryPuffCallback);
+        }
+        #endregion
 
         #region Friend Panel
         private async void DisplayFriendList(JsonTypes.PuffAccountType account)
@@ -120,5 +178,9 @@ namespace Puff.View
                 });
         }
         #endregion
+
+        private enum Tab { 
+            Library, Friend
+        }
     }
 }

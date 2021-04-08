@@ -44,7 +44,6 @@ namespace Puff.Model
 
             if (rawPuffMsgData.isSuccess)
             {
-
                 puffArray = JsonHelper.FromJson<JsonTypes.PuffMessageType>(rawPuffMsgData.body).ToList();
 
                 RegisterNewPuffMsg(puffArray);

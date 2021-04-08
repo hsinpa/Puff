@@ -44,15 +44,16 @@ public class GeneralFlag
         public const string SendPuffComment = "puff/send_puff_comment";
         public const string SendPuffMsg = "puff/send_puff_msg";
 
+        //Puff Save / Safe Msg
+        public const string GetAllSavePuff = "puff/get_all_self_msg"; //account_id
+        public const string SavePuffToLibrary = "puff/save_puff_to_library"; //puff_id, account_id
+        public const string RemovePuffFromLibrary = "puff/remove_puff_from_library"; //puff_id, account_id
 
         //Account
         public const string Login = "account/login";
         public const string SignUp = "account/sign_up";
         public const string AuthLogin = "account/auth_login";
         public const string AccountByEmail = "account/email/{0}";
-
-        public const string SavePuffMsg = "account/save_puff_msg";
-        public const string RemovePuffMsg = "account/release_puff_msg";
 
         //Friend
         public const string GetFriends = "friends/{0}";

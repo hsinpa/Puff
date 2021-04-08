@@ -1,7 +1,7 @@
 import PuffSchema from '../Schema/PuffSchema';
 import * as moogoose from 'mongoose';
-import {PuffCommentType, PuffMessageType, Duration } from '../../Utility/Flag/TypeFlag';
-import {AccountSchemeTableKey } from '../../Utility/Flag/EventFlag';
+import {PuffCommentType, PuffMessageType, Duration, DatabaseResultType } from '../../Utility/Flag/TypeFlag';
+import {AccountSchemeTableKey, DatabaseErrorType} from '../../Utility/Flag/EventFlag';
 
 import * as uuid from 'uuid';
 import {GetDate } from '../../Utility/GeneralMethod';
@@ -75,23 +75,28 @@ class PuffModel {
 
     private async GetSelfWritePuffIDs(account_id : string) {
         return await this.puffSchema.find({author_id : account_id}).select("_id");
-    } 
+    }
 
     //#region To Personal Library
-    async SavePuffMsgToLibrary(puff_id : string, user_id : string) : Promise<boolean> {
+    async SavePuffMsgToLibrary(puff_id : string, user_id : string) : Promise<DatabaseResultType> {
         //Check if no duplicate
         let msgs = await this.GetPuffIDsByAccountID(user_id);
         let puffList : string[] = msgs[AccountSchemeTableKey.SavePuffMsgList];
+
+        let returnType  : DatabaseResultType = {
+            status : DatabaseErrorType.Account.Fail_AuthLogin_NotValid
+        };
 
         let isNoDuplicate = puffList.findIndex(x=> x == puff_id) < 0;
 
         if (isNoDuplicate) {
             msgs[AccountSchemeTableKey.SavePuffMsgList].push(puff_id);
             await msgs.save();
-            return true;
+            returnType.status = DatabaseErrorType.Normal;
+            return returnType;
         }
 
-        return false;
+        return returnType;
     }
 
     async RemovePuffMsgFromLibrary(puff_id : string, user_id : string) : Promise<boolean> {

@@ -70,7 +70,10 @@ namespace Hsinpa.View
                 openModals.Add(targetModal as T);
             }
 
+            //Put the current modal to last sibling
+            int siblingCount = transform.childCount;
             currentModals = targetModal as T;
+            currentModals.transform.SetSiblingIndex(siblingCount - 1);
 
             background.enabled = (_hasBackground);
 

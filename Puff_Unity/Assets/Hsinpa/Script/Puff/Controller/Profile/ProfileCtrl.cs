@@ -17,7 +17,7 @@ namespace Puff.Ctrl
 
         private AccountModel _accountModel;
         private FriendModel _friendModel;
-
+        private PuffModel _puffModel;
 
         public override void OnNotify(string p_event, params object[] p_objects)
         {
@@ -27,6 +27,7 @@ namespace Puff.Ctrl
                     {
                         _accountModel = PuffApp.Instance.models.accountModel;
                         _friendModel = PuffApp.Instance.models.friendModel;
+                        _puffModel = PuffApp.Instance.models.puffModel;
                     }
                     break;
                 case EventFlag.Event.OnProfileOpen:
@@ -37,9 +38,11 @@ namespace Puff.Ctrl
 
         private void OnProfileOpenEvent() {
             ProfileModal profileModal = Modals.instance.OpenModal<ProfileModal>();
-            profileModal.SetUp(this._accountModel, this._friendModel, OnAddNewFriendtEvent, OnFriendAcceptEvent, OnFriendRejectEvent);
+            profileModal.SetUp(this._accountModel, this._friendModel, this._puffModel.puffSaveMsgUtility,
+                                OnAddNewFriendtEvent, OnFriendAcceptEvent, OnFriendRejectEvent, OnLibraryPuffClick);
         }
 
+        #region Friend Callback
         private async void OnAddNewFriendtEvent()
         {
             FindFriendModal findFriendModal = Modals.instance.OpenModal<FindFriendModal>();
@@ -98,5 +101,17 @@ namespace Puff.Ctrl
         {
             await _friendModel.RejectFriend(_friendModel.GetActionJSON(_accountModel.puffAccountType._id, friendType._id, _accountModel.puffAccountType.auth_key));
         }
+        #endregion
+
+
+        #region Puff Library Callback
+        private void OnLibraryPuffClick(JsonTypes.PuffMessageType puffMessageType)
+        {
+            Debug.Log("puffMessageType id " + puffMessageType._id);
+
+            PuffApp.Instance.Notify(EventFlag.Event.OpenPuffMsg, puffMessageType);
+        }
+
+        #endregion
     }
 }
