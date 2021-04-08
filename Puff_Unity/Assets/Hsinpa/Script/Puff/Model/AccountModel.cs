@@ -45,17 +45,6 @@ public class AccountModel
         return await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.AuthLogin), BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(authType));
     }
 
-    //public async void SavePuffMsg(string puffID) {
-        
-
-
-    //    return await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(GeneralFlag.API.AuthLogin), BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(authType));
-    //}
-
-    public void ReleasePuffMsg() { 
-    
-    }
-
     public static bool CheckPassword(string p_password)
     {
         return Regex.Match(p_password, GeneralFlag.RegularExpression.UniversalSyntaxRex).Success;

@@ -63,7 +63,6 @@ public class JsonTypes {
         public string email;
         public string auth_key;
 
-        public List<string> savePuffList;
         public bool isValid => !string.IsNullOrEmpty(_id);
     }
 

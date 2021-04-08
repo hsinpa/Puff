@@ -16,7 +16,7 @@ namespace Hsinpa.View.Friend {
         [SerializeField]
         private Button ActionBtn;
 
-        public void SetUp(string friendInfo, string friendID, Texture texture, System.Action<string> action)
+        public void SetUp(string friendInfo, JsonTypes.FriendType friendJSON, Texture texture, System.Action<JsonTypes.FriendType> action)
         {
             this.gameObject.SetActive(true);
 
@@ -25,7 +25,7 @@ namespace Hsinpa.View.Friend {
             if (texture != null)
                 FriendAvatar.texture = texture;
 
-            UtilityMethod.SetSimpleBtnEvent<string>(ActionBtn, action, friendID);
+            UtilityMethod.SetSimpleBtnEvent<JsonTypes.FriendType>(ActionBtn, action, friendJSON);
         }
     }
 }

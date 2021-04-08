@@ -76,10 +76,18 @@ namespace Puff.Ctrl
             }
         }
 
-        private async void OnFriendInviteEvent(string user_id)
+        private async void OnFriendInviteEvent(JsonTypes.FriendType friendJSON)
         {
-            Debug.Log("OnFriendInviteEvent : " + user_id);
+            Debug.Log("OnFriendInviteEvent : " + friendJSON._id);
+
             Modals.instance.Close();
+
+            JsonTypes.FriendActionJson friendActionJson = new JsonTypes.FriendActionJson();
+            friendActionJson.account_id = _accountModel.puffAccountType._id;
+            friendActionJson.auth_key = _accountModel.puffAccountType.auth_key;
+            friendActionJson.target_id = friendJSON._id;
+
+            await _friendModel.RequestFriend(friendActionJson);
         }
 
         private async void OnFriendAcceptEvent(JsonTypes.FriendType friendType) {

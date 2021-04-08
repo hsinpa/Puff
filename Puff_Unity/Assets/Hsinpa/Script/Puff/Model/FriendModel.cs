@@ -49,11 +49,10 @@ namespace Hsinpa.Model {
             await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(friendJson));
         }
 
-        public void UpdateFriendList() { 
-        
+        public async Task RequestFriend(JsonTypes.FriendActionJson friendJson) {
+            string url = (GeneralFlag.API.AddFriends);
+            await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(friendJson));
         }
-
-
     }
 }
 
