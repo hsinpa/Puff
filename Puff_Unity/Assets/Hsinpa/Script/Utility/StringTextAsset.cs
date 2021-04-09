@@ -5,6 +5,12 @@ using UnityEngine;
 public class StringTextAsset
 {
 
+    public class GeneralText {
+        public const string Success = "Operation successful";
+        public const string Failure = "Operation fail";
+        public const string FailureWithVariable = "Operation fail : {0}";
+    }
+
     public class Login
     {
         public const string SignUpBtn = "Sign Up";
@@ -35,8 +41,6 @@ public class StringTextAsset
         public const string FriendDialogueBoxTitle = "Friend Management";
         public const string FriendAcceptMessage = "Accept friend request from {0}";
         public const string FriendRejectMessage = "Do you wish to reject friend offer from {0}";
-
-        public const string FriendOperationSuccess = "Operation successful";
     }
 
     public class DialogueBox {
@@ -61,5 +65,9 @@ public class StringTextAsset
         public const string SubmitBtnNext = "Next step";
 
         public const string SubmitSuccess = "Message is made!";
+
+        //Save Puff to library
+        public const string PuffLibraryError_IsAccountOwner = "Cannot save your own message";
+        public const string PuffLibraryError_IsAlreadySave = "This message is already saved";
     }
 }

@@ -30,6 +30,7 @@ namespace Puff.Ctrl {
 
         private PuffInspectorInput _puffInspectorInput;
         private PuffModel _puffModel;
+        private AccountModel _accountModel;
 
         private Vector3 sharedVectorUnit = new Vector3();
 
@@ -58,6 +59,7 @@ namespace Puff.Ctrl {
         private void SetUp()
         {
             _puffModel = PuffApp.Instance.models.puffModel;
+            _accountModel = PuffApp.Instance.models.accountModel;
             _puffInspectorInput = new PuffInspectorInput(SetCurrentSelectedObject, SetFaceInfo, ReleaseSelectObject, ProcessVertical, DragThreshold, _camera);
 
             puffHUDView.SetBottomHUD(() => {
@@ -122,17 +124,20 @@ namespace Puff.Ctrl {
             return true;
         }
 
-        private void ReleaseSelectObject(bool releaseBool) {
+        private void ReleaseSelectObject(PuffInspectorInput.GestureEvent gestureInput) {
 
-            if (releaseBool) {
+            if (gestureInput != PuffInspectorInput.GestureEvent.None) {
                 puffInspectView.Show(false);
 
                 if (SelectedPuffObject != null)
                 {
+                    if (gestureInput == PuffInspectorInput.GestureEvent.Save)
+                        SaveToSelfLibrary(SelectedPuffObject.puffMessageType);
+
                     SelectedPuffObject.Dismiss();
                     SelectedPuffObject = null;
 
-                    _puffInspectorInput.SetInputSelectObject(SelectedPuffObject);
+                    _puffInspectorInput.SetInputSelectObject(SelectedPuffObject);                
                 }
             }
 
@@ -144,6 +149,24 @@ namespace Puff.Ctrl {
             puffInspectView.Show(isShow);
             if (SelectedPuffObject != null)
                 SelectedPuffObject.gameObject.SetActive(isShow);
+        }
+
+        private async void SaveToSelfLibrary(JsonTypes.PuffMessageType puffMessageType) {
+            //Check if message is belong to account user
+            if (puffMessageType.author_id == _accountModel.puffAccountType._id) {
+
+                HUDToastView.instance.ShowMessage(StringTextAsset.Messaging.PuffLibraryError_IsAccountOwner, 4, GeneralFlag.Colors.ToastColorError);
+
+                return;
+            }
+
+            var actionType = PuffSaveMsgUtility.GetPuffSaveActionType(_accountModel.puffAccountType._id, puffMessageType._id);
+            bool isSucess = await this._puffModel.puffSaveMsgUtility.AddNewSaveMsg(puffMessageType, actionType);
+
+            if (!isSucess)
+                HUDToastView.instance.ShowMessage(StringTextAsset.Messaging.PuffLibraryError_IsAlreadySave, 4, GeneralFlag.Colors.ToastColorError);
+            else
+                HUDToastView.instance.ShowMessage(StringTextAsset.GeneralText.Success, 4, GeneralFlag.Colors.ToastColorNormal);
         }
     }
 }

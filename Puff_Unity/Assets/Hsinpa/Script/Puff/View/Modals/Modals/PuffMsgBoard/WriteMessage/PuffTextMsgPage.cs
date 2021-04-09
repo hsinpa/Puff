@@ -164,7 +164,7 @@ namespace Puff.View
                 {
                     if (string.IsNullOrEmpty(msgText.text) || string.IsNullOrEmpty(titleText.text))
                     {
-                            HUDToastView.instance.ShowMessage(StringTextAsset.Messaging.WarningNoMessageOrTitle, 4);
+                            HUDToastView.instance.ShowMessage(StringTextAsset.Messaging.WarningNoMessageOrTitle, 4, GeneralFlag.Colors.ToastColorNormal);
 
                         return;
                     }

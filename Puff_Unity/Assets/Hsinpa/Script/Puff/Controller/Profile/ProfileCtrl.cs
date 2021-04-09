@@ -54,7 +54,7 @@ namespace Puff.Ctrl
         {
             if (!AccountModel.CheckEmail(email)) {
                 Debug.Log("Wrong Email Format " + email);
-                HUDToastView.instance.ShowMessage(StringTextAsset.Login.EmailWrongFormat, 3);
+                HUDToastView.instance.ShowMessage(StringTextAsset.Login.EmailWrongFormat, 3, GeneralFlag.Colors.ToastColorNormal);
                 return;
             }
 
@@ -66,7 +66,7 @@ namespace Puff.Ctrl
 
                 if (databaseResultType.status == (int)EventFlag.DatabaseStateType.AccountState.Fail_Login_NoAccount) {
                     Debug.Log("No Account");
-                    HUDToastView.instance.ShowMessage(StringTextAsset.Login.DatabaseFail_Login, 3);
+                    HUDToastView.instance.ShowMessage(StringTextAsset.Login.DatabaseFail_Login, 3, GeneralFlag.Colors.ToastColorNormal);
 
                     return;
                 }

@@ -10,6 +10,10 @@ public class GeneralFlag
         public static readonly Color HideColor = new Color(1,1,1,0);
         public static readonly Color DisplayColor = new Color(1,1,1,1);
         public static readonly Color HighLightColor = new Color(0.976f, 0.913f, 0.8196f, 1);
+
+        public static readonly Color ToastColorNormal = new Color(0.08235294f, 0.4313726f, 0.345098f, 1);
+        public static readonly Color ToastColorError = new Color(0.735849f, 0.227451f, 0.1843137f, 1);
+        public static readonly Color ToastColorWarning = new Color(0.7169812f, 0.4941176f, 0.1254902f, 1);
     }
 
     public class RegularExpression {

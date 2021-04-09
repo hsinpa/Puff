@@ -38,7 +38,7 @@ namespace Puff.Ctrl.Utility
 
         private System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback;
         private System.Action<Face> SetFaceCallback;
-        private System.Action<bool> ReleaseObjectCallback;
+        private System.Action<GestureEvent> ReleaseObjectCallback;
         private System.Action<DragDir, float, float, Vector3> ProcessVerticalCallback;
 
 
@@ -46,7 +46,7 @@ namespace Puff.Ctrl.Utility
 
         public PuffInspectorInput(System.Func<PuffItemView, bool> SetCurrentSelectedObjectCallback,
                                 System.Action<Face> SetFaceCallback,
-                                System.Action<bool> ReleaseObjectCallback,
+                                System.Action<GestureEvent> ReleaseObjectCallback,
                                 System.Action<DragDir, float, float, Vector3> ProcessVerticalCallback, float dragThreshold, Camera camera) {
             this.SetCurrentSelectedObjectCallback = SetCurrentSelectedObjectCallback;
             this.SetFaceCallback = SetFaceCallback;
@@ -128,7 +128,7 @@ namespace Puff.Ctrl.Utility
                 if (rotDir == 0 && recordRotationY >= 180)
                     rotDir = 360;
 
-                this.ReleaseObjectCallback(gestureEvent != GestureEvent.None);
+                this.ReleaseObjectCallback(gestureEvent);
             }
         }
 

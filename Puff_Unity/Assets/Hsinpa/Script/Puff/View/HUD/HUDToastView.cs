@@ -9,7 +9,7 @@ namespace Hsinpa.View {
     {
 
         [SerializeField]
-        private RectTransform rectTran;
+        private Image toastUISprite;
 
         [SerializeField]
         private Text messageText;
@@ -30,19 +30,20 @@ namespace Hsinpa.View {
 
         private bool isShowed = false;
 
-        public void ShowMessage(string message, float duration) {
+        public void ShowMessage(string message, float duration, Color toastBgColor) {
 
             //If current message is showing, then ignore
             if (isShowed) return;
             isShowed = true;
 
-            var rect = rectTran.rect;
+            var rect = toastUISprite.rectTransform.rect;
             float width = rect.width - 20;
 
             messageText.text = message;
 
-            rectTran.DOKill();
-            rectTran.DOAnchorPosX(-width, 0.3f);
+            toastUISprite.rectTransform.DOKill();
+            toastUISprite.rectTransform.DOAnchorPosX(-width, 0.3f);
+            toastUISprite.color = toastBgColor;
 
             duration = 0.3f + duration;
             _ = Utility.UtilityMethod.DoDelayWork(duration, Close);
@@ -51,8 +52,8 @@ namespace Hsinpa.View {
         private void Close() {
             isShowed = false;
 
-            rectTran.DOKill();
-            rectTran.DOAnchorPosX(0, 0.2f);
+            toastUISprite.rectTransform.DOKill();
+            toastUISprite.rectTransform.DOAnchorPosX(0, 0.2f);
 
             messageText.text = "";
         }

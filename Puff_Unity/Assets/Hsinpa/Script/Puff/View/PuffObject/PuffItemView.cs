@@ -19,7 +19,11 @@ namespace Puff.View {
 
         private Vector3 _catchPosition;
 
+        private JsonTypes.PuffMessageType _puffMessageType;
+        public JsonTypes.PuffMessageType puffMessageType => _puffMessageType;
+
         public void SetUp(JsonTypes.PuffMessageType p_puffMessageType) {
+            this._puffMessageType = p_puffMessageType;
             offsetTime = Random.Range(0.1f, 2f);
             _puffID = p_puffMessageType._id;
             gameObject.name = p_puffMessageType.author;
