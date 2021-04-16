@@ -18,7 +18,9 @@ public class JsonTypes {
 
         public float distance;
         public float latitude;
-        public float longitude;
+        public float longitidue;
+
+        public GeographicType geo_location;
 
         public string date;
         public string expire;
@@ -28,6 +30,15 @@ public class JsonTypes {
 
         public List<PuffCommentType> comments;
         public List<string> images;
+    }
+
+    [System.Serializable]
+    public struct GeographicType {
+        public float[] coordinates;
+
+        public GeographicType(float latitude, float longitude) {
+            coordinates = new float[] { latitude, longitude };
+        }
     }
 
     [System.Serializable]

@@ -38,6 +38,8 @@ namespace Puff.Model
             int defaultRadius = 10000;
             string url = string.Format(GeneralFlag.API.GetAll, locationInfo.latitude, locationInfo.longitude, defaultRadius);
 
+            Debug.Log(url);
+
             APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Get);
 
             List<JsonTypes.PuffMessageType> puffArray = new List<JsonTypes.PuffMessageType>();

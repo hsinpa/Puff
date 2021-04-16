@@ -22,6 +22,8 @@ namespace Hsinpa.Utility
                 LocationInfo location = new LocationInfo();
                 location.isSuccess = isSuccess;
 
+                Debug.Log(isSuccess);
+
                 if (isSuccess)
                 {
                     location.longitude = Input.location.lastData.longitude;

@@ -20,6 +20,11 @@ export let PuffRouter = function (router : Router, mongodb:MongoDB) {
     let r = JSON.stringify(await mongodb.puffModel.GetAllPuff());
     ctx.body = r;
   });
+
+  router.get('/puff/filter_puff/:account_id', async function (ctx:any, next:any) {
+    let r = await mongodb.puffModel.GetFilteredPuff(ctx.params.account_id);
+    ctx.body = "Hi All";
+  });
   
   router.post('/puff/send_puff_comment', async function (ctx:any, next:any) {
     let r = await mongodb.puffModel.SavePuffComment(ctx.request.body.message_id, ctx.request.body.author_id, ctx.request.body.author, ctx.request.body.body );

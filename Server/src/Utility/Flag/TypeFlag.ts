@@ -28,14 +28,16 @@ export interface PuffMessageType {
     type : number,
     duration : number,
     privacy : number,
-
-    latitude : number,
-    longitude : number,
+    geo_location : GeographicType,
     images : string[],
     comments : string[],
 
     date : Date,
     expire : Date
+}
+
+export interface GeographicType {
+    coordinates : number[]
 }
 
 export interface DatabaseResultType {

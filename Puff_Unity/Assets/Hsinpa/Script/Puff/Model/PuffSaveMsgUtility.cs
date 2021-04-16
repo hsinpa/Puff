@@ -23,7 +23,6 @@ namespace Puff.Model {
 
             _puffMessageTypes = JsonHelper.FromJson<JsonTypes.PuffMessageType>(rawServerResult.body).ToList();
 
-            Debug.Log("_puffMessageTypes length " + _puffMessageTypes.Count);
 
             return _puffMessageTypes;
         }

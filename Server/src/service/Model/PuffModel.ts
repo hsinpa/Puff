@@ -6,7 +6,7 @@ import {AccountSchemeTableKey, DatabaseErrorType} from '../../Utility/Flag/Event
 import * as uuid from 'uuid';
 import {GetDate } from '../../Utility/GeneralMethod';
 import accountschema from '../Schema/AccountSchema';
-
+import {FilterPuffQuery} from './Query/AccountQuery';
 
 class PuffModel {
 
@@ -21,6 +21,23 @@ class PuffModel {
         let r = await this.puffSchema.find();
         return r;
     }
+
+    //API not for production yet
+    async GetFilteredPuff(account_id : string) {
+        let r = (await FilterPuffQuery(this.accountSchema, account_id))[0];
+        let friendList : string[] = r["friend_list"];
+
+        let finalQuery = await this.puffSchema.find(
+            {
+                $or: [
+                    { _id: { $in: friendList } },
+                    { $or: [ { privacy: 0}, { privacy: 2 }] }
+                ]}
+            ).limit(20);
+        
+        console.log(JSON.stringify(finalQuery));
+    }
+
 
     async SavePuffRecord(puffMsg : PuffMessageType) {
         puffMsg.date = new Date(Date.now());

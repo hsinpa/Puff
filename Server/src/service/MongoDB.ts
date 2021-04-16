@@ -35,7 +35,11 @@ class MongoDB {
     }
 
     async ConnectToDatabase(callback : (db : MongoDB ) => void) {
-        this.moogoseDB = await moogoose.connect(this.dburi, {useUnifiedTopology : true, useNewUrlParser : true});
+        this.moogoseDB = await moogoose.connect(this.dburi, {
+            useCreateIndex: true,
+            useUnifiedTopology : true, 
+            useNewUrlParser : true
+        });
         this.RegisterAllSchema();
         this.RegisterAllModel();
         callback(this);

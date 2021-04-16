@@ -36,3 +36,31 @@ export function FriendQuery(accountSchema : typeof moogoose.Model, account_id : 
         }}}
     ]);
 }
+
+export function FilterPuffQuery(accountSchema : typeof moogoose.Model, account_id : string) {
+    return accountSchema.aggregate([
+        {$match : {_id : moogoose.Types.ObjectId(account_id)}},
+        {$lookup: {
+            from : DatabaseTableName.Friend,
+            localField : "friends",
+            foreignField : "_id",
+            as : "friend_table"
+        }},
+        {$lookup : {
+            from : DatabaseTableName.Account,
+            localField : "friend_table.recipient",
+            foreignField : "_id",
+            as : "friend_info"
+        }} 
+        ,{$project : {
+            friend_list : {
+            $map: { 
+                'input': '$friend_info', 
+                'as': 'friend_info', 
+                'in': "$$friend_info._id"
+                
+            }}
+        }
+    }
+    ]);
+}
