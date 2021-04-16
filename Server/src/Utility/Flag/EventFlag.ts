@@ -1,5 +1,6 @@
 export const UniversalParameter = {
-    AuthkeyExpireDate : 30
+    AuthkeyExpireDate : 30,
+    KMPerEquatorialRadius : 6378.1
 }
 
 export const TeacherSocketEvent = {

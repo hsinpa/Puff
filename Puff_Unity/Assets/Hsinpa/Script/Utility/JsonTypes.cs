@@ -35,9 +35,11 @@ public class JsonTypes {
     [System.Serializable]
     public struct GeographicType {
         public float[] coordinates;
+        public string type;
 
-        public GeographicType(float latitude, float longitude) {
-            coordinates = new float[] { latitude, longitude };
+        public GeographicType(float longitude, float latitude) {
+            coordinates = new float[] { longitude, latitude };
+            type = "Point";
         }
     }
 

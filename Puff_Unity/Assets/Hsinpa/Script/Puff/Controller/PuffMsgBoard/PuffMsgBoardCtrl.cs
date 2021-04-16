@@ -137,7 +137,7 @@ namespace Puff.Ctrl
 
             await APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
 
-            HUDToastView.instance.SendMessage(StringTextAsset.Messaging.SubmitSuccess, 3);
+            HUDToastView.instance.Toast(StringTextAsset.Messaging.SubmitSuccess, 3, GeneralFlag.Colors.ToastColorNormal);
         }
 
         private void OnCameraScreenShot(Texture renderTexture) {

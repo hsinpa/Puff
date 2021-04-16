@@ -155,7 +155,7 @@ namespace Puff.Ctrl {
             //Check if message is belong to account user
             if (puffMessageType.author_id == _accountModel.puffAccountType._id) {
 
-                HUDToastView.instance.ShowMessage(StringTextAsset.Messaging.PuffLibraryError_IsAccountOwner, 4, GeneralFlag.Colors.ToastColorError);
+                HUDToastView.instance.Toast(StringTextAsset.Messaging.PuffLibraryError_IsAccountOwner, 4, GeneralFlag.Colors.ToastColorError);
 
                 return;
             }
@@ -164,9 +164,9 @@ namespace Puff.Ctrl {
             bool isSucess = await this._puffModel.puffSaveMsgUtility.AddNewSaveMsg(puffMessageType, actionType);
 
             if (!isSucess)
-                HUDToastView.instance.ShowMessage(StringTextAsset.Messaging.PuffLibraryError_IsAlreadySave, 4, GeneralFlag.Colors.ToastColorError);
+                HUDToastView.instance.Toast(StringTextAsset.Messaging.PuffLibraryError_IsAlreadySave, 4, GeneralFlag.Colors.ToastColorError);
             else
-                HUDToastView.instance.ShowMessage(StringTextAsset.GeneralText.Success, 4, GeneralFlag.Colors.ToastColorNormal);
+                HUDToastView.instance.Toast(StringTextAsset.GeneralText.Success, 4, GeneralFlag.Colors.ToastColorNormal);
         }
     }
 }

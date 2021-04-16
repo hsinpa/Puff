@@ -30,7 +30,7 @@ namespace Hsinpa.View {
 
         private bool isShowed = false;
 
-        public void ShowMessage(string message, float duration, Color toastBgColor) {
+        public void Toast(string message, float duration, Color toastBgColor) {
 
             //If current message is showing, then ignore
             if (isShowed) return;

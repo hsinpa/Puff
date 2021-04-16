@@ -1,7 +1,7 @@
 import PuffSchema from '../Schema/PuffSchema';
 import * as moogoose from 'mongoose';
 import {PuffCommentType, PuffMessageType, Duration, DatabaseResultType } from '../../Utility/Flag/TypeFlag';
-import {AccountSchemeTableKey, DatabaseErrorType} from '../../Utility/Flag/EventFlag';
+import {AccountSchemeTableKey, DatabaseErrorType, UniversalParameter} from '../../Utility/Flag/EventFlag';
 
 import * as uuid from 'uuid';
 import {GetDate } from '../../Utility/GeneralMethod';
@@ -23,21 +23,33 @@ class PuffModel {
     }
 
     //API not for production yet
-    async GetFilteredPuff(account_id : string) {
+    async GetFilteredPuff(account_id : string, latitude : number, longitude : number, range : number) {
         let r = (await FilterPuffQuery(this.accountSchema, account_id))[0];
         let friendList : string[] = r["friend_list"];
+        let rangeToMile = range / UniversalParameter.KMPerEquatorialRadius
+        let plantRange = 0.1 / UniversalParameter.KMPerEquatorialRadius; //100 meters
 
         let finalQuery = await this.puffSchema.find(
             {
-                $or: [
-                    { _id: { $in: friendList } },
-                    { $or: [ { privacy: 0}, { privacy: 2 }] }
-                ]}
+                $and: [
+                    {$or: [
+                        { _id: { $in: friendList } }, //If the owner is user's friend
+                        { $or: [ { privacy: 0}, { privacy: 2 }] }  //If privacy setting is Public, Anonymous
+                    ]},
+                    {
+                        $or: [
+                            //If the message is within range
+                            { type : 0, geo_location: { $geoWithin: { $centerSphere: [   [ longitude,latitude ] ,  rangeToMile]} } },
+                            //If the message is plant type
+                            { type : 1, geo_location: { $geoWithin: { $centerSphere: [  [ longitude, latitude ] ,  plantRange ]} } }
+                        ]                        
+                    }
+                ]
+            }
             ).limit(20);
         
-        console.log(JSON.stringify(finalQuery));
+        return JSON.stringify(finalQuery);
     }
-
 
     async SavePuffRecord(puffMsg : PuffMessageType) {
         puffMsg.date = new Date(Date.now());

@@ -18,6 +18,7 @@ const puffSchema = new Schema({
     privacy : Number, //0 = public, 1 = friend, 2 = anonymous
     // latitude : Number,
     // longitude : Number,
+    distance : Number,
     geo_location : {
         type: { type: String },
         coordinates: [Number]

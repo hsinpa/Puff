@@ -32,7 +32,7 @@ namespace Puff.Ctrl.Utility {
             puffMessageType.duration = duration;
             puffMessageType.distance = distance;
 
-            puffMessageType.geo_location = new JsonTypes.GeographicType(0, 0); // Longitude, Latitude
+            puffMessageType.geo_location = new JsonTypes.GeographicType(121.564315f, 24.906367f); // Longitude, Latitude
 
             return puffMessageType;
         }

@@ -21,9 +21,9 @@ export let PuffRouter = function (router : Router, mongodb:MongoDB) {
     ctx.body = r;
   });
 
-  router.get('/puff/filter_puff/:account_id', async function (ctx:any, next:any) {
-    let r = await mongodb.puffModel.GetFilteredPuff(ctx.params.account_id);
-    ctx.body = "Hi All";
+  router.get('/puff/filter_puff/:account_id/:latitude/:longtitude/:radius', async function (ctx:any, next:any) {
+    let r = await mongodb.puffModel.GetFilteredPuff(ctx.params.account_id,ctx.params.latitude, ctx.params.longtitude,ctx.params.radius );
+    ctx.body = r;
   });
   
   router.post('/puff/send_puff_comment', async function (ctx:any, next:any) {
