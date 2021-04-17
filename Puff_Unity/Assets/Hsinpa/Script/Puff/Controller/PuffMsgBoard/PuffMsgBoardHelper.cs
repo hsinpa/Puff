@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Hsinpa.Utility;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -18,7 +19,7 @@ namespace Puff.Ctrl.Utility {
         }
 
         public static JsonTypes.PuffMessageType GetCreateMessageType(int type, string author_id, string author_name, string body, string title,
-            int privacy, int duration, float distance)
+            int privacy, int duration, float distance, GPSLocationService.LocationInfo locationInfo)
         {
             JsonTypes.PuffMessageType puffMessageType = new JsonTypes.PuffMessageType();
 
@@ -32,7 +33,13 @@ namespace Puff.Ctrl.Utility {
             puffMessageType.duration = duration;
             puffMessageType.distance = distance;
 
-            puffMessageType.geo_location = new JsonTypes.GeographicType(121.564315f, 24.906367f); // Longitude, Latitude
+#if UNITY_EDITOR
+            //Geographic info of Taipei, only use during editor mode
+            locationInfo.longitude = 121.564315f;
+            locationInfo.latitude = 24.906367f;
+#endif
+
+            puffMessageType.geo_location = new JsonTypes.GeographicType(locationInfo.longitude, locationInfo.latitude); // Longitude, Latitude
 
             return puffMessageType;
         }

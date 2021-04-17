@@ -131,6 +131,17 @@ public class JsonTypes {
         public string url;
     }
 
+    public struct GeographicRange
+    {
+        public string name;
+        public float kilometer_radius;
+
+        public GeographicRange(string name, float km)
+        {
+            this.name = name;
+            this.kilometer_radius = km;
+        }
+    }
     #region Enum 
     public enum PuffTypes { FloatSeed = 0, Plant }
     

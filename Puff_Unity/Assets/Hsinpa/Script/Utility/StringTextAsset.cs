@@ -55,8 +55,8 @@ public class StringTextAsset
         public const string CameraIndicator = "{0}/{1}";
 
         public const string DistanceNear = "Near({0}M)";
-        public const string DistanceMedium = "City"; // Medium({0}KM)
-        public const string DistanceFar = "Country"; // Far({0}KM)
+        public const string DistanceMedium = "Medium({0}KM)"; // Medium({0}KM)
+        public const string DistanceFar = "Far({0}KM)"; // Far({0}KM)
         public const string DistanceWorld = "World";
 
         public const string WarningNoMessageOrTitle = "Please fulfill title and message box to proceed";

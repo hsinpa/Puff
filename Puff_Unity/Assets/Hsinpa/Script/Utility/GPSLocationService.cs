@@ -22,8 +22,6 @@ namespace Hsinpa.Utility
                 LocationInfo location = new LocationInfo();
                 location.isSuccess = isSuccess;
 
-                Debug.Log(isSuccess);
-
                 if (isSuccess)
                 {
                     location.longitude = Input.location.lastData.longitude;
@@ -50,7 +48,7 @@ namespace Hsinpa.Utility
             Input.location.Start();
 
             // Wait until service initializes
-            int maxWait = 4;
+            int maxWait = 20;
             while (Input.location.status == LocationServiceStatus.Initializing && maxWait > 0)
             {
                 yield return new WaitForSeconds(1);

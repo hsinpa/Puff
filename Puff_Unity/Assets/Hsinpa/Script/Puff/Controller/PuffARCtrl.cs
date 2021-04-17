@@ -53,6 +53,10 @@ namespace Puff.Ctrl
         private void Init() {
             _puffModel = PuffApp.Instance.models.puffModel;
             _puffModel.OnReceiveNewPuffMsgEvent += RenderPuffObjectFromDatabase;
+
+#if UNITY_ANDROID
+            UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.FineLocation);
+#endif
         }
 
         private void Update()
@@ -106,7 +110,7 @@ namespace Puff.Ctrl
         {
             foreach (var data in newPuffMsgArray)
             {
-                Debug.Log($"Body {data.body}, Author ID {data.author_id}, Date {data.parseDate}");
+                //Debug.Log($"Body {data.body}, Author ID {data.author_id}, Date {data.parseDate}");
                 GeneratePuffObjectToWorld(data);
             }
         }

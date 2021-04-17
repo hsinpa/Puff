@@ -133,9 +133,7 @@ namespace Puff.Ctrl
             List<string> rawIMGBBResult = await _puffModel.UploadTextureToIMGBB(textureBytes);
             puffMessage.images = rawIMGBBResult;
 
-            string url = GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffMsg);
-
-            await APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
+            _puffModel.SendNewMsg(puffMessage);
 
             HUDToastView.instance.Toast(StringTextAsset.Messaging.SubmitSuccess, 3, GeneralFlag.Colors.ToastColorNormal);
         }

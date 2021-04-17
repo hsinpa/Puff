@@ -38,8 +38,6 @@ namespace Puff.Model
             int defaultRadius = 10000;
             string url = string.Format(GeneralFlag.API.GetAll, locationInfo.latitude, locationInfo.longitude, defaultRadius);
 
-            Debug.Log(url);
-
             APIHttpRequest.HttpResult rawPuffMsgData = await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Get);
 
             List<JsonTypes.PuffMessageType> puffArray = new List<JsonTypes.PuffMessageType>();
@@ -54,6 +52,13 @@ namespace Puff.Model
             return puffArray;
         }
 
+        public async void SendNewMsg(JsonTypes.PuffMessageType puffMessage) {
+            string url = GeneralFlag.GetFullAPIUri(GeneralFlag.API.SendPuffMsg);
+
+            await APIHttpRequest.Curl(url, BestHTTP.HTTPMethods.Post, JsonUtility.ToJson(puffMessage));
+        }
+
+
         private async void RegisterNewPuffMsg(List<JsonTypes.PuffMessageType> puffArray)
         {
             var filterArray = await FilterExistPuffMsg(puffArray);
@@ -63,6 +68,8 @@ namespace Puff.Model
                 OnReceiveNewPuffMsgEvent(filterArray);
             }
         }
+
+
 
         private async Task<List<JsonTypes.PuffMessageType>> FilterExistPuffMsg(List<JsonTypes.PuffMessageType> puffArray)
         {
@@ -91,6 +98,7 @@ namespace Puff.Model
 
             return filterPuff;
         }
+
         #endregion
 
         #region Write / Update Comments

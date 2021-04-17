@@ -61,6 +61,8 @@ namespace Puff.View
         public enum Distance { Near = 0, Medium, Far, World };
         private enum Page {TypeSelection, MainContent, SideContent }
 
+        private Dictionary<int, JsonTypes.GeographicRange> distTable = new Dictionary<int, JsonTypes.GeographicRange>();
+
         private ColorItemSObj colorSetting;
         private AccountModel accountModel;
         private Page currentPage = Page.TypeSelection;
@@ -80,6 +82,13 @@ namespace Puff.View
             UtilityMethod.SetSimpleBtnEvent(addModuleBtn, OnAddModulePanelExpand);
             UtilityMethod.SetSimpleBtnEvent(backBtn, BackToPreviousPage);
 
+            distTable = new Dictionary<int, JsonTypes.GeographicRange>()
+            {
+                { (int)Distance.Near, new JsonTypes.GeographicRange(string.Format(StringTextAsset.Messaging.DistanceNear, 100), 0.1f) },
+                { (int)Distance.Medium, new JsonTypes.GeographicRange(string.Format(StringTextAsset.Messaging.DistanceMedium, 1), 1) },
+                { (int)Distance.Far,  new JsonTypes.GeographicRange(string.Format(StringTextAsset.Messaging.DistanceFar, 10), 10) },
+                { (int)Distance.World, new JsonTypes.GeographicRange(StringTextAsset.Messaging.DistanceWorld, 6371) }
+            };
         }
 
         public void SetContent(AccountModel accountModel, OnPuffMsgSend onPuffMsgSendEvent, System.Action OnCameraClick) {
@@ -177,20 +186,26 @@ namespace Puff.View
                     {
                         var allImageBytes = cameraModule.GetTextureBytes();
 
-                        var puffMsgType = PuffMsgBoardHelper.GetCreateMessageType(
-                            (int)this.puffMsgTypePanel.SelectedType,
-                            this.accountModel.puffAccountType._id,
-                            this.accountModel.puffAccountType.username,
-                            msgText.text,
-                            titleText.text,
-                            privacyTabHolder.CurrentIndex,
-                            durationTabHolder.date,
-                            (int)sliderModule.sliderValue
-                        );
+                        GPSLocationService.GetGPS(this, false, (GPSLocationService.LocationInfo locationInfo) =>
+                        {
+                            if (distTable.TryGetValue((int)sliderModule.sliderValue, out JsonTypes.GeographicRange gRange))
+                            {
+                                var puffMsgType = PuffMsgBoardHelper.GetCreateMessageType(
+                                    (int)this.puffMsgTypePanel.SelectedType,
+                                    this.accountModel.puffAccountType._id,
+                                    this.accountModel.puffAccountType.username,
+                                    msgText.text,
+                                    titleText.text,
+                                    privacyTabHolder.CurrentIndex,
+                                    durationTabHolder.date,
+                                    gRange.kilometer_radius,
+                                    locationInfo
+                                );
 
-                        this.OnPuffMsgSendCallback(puffMsgType, allImageBytes);
-                        msgText.text = "";
-
+                                this.OnPuffMsgSendCallback(puffMsgType, allImageBytes);
+                                msgText.text = "";
+                            }
+                        });
 
                     }
                     break;
@@ -200,16 +215,8 @@ namespace Puff.View
         private void OnDistanceSliderChange(float p_index) {
             int index = (int)p_index;
 
-            Dictionary<int, string> distTable = new Dictionary<int, string>()
-            {
-                { (int)Distance.Near, string.Format(StringTextAsset.Messaging.DistanceNear, 100) },
-                { (int)Distance.Medium, string.Format(StringTextAsset.Messaging.DistanceMedium, 1) },
-                { (int)Distance.Far, string.Format(StringTextAsset.Messaging.DistanceFar, 10) },
-                { (int)Distance.World, string.Format(StringTextAsset.Messaging.DistanceWorld) }
-            };
-
-            if (distTable.TryGetValue(index, out string text)) {
-                sliderModule.SetSliderField(text);
+            if (distTable.TryGetValue(index, out JsonTypes.GeographicRange gRange)) {
+                sliderModule.SetSliderField(gRange.name);
             }
         }
 
@@ -218,7 +225,6 @@ namespace Puff.View
             bool isExpand = !addModulePanel.isActive;
 
             addModulePanel.Show(isExpand);
-
         }
 
         private void OnModuleIsAppended(Button btn)
