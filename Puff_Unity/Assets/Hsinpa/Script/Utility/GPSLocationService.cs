@@ -17,16 +17,11 @@ namespace Hsinpa.Utility
                 return;
             }
 
-            mono.StartCoroutine(StartGPS((bool isSuccess) =>
+            mono.StartCoroutine(StartGPS((LocationInfo location) =>
             {
-                LocationInfo location = new LocationInfo();
-                location.isSuccess = isSuccess;
 
-                if (isSuccess)
+                if (location.isSuccess)
                 {
-                    location.longitude = Input.location.lastData.longitude;
-                    location.latitude = Input.location.lastData.latitude;
-
                     cacheInfo = location;
                 }
 
@@ -35,15 +30,18 @@ namespace Hsinpa.Utility
             }));
         }
 
-        private static IEnumerator StartGPS(System.Action<bool> callback)
+        private static IEnumerator StartGPS(System.Action<LocationInfo> callback)
         {
+
+            LocationInfo location = new LocationInfo();
+            location.isSuccess = false;
+
             // First, check if user has location service enabled
             if (!Input.location.isEnabledByUser)
             {
-                callback(false);
+                callback(location);
                 yield break;
             }
-
             // Start service before querying location
             Input.location.Start();
 
@@ -62,22 +60,34 @@ namespace Hsinpa.Utility
             if (maxWait < 1)
             {
                 Debug.LogError("Timed out");
-                callback(false);
+                Input.location.Stop();
+
+                callback(location);
+
                 yield break;
             }
 
             // Connection has failed
-            if (Input.location.status == LocationServiceStatus.Failed)
+            if (Input.location.status == LocationServiceStatus.Failed || Input.location.status == LocationServiceStatus.Stopped)
             {
                 Debug.LogError("Unable to determine device location");
-                callback(false);
+                Input.location.Stop();
+
+                callback(location);
                 yield break;
             }
             else
             {
                 // Access granted and location value could be retrieved
-                Debug.Log("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude + " " + Input.location.lastData.altitude + " " + Input.location.lastData.horizontalAccuracy + " " + Input.location.lastData.timestamp);
-                callback(true);
+                Debug.Log("Location: " + Input.location.lastData.latitude + " " + Input.location.lastData.longitude);
+
+                location.latitude = Input.location.lastData.latitude;
+                location.latitude = Input.location.lastData.longitude;
+                location.isSuccess = true;
+
+                Input.location.Stop();
+
+                callback(location);
             }
         }
 

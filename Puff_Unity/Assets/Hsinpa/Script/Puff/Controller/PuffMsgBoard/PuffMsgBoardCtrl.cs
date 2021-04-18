@@ -100,7 +100,10 @@ namespace Puff.Ctrl
         private void OpenFrontPage(JsonTypes.PuffMessageType puffMessageType) {
             PuffMsgFrontPage frontPage = puffMessageModal.OpenPage<PuffMsgFrontPage>();
 
-            frontPage.SetContent(puffMessageType, onIrrigateButtonClick, (string replayMsg) =>
+
+            bool isSaveToLibrary = this._puffModel.puffSaveMsgUtility.IsDuplicate(puffMessageType._id);
+
+            frontPage.SetContent(puffMessageType, isSaveToLibrary, onIrrigateButtonClick, (string replayMsg) =>
             {
                 PushCommentToServer(frontPage, puffMessageType._id, replayMsg);
             });

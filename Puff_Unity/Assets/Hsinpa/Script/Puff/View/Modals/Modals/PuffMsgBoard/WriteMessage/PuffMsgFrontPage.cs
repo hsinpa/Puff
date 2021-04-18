@@ -64,6 +64,20 @@ namespace Puff.View {
         [SerializeField]
         private Material cropMat;
 
+        [Header("Other")]
+        [SerializeField]
+        private Image SaveToLibraryBadge;
+
+        [SerializeField]
+        private Image leafImage;
+
+        [SerializeField]
+        private Sprite greanLeaf;
+
+        [SerializeField]
+        private Sprite waterLeaf;
+
+
         private List<PuffMsgThumbItem> cacheThumbItems = new List<PuffMsgThumbItem>();
 
         private List<RenderTexture> cacheThumbs = new List<RenderTexture>();
@@ -73,12 +87,13 @@ namespace Puff.View {
             PrepareCacheTexture(maxThumb: 4);
         }
 
-        public void SetContent(JsonTypes.PuffMessageType puffMsgType, System.Action IrrigateBtnEvent, System.Action<string> ReplyBtnEvent) {
+        public void SetContent(JsonTypes.PuffMessageType puffMsgType, bool IsMsgSaveToLibrary, System.Action IrrigateBtnEvent, System.Action<string> ReplyBtnEvent) {
             title.text = puffMsgType.title;
             author.text = puffMsgType.author;
             create_date.text = puffMsgType.parseDate.ToString("MM/dd/yyyy hh:mm tt");
             Description.text = puffMsgType.body;
-
+            SaveToLibraryBadge.enabled = IsMsgSaveToLibrary;
+            leafImage.sprite = greanLeaf;
             _ReplyInputfield.text = "";
 
             CleanThumbnails();
@@ -98,7 +113,10 @@ namespace Puff.View {
             RotateBtn.onClick.RemoveAllListeners();
             RotateBtn.onClick.AddListener(OnRotation);
 
-            UtilityMethod.SetSimpleBtnEvent(IrrigateBtn, IrrigateBtnEvent);
+            UtilityMethod.SetSimpleBtnEvent(IrrigateBtn, () => {
+                IrrigateBtnEvent();
+                leafImage.sprite = waterLeaf;
+            });
         }
 
         private void GenerateComments(List<JsonTypes.PuffCommentType> commentList) {
