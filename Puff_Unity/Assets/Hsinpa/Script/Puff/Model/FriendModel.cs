@@ -12,6 +12,18 @@ namespace Hsinpa.Model {
     {
         JsonTypes.FriendListType _cacheFriendList;
 
+        public bool HasRelationWithAccount(string id) {
+            if (_cacheFriendList.friend_info != null) {
+                int friendCount = _cacheFriendList.friend_info.Length;
+
+                for (int i = 0; i < friendCount; i++) {
+                    if (_cacheFriendList.friend_info[i]._id == id)
+                        return true;
+                }
+            }
+            return false;
+        }
+
         public JsonTypes.FriendActionJson GetActionJSON(string accountID, string targetID, string auth_key) {
             var json = new JsonTypes.FriendActionJson();
             json.target_id = targetID;

@@ -9,6 +9,8 @@ using Puff.Model;
 using System.Threading.Tasks;
 using Hsinpa.Model;
 using LitJson;
+using UnityEngine.WSA;
+using System.IO.IsolatedStorage;
 
 namespace Puff.Ctrl
 {
@@ -33,6 +35,15 @@ namespace Puff.Ctrl
                 case EventFlag.Event.OnProfileOpen:
                     OnProfileOpenEvent();
                     break;
+
+                case EventFlag.Event.OnProfileAccountIDSearch:
+                    if (p_objects == null || p_objects.Length <= 1) return;
+
+                    string account_id = (string)p_objects[0];
+                    string account_name = (string)p_objects[1];
+
+                    OnFriendIDSearchtEvent(account_id, account_name);
+                    break;
             }
         }
 
@@ -47,10 +58,10 @@ namespace Puff.Ctrl
         {
             FindFriendModal findFriendModal = Modals.instance.OpenModal<FindFriendModal>();
 
-            findFriendModal.SetSearchPanel(OnFriendSearchtEvent);
+            findFriendModal.SetSearchPanel(OnFriendEmailSearchtEvent);
         }
 
-        private async void OnFriendSearchtEvent(string email)
+        private async void OnFriendEmailSearchtEvent(string email)
         {
             if (!AccountModel.CheckEmail(email)) {
                 Debug.Log("Wrong Email Format " + email);
@@ -60,11 +71,35 @@ namespace Puff.Ctrl
 
             var r = await _accountModel.FindAccountByEmail(email);
 
-            if (r.isSuccess) {
+            ProcessUserAccountHttpCallback(r);
+        }
 
+        private async void OnFriendIDSearchtEvent(string id, string account_name)
+        {
+            //No Relation and not self
+            bool isFriendInvitationAllow = !this._friendModel.HasRelationWithAccount(id) &&
+                                            id != this._accountModel.puffAccountType._id;
+
+            if (!isFriendInvitationAllow) {
+                FindFriendModal findFriendModal = Modals.instance.OpenModal<FindFriendModal>();
+
+                findFriendModal.SetFriendInvitePanel(id, account_name, isFriendInvitationAllow, OnFriendInviteEvent);
+
+                return;    
+            }
+
+            var r = await _accountModel.FindAccountByID(id);
+
+            ProcessUserAccountHttpCallback(r);
+        }
+
+        private void ProcessUserAccountHttpCallback(Hsinpa.Utility.APIHttpRequest.HttpResult r) {
+            if (r.isSuccess)
+            {
                 JsonTypes.DatabaseResultType databaseResultType = JsonUtility.FromJson<JsonTypes.DatabaseResultType>(r.body);
 
-                if (databaseResultType.status == (int)EventFlag.DatabaseStateType.AccountState.Fail_Login_NoAccount) {
+                if (databaseResultType.status == (int)EventFlag.DatabaseStateType.AccountState.Fail_Login_NoAccount)
+                {
                     Debug.Log("No Account");
                     HUDToastView.instance.Toast(StringTextAsset.Login.DatabaseFail_Login, 3, GeneralFlag.Colors.ToastColorNormal);
 
@@ -73,22 +108,24 @@ namespace Puff.Ctrl
 
                 JsonTypes.FriendType friendJSON = JsonUtility.FromJson<JsonTypes.FriendType>(databaseResultType.result);
 
-                FindFriendModal findFriendModal = Modals.instance.GetModal<FindFriendModal>();
+                //No Relation and not self
+                bool isFriendInvitationAllow = !this._friendModel.HasRelationWithAccount(friendJSON._id) &&
+                                                friendJSON._id != this._accountModel.puffAccountType._id;
 
-                findFriendModal.SetFriendInvitePanel(friendJSON, OnFriendInviteEvent);
+                FindFriendModal findFriendModal = Modals.instance.OpenModal<FindFriendModal>();
+
+                findFriendModal.SetFriendInvitePanel(friendJSON._id, friendJSON.username, isFriendInvitationAllow, OnFriendInviteEvent);
             }
         }
 
-        private async void OnFriendInviteEvent(JsonTypes.FriendType friendJSON)
+        private async void OnFriendInviteEvent(string friend_id)
         {
-            Debug.Log("OnFriendInviteEvent : " + friendJSON._id);
-
             Modals.instance.Close();
 
             JsonTypes.FriendActionJson friendActionJson = new JsonTypes.FriendActionJson();
             friendActionJson.account_id = _accountModel.puffAccountType._id;
             friendActionJson.auth_key = _accountModel.puffAccountType.auth_key;
-            friendActionJson.target_id = friendJSON._id;
+            friendActionJson.target_id = friend_id;
 
             await _friendModel.RequestFriend(friendActionJson);
         }

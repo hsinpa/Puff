@@ -15,7 +15,7 @@ class AccountModel {
     }
 
 //#region Utility Functions
-async GetAccountByEmail(p_email : string) {
+async GetPublicAccountByEmail(p_email : string) {
     return await this.accountSchema.find({
         email : p_email
     }).
@@ -23,8 +23,14 @@ async GetAccountByEmail(p_email : string) {
     exec();
 }
 
+async GetPublicAccountByID(id : string) {
+    return await this.accountSchema.findById(id).
+    select("username _id email").
+    exec();
+}
+
 async IsEmailNoExist(p_email : string) : Promise<boolean>  {
-    let r = await this.GetAccountByEmail(p_email);
+    let r = await this.GetPublicAccountByEmail(p_email);
 
     return r.length <= 0;
 }

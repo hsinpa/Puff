@@ -87,7 +87,8 @@ namespace Puff.View {
             PrepareCacheTexture(maxThumb: 4);
         }
 
-        public void SetContent(JsonTypes.PuffMessageType puffMsgType, bool IsMsgSaveToLibrary, System.Action IrrigateBtnEvent, System.Action<string> ReplyBtnEvent) {
+        public void SetContent(JsonTypes.PuffMessageType puffMsgType, bool IsMsgSaveToLibrary, System.Action IrrigateBtnEvent,
+            System.Action<string, string> ProfileBtnEvent, System.Action<string> ReplyBtnEvent) {
             title.text = puffMsgType.title;
             author.text = puffMsgType.author;
             create_date.text = puffMsgType.parseDate.ToString("MM/dd/yyyy hh:mm tt");
@@ -116,6 +117,11 @@ namespace Puff.View {
             UtilityMethod.SetSimpleBtnEvent(IrrigateBtn, () => {
                 IrrigateBtnEvent();
                 leafImage.sprite = waterLeaf;
+            });
+
+            ProfileBtn.onClick.RemoveAllListeners();
+            ProfileBtn.onClick.AddListener(() => {
+                ProfileBtnEvent(puffMsgType.author_id, puffMsgType.author);
             });
         }
 

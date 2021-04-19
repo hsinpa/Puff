@@ -15,6 +15,8 @@ public class EventFlag
 
         public const string OnProfileOpen = "event@profile_page_open";
 
+        public const string OnProfileAccountIDSearch = "event@profile_accountID_search";
+
         //Generally, want to enable/disable according to wheter we need it or not;
         public const string GameWorldUpdateEnable = "event@game_world_enable";
         public const string GameWorldUpdateDisable = "event@game_world_disable";

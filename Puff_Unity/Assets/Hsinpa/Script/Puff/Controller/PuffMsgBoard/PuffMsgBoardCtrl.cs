@@ -7,6 +7,7 @@ using Puff.Ctrl.Utility;
 using Hsinpa.Utility;
 using Puff.Model;
 using System.Threading.Tasks;
+using Hsinpa.Model;
 
 namespace Puff.Ctrl
 {
@@ -23,6 +24,8 @@ namespace Puff.Ctrl
         private PuffMsgBoardHelper _puffMsgBoardHelper;
         private AccountModel _accountModel;
         private PuffModel _puffModel;
+        private FriendModel _friendModel;
+
 
         private JsonTypes.PuffMessageType _currentPuffMsg;
 
@@ -65,9 +68,8 @@ namespace Puff.Ctrl
             this.puffMessageModal = Modals.instance.GetModal<PuffMessageModal>();
             this._accountModel = PuffApp.Instance.models.accountModel;
             this._puffModel = PuffApp.Instance.models.puffModel;
+            this._friendModel = PuffApp.Instance.models.friendModel;
             this._arCameraCtrl.OnScreenShotIsDone += OnCameraScreenShot;
-
-            //puffMessageModal.puffActionSelectPage.SetUp(OpenTextMsgPage, () => { }, () => OpenFrontPage(_currentPuffMsg));
         }
 
         private void RefreshSaveLibraryPuff() {
@@ -87,11 +89,6 @@ namespace Puff.Ctrl
 
             puffMsgPage.SetContent(_accountModel, OnCreatorMessageSubmitEvent, () => {
 
-                //var screenshot = _arCameraCtrl.TakeScreenShot();
-
-                //if (screenshot != null)
-                //    puffMsgPage.cameraModule.AssignRawImage(screenshot);
-
                 if (puffMsgPage.cameraModule.isTakePhotoAvailable)
                     PuffApp.Instance.Notify(EventFlag.Event.EnterCameraMode);
             });
@@ -100,10 +97,9 @@ namespace Puff.Ctrl
         private void OpenFrontPage(JsonTypes.PuffMessageType puffMessageType) {
             PuffMsgFrontPage frontPage = puffMessageModal.OpenPage<PuffMsgFrontPage>();
 
-
             bool isSaveToLibrary = this._puffModel.puffSaveMsgUtility.IsDuplicate(puffMessageType._id);
 
-            frontPage.SetContent(puffMessageType, isSaveToLibrary, onIrrigateButtonClick, (string replayMsg) =>
+            frontPage.SetContent(puffMessageType, isSaveToLibrary, OnIrrigateButtonClick, OnSearchProfileInfoEvent,(string replayMsg) =>
             {
                 PushCommentToServer(frontPage, puffMessageType._id, replayMsg);
             });
@@ -111,6 +107,10 @@ namespace Puff.Ctrl
 
         private void OpenTextMsgPage() {
             var page = puffMessageModal.OpenPage<PuffTextMsgPage>();
+        }
+
+        private void OnSearchProfileInfoEvent(string account_id, string account_name) {
+            PuffApp.Instance.Notify(EventFlag.Event.OnProfileAccountIDSearch, account_id, account_name);
         }
 
         private async void PushCommentToServer(PuffMsgFrontPage frontPage, string msg_id, string comment) {
@@ -150,7 +150,7 @@ namespace Puff.Ctrl
             puffMsgPage.cameraModule.AssignRawImage(renderTexture);
         }
 
-        private void onIrrigateButtonClick() {
+        private void OnIrrigateButtonClick() {
             puffMessageModal.Show(false);
             Modals.instance.EnableBackgroundImg(false);
 
@@ -162,10 +162,6 @@ namespace Puff.Ctrl
                 Modals.instance.EnableBackgroundImg(true);
                 puffMessageModal.Show(true);
             });
-        }
-
-        private void OnProfileButtonClick() { 
-        
         }
         #endregion
 

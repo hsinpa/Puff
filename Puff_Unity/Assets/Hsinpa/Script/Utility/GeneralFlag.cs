@@ -57,7 +57,8 @@ public class GeneralFlag
         public const string Login = "account/login";
         public const string SignUp = "account/sign_up";
         public const string AuthLogin = "account/auth_login";
-        public const string AccountByEmail = "account/email/{0}";
+        public const string PublicInfoByEmail = "account/publicInfo/email/{0}";
+        public const string PublicInfoByID = "account/publicInfo/id/{0}";
 
         //Friend
         public const string GetFriends = "friends/{0}";
@@ -73,6 +74,6 @@ public class GeneralFlag
 
     public static string GetFullAPIUri(string apiUrl)
     {
-        return Domain.GoogleServer + apiUrl;
+        return Domain.LocalHost + apiUrl;
     }
 }

@@ -21,7 +21,14 @@ public class AccountModel
     }
 
     public async Task<APIHttpRequest.HttpResult> FindAccountByEmail(string email) {
-        string url = string.Format(GeneralFlag.API.AccountByEmail, email);
+        string url = string.Format(GeneralFlag.API.PublicInfoByEmail, email);
+        return await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Get);
+    }
+
+    public async Task<APIHttpRequest.HttpResult> FindAccountByID(string id)
+    {
+        string url = string.Format(GeneralFlag.API.PublicInfoByID, id);
+
         return await APIHttpRequest.Curl(GeneralFlag.GetFullAPIUri(url), BestHTTP.HTTPMethods.Get);
     }
 

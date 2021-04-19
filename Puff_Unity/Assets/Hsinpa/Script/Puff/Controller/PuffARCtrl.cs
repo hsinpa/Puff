@@ -45,6 +45,8 @@ namespace Puff.Ctrl
                 case EventFlag.Event.LoginSuccessful:
                     {
                         enableAPIRequest = true;
+
+                        InitiateAppDataset();
                     }
                     break;
             }
@@ -57,6 +59,15 @@ namespace Puff.Ctrl
 #if UNITY_ANDROID
             UnityEngine.Android.Permission.RequestUserPermission(UnityEngine.Android.Permission.FineLocation);
 #endif
+        }
+
+        private void InitiateAppDataset()
+        {
+            var friendModel = PuffApp.Instance.models.friendModel;
+            var accountModel = PuffApp.Instance.models.accountModel;
+
+            _ = this._puffModel.puffSaveMsgUtility.GetSaveMsgFromServer(PuffSaveMsgUtility.GetPuffSaveActionType(accountModel.puffAccountType._id));
+            _ = friendModel.GetFriend(accountModel.puffAccountType._id);
         }
 
         private void Update()

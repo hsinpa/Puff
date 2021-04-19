@@ -19,9 +19,10 @@ namespace Puff.View
             FriendModalInvite.gameObject.SetActive(false);
         }
 
-        public void SetFriendInvitePanel(JsonTypes.FriendType friend, System.Action<JsonTypes.FriendType> OnInviteBtnCallback) {
+        public void SetFriendInvitePanel(string id, string username, bool isFriendInvitationAllow, System.Action<string> OnInviteBtnCallback) {
             FriendModalSearch.gameObject.SetActive(false);
-            FriendModalInvite.SetUp(friend.username, friend, null, OnInviteBtnCallback);
+
+            FriendModalInvite.SetUp(id, username, isFriendInvitationAllow, OnInviteBtnCallback);
         }
     }
 }

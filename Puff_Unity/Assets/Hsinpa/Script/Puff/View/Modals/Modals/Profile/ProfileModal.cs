@@ -170,7 +170,7 @@ namespace Puff.View
                 string.Format(StringTextAsset.Friend.FriendRejectMessage, friendItem.friendType.username), btnStringArray, (int index) => {
                     Debug.Log("Friend Reject : " + friendItem.friendType.username);
 
-                    if (index == 0 && FriendAcceptCallback != null)
+                    if (index == 0 && FriendRejectCallback != null)
                     {
                         FriendRejectCallback(friendItem.friendType);
                         friendItem.ModifyStatusUI(JsonTypes.FriendStatus.Block);

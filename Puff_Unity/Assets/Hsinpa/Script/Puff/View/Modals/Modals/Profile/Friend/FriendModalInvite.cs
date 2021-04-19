@@ -16,16 +16,26 @@ namespace Hsinpa.View.Friend {
         [SerializeField]
         private Button ActionBtn;
 
-        public void SetUp(string friendInfo, JsonTypes.FriendType friendJSON, Texture texture, System.Action<JsonTypes.FriendType> action)
+        [SerializeField]
+        private Texture defaultFriendSprite;
+
+        public void SetUp(string friend_id, string friendInfo, bool allowInvitation, System.Action<string> action)
         {
             this.gameObject.SetActive(true);
 
             FriendInfoText.text = friendInfo;
 
+            FriendAvatar.texture = defaultFriendSprite;
+
+            ActionBtn.interactable = allowInvitation;
+
+            UtilityMethod.SetSimpleBtnEvent<string>(ActionBtn, action, friend_id);
+        }
+
+        public void SetAvatarTexture(Texture texture) {
             if (texture != null)
                 FriendAvatar.texture = texture;
-
-            UtilityMethod.SetSimpleBtnEvent<JsonTypes.FriendType>(ActionBtn, action, friendJSON);
         }
+
     }
 }
