@@ -132,7 +132,7 @@ namespace Puff.Ctrl {
                 if (SelectedPuffObject != null)
                 {
                     if (gestureInput == PuffInspectorInput.GestureEvent.Save)
-                        SaveToSelfLibrary(SelectedPuffObject.puffMessageType);
+                        PuffApp.Instance.Notify(EventFlag.Event.OnProfileSaveToLibrary, SelectedPuffObject.puffMessageType);
 
                     SelectedPuffObject.Dismiss();
                     SelectedPuffObject = null;
@@ -149,24 +149,6 @@ namespace Puff.Ctrl {
             puffInspectView.Show(isShow);
             if (SelectedPuffObject != null)
                 SelectedPuffObject.gameObject.SetActive(isShow);
-        }
-
-        private async void SaveToSelfLibrary(JsonTypes.PuffMessageType puffMessageType) {
-            //Check if message is belong to account user
-            if (puffMessageType.author_id == _accountModel.puffAccountType._id) {
-
-                HUDToastView.instance.Toast(StringTextAsset.Messaging.PuffLibraryError_IsAccountOwner, 4, GeneralFlag.Colors.ToastColorError);
-
-                return;
-            }
-
-            var actionType = PuffSaveMsgUtility.GetPuffSaveActionType(_accountModel.puffAccountType._id, puffMessageType._id);
-            bool isSucess = await this._puffModel.puffSaveMsgUtility.AddNewSaveMsg(puffMessageType, actionType);
-
-            if (!isSucess)
-                HUDToastView.instance.Toast(StringTextAsset.Messaging.PuffLibraryError_IsAlreadySave, 4, GeneralFlag.Colors.ToastColorError);
-            else
-                HUDToastView.instance.Toast(StringTextAsset.GeneralText.Success, 4, GeneralFlag.Colors.ToastColorNormal);
         }
     }
 }

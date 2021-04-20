@@ -45,6 +45,9 @@ namespace Puff.View {
         private Button IrrigateBtn;
 
         [SerializeField]
+        private Button ToLibraryBtn;
+
+        [SerializeField]
         private Button ProfileBtn;
 
         [Header("Comment")]
@@ -88,7 +91,9 @@ namespace Puff.View {
         }
 
         public void SetContent(JsonTypes.PuffMessageType puffMsgType, bool IsMsgSaveToLibrary, System.Action IrrigateBtnEvent,
-            System.Action<string, string> ProfileBtnEvent, System.Action<string> ReplyBtnEvent) {
+            System.Action<JsonTypes.PuffMessageType> SaveToLibraryBtnEvent, System.Action<string, string> ProfileBtnEvent,
+            System.Action<string> ReplyBtnEvent) {
+
             title.text = puffMsgType.title;
             author.text = puffMsgType.author;
             create_date.text = puffMsgType.parseDate.ToString("MM/dd/yyyy hh:mm tt");
@@ -118,6 +123,8 @@ namespace Puff.View {
                 IrrigateBtnEvent();
                 leafImage.sprite = waterLeaf;
             });
+
+            UtilityMethod.SetSimpleBtnEvent<JsonTypes.PuffMessageType>(ToLibraryBtn, SaveToLibraryBtnEvent, puffMsgType);
 
             ProfileBtn.onClick.RemoveAllListeners();
             ProfileBtn.onClick.AddListener(() => {

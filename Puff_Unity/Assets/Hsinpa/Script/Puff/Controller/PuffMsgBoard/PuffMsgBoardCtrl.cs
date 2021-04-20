@@ -26,7 +26,6 @@ namespace Puff.Ctrl
         private PuffModel _puffModel;
         private FriendModel _friendModel;
 
-
         private JsonTypes.PuffMessageType _currentPuffMsg;
 
         public override void OnNotify(string p_event, params object[] p_objects)
@@ -99,7 +98,7 @@ namespace Puff.Ctrl
 
             bool isSaveToLibrary = this._puffModel.puffSaveMsgUtility.IsDuplicate(puffMessageType._id);
 
-            frontPage.SetContent(puffMessageType, isSaveToLibrary, OnIrrigateButtonClick, OnSearchProfileInfoEvent,(string replayMsg) =>
+            frontPage.SetContent(puffMessageType, isSaveToLibrary, OnIrrigateButtonClick, OnSaveToLiraryEvent, OnSearchProfileInfoEvent,(string replayMsg) =>
             {
                 PushCommentToServer(frontPage, puffMessageType._id, replayMsg);
             });
@@ -111,6 +110,10 @@ namespace Puff.Ctrl
 
         private void OnSearchProfileInfoEvent(string account_id, string account_name) {
             PuffApp.Instance.Notify(EventFlag.Event.OnProfileAccountIDSearch, account_id, account_name);
+        }
+
+        private void OnSaveToLiraryEvent(JsonTypes.PuffMessageType puffMsg) {
+            PuffApp.Instance.Notify(EventFlag.Event.OnProfileSaveToLibrary, puffMsg);
         }
 
         private async void PushCommentToServer(PuffMsgFrontPage frontPage, string msg_id, string comment) {

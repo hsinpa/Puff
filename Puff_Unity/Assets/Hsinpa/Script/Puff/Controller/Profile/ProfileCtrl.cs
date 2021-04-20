@@ -9,7 +9,6 @@ using Puff.Model;
 using System.Threading.Tasks;
 using Hsinpa.Model;
 using LitJson;
-using UnityEngine.WSA;
 using System.IO.IsolatedStorage;
 
 namespace Puff.Ctrl
@@ -43,6 +42,13 @@ namespace Puff.Ctrl
                     string account_name = (string)p_objects[1];
 
                     OnFriendIDSearchtEvent(account_id, account_name);
+                    break;
+
+
+                case EventFlag.Event.OnProfileSaveToLibrary:
+                    if (p_objects == null || p_objects.Length <= 1) return;
+
+                    SaveToSelfLibrary((JsonTypes.PuffMessageType)p_objects[0]);
                     break;
             }
         }
@@ -142,6 +148,27 @@ namespace Puff.Ctrl
 
 
         #region Puff Library Callback
+
+        private async void SaveToSelfLibrary(JsonTypes.PuffMessageType puffMessageType)
+        {
+            //Check if message is belong to account user
+            if (puffMessageType.author_id == _accountModel.puffAccountType._id)
+            {
+
+                HUDToastView.instance.Toast(StringTextAsset.Messaging.PuffLibraryError_IsAccountOwner, 4, GeneralFlag.Colors.ToastColorError);
+
+                return;
+            }
+
+            var actionType = PuffSaveMsgUtility.GetPuffSaveActionType(_accountModel.puffAccountType._id, puffMessageType._id);
+            bool isSucess = await this._puffModel.puffSaveMsgUtility.AddNewSaveMsg(puffMessageType, actionType);
+
+            if (!isSucess)
+                HUDToastView.instance.Toast(StringTextAsset.Messaging.PuffLibraryError_IsAlreadySave, 4, GeneralFlag.Colors.ToastColorError);
+            else
+                HUDToastView.instance.Toast(StringTextAsset.GeneralText.Success, 4, GeneralFlag.Colors.ToastColorNormal);
+        }
+
         private void OnLibraryPuffClick(JsonTypes.PuffMessageType puffMessageType)
         {
             Debug.Log("puffMessageType id " + puffMessageType._id);

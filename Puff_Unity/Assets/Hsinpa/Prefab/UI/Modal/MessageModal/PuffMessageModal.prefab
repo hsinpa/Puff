@@ -887,7 +887,7 @@ GameObject:
   - component: {fileID: 17345496469958339}
   - component: {fileID: 971235074262195221}
   m_Layer: 5
-  m_Name: FriendBtn
+  m_Name: SaveToLibraryBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2602,6 +2602,7 @@ MonoBehaviour:
   _ReplyBtn: {fileID: 2766038935912314081}
   RotateBtn: {fileID: 234936846302459771}
   IrrigateBtn: {fileID: 7527026151923416766}
+  ToLibraryBtn: {fileID: 17345496469958339}
   ProfileBtn: {fileID: 2749489498763872058}
   commentsHolder: {fileID: 1611255705890586810}
   commentItemPrefab: {fileID: 8597919377421383269, guid: 41e3b0f5b92b1ed4baf621b94d9cdaa4,
