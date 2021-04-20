@@ -46,7 +46,7 @@ namespace Puff.Ctrl
 
 
                 case EventFlag.Event.OnProfileSaveToLibrary:
-                    if (p_objects == null || p_objects.Length <= 1) return;
+                    if (p_objects == null || p_objects.Length <= 0) return;
 
                     SaveToSelfLibrary((JsonTypes.PuffMessageType)p_objects[0]);
                     break;

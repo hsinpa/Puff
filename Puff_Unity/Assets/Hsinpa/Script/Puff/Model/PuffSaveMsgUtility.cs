@@ -12,6 +12,9 @@ namespace Puff.Model {
         public List<JsonTypes.PuffMessageType> cachePuffMsgTypes => _puffMessageTypes;
 
         public bool IsDuplicate(string puff_id) {
+
+            if (_puffMessageTypes == null) return false;
+
             return _puffMessageTypes.FindIndex(x => x._id == puff_id) >= 0;
         }
 
