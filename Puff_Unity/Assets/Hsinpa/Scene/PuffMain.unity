@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_UseShadowmask: 0
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -708,7 +708,7 @@ PrefabInstance:
     - target: {fileID: 7446363177082260071, guid: 0312d63a9197a4d459b6efe15fb9ee0c,
         type: 3}
       propertyPath: m_Alpha
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7446363177082260074, guid: 0312d63a9197a4d459b6efe15fb9ee0c,
         type: 3}
@@ -1141,7 +1141,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c5ef60cad8fb23a499eaa7f668d7e1e3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 038ccab8cd184d04cb1bfa1d79704320, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1812,8 +1812,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.06641763}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -0.21289062}
-  m_SizeDelta: {x: -0.000061035156, y: -0.4958496}
+  m_AnchoredPosition: {x: 0, y: 0.017517}
+  m_SizeDelta: {x: -0.000061035156, y: -0.03503418}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1184717078
 MonoBehaviour:
@@ -2187,7 +2187,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 13fd7660c64d27945a8d3d631cfed708, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 54480c8535d545149b22ee8bfcaad6c2, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -3524,7 +3524,7 @@ PrefabInstance:
     - target: {fileID: 2766038934709615502, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -10.0000305
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 2766038935138955204, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
@@ -3555,6 +3555,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2766038935318745553, guid: 97cd404dfd59dc34e958fa964875bdbd,
+        type: 3}
+      propertyPath: m_Alpha
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2766038935318745566, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
@@ -3629,7 +3634,7 @@ PrefabInstance:
     - target: {fileID: 2766038935318745566, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
       propertyPath: m_SizeDelta.y
-      value: -0.000061035156
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2766038935318745566, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
