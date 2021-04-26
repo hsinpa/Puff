@@ -93,9 +93,9 @@ namespace Puff.Ctrl
         private PuffItemView GeneratePuffObjectToWorld(JsonTypes.PuffMessageType puffMsg) {
             Vector3 originPoint = _camera.transform.forward * 1.5f;
 
-            float xPos = originPoint.x + Random.Range(-1.5f, 1.5f);
-            float yPos = Random.Range(1.5f, 4.5f);
-            float zPos = originPoint.z + Random.Range(-1.5f, 1.5f);
+            float xPos = originPoint.x + Random.Range(-3.5f, 3.5f);
+            float yPos = Random.Range(1.2f, 2.5f);
+            float zPos = originPoint.z + Random.Range(-3.5f, 3.5f);
 
             GeneralFlag.SharedVectorUnit.Set(xPos, yPos, zPos);
 

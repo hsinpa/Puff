@@ -17,7 +17,7 @@ public class GeneralFlag
     }
 
     public class RegularExpression {
-        public const string Email = @"^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$";
+        public const string Email = @"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)";
         public const string UniversalSyntaxRex = @"^.{6,30}$";
     }
 
