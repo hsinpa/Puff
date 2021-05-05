@@ -7,13 +7,20 @@ namespace Puff.WorldManager {
     public class PuffItemManager : MonoBehaviour
     {
         [SerializeField]
-        private PuffItemView puffItemViewPrefab;
+        private PuffItemView puffPuffPrefab; // Sky
+
+        [SerializeField] 
+        private PuffItemView plantPuffPrefab; // Ground
 
         private List<PuffItemView> puffItemViews = new List<PuffItemView>();
 
         public PuffItemView GeneratePuffObject(JsonTypes.PuffMessageType puffMsgType, Vector3 spawnPositon)
         {
-            GameObject generateObj = Instantiate(puffItemViewPrefab.gameObject, this.transform);
+            JsonTypes.PuffTypes puffTypes = (JsonTypes.PuffTypes)puffMsgType.type;
+
+            PuffItemView spawnPrefab = (puffTypes == JsonTypes.PuffTypes.FloatSeed) ? puffPuffPrefab : plantPuffPrefab;
+
+            GameObject generateObj = Instantiate(spawnPrefab.gameObject, this.transform);
             PuffItemView itemView = generateObj.GetComponent<PuffItemView>();
             itemView.SetUp(puffMsgType);
             itemView.transform.position = spawnPositon;

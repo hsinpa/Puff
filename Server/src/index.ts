@@ -38,7 +38,6 @@ app.use(router.allowedMethods())
 var server = http.Server(app.callback());
 
 const mongodb = new MongoDB(env, (db: MongoDB) => {
-  
   console.log("Connect to database");
 
   rootRouter(router, db);

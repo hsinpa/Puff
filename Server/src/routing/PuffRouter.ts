@@ -33,14 +33,9 @@ export let PuffRouter = function (router : Router, mongodb:MongoDB) {
   });
   
   router.post('/puff/send_puff_msg', async function (ctx:any, next:any) {
-    // let msgType : PuffMessageType = {
-    //   author : ctx.request.body['author'],
-    //   author_id : ctx.request.body['author_id'],
-    //   body : ctx.request.body['body'],
-    //   comments : []
-    // }
-  
+
     delete ctx.request.body['_id'];
+    
     let msgType : PuffMessageType = ctx.request.body;
   
     let result = await mongodb.puffModel.SavePuffRecord(msgType);
