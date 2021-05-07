@@ -118,7 +118,7 @@ namespace Puff.Ctrl.Utility
                 dragMode = DragDir.None;
                 hasHitOnPuffObj = false;
                 recordRotationY = SelectedPuffObject.transform.eulerAngles.y;
-                GeneralFlag.SharedVectorUnit.Set(0, recordRotationY, 0);
+                GeneralFlag.SharedVectorUnit.Set(SelectedPuffObject.transform.eulerAngles.x, recordRotationY, SelectedPuffObject.transform.eulerAngles.z);
                 lerpQuaterion = Quaternion.Euler(GeneralFlag.SharedVectorUnit);
                 currentFace = FindTheBestFace();
                 this.SetFaceCallback(currentFace);
@@ -212,7 +212,8 @@ namespace Puff.Ctrl.Utility
         private void GraduallyRotateToFace(Face face)
         {
             float angle = GetAngle( (_camera.transform.forward));
-            GeneralFlag.SharedVectorUnit.Set(0, rotDir - angle, 0);
+            var objectEulerVector = SelectedPuffObject.transform.rotation.eulerAngles;
+            GeneralFlag.SharedVectorUnit.Set(objectEulerVector.x, rotDir - angle, objectEulerVector.z);
             lerpQuaterion = Quaternion.Lerp(lerpQuaterion, Quaternion.Euler(GeneralFlag.SharedVectorUnit), 0.1f);
 
             SelectedPuffObject.transform.rotation = lerpQuaterion;

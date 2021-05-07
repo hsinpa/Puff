@@ -109,7 +109,7 @@ namespace Puff.Ctrl
             Vector3 originPoint = _camera.transform.forward * 1.5f;
 
             float xPos = originPoint.x + Random.Range(-2.5f, 2.5f);
-            float yPos = Random.Range(-0.9f, -1.1f);
+            float yPos = Random.Range(-1f, -1.5f);
             float zPos = originPoint.z + Random.Range(-2.5f, 2.5f);
 
             return puffItemManager.GeneratePuffObject(puffMsg, new Vector3(xPos, yPos, zPos));
@@ -142,7 +142,7 @@ namespace Puff.Ctrl
                         break;
 
                     case JsonTypes.PuffTypes.Plant:
-                        GeneratePuffObjectToWorld(data);
+                        GeneratePlantObjectToWorld(data);
                         break;
                 }
             }
