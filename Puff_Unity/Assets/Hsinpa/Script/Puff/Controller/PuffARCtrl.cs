@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.XR.ARFoundation;
 using Hsinpa.Utility;
+using LitJson;
 
 namespace Puff.Ctrl
 {
@@ -36,9 +37,6 @@ namespace Puff.Ctrl
                 case EventFlag.Event.GameStart:
                     {
                         Init();
-
-                        //GenerateTestPuffObject(20);
-                        //RefreshPuffMsg();
                     }
                     break;
 
@@ -75,18 +73,6 @@ namespace Puff.Ctrl
             if (Time.time > APIRequestTimeRecord && enableAPIRequest) {
                 RefreshGPSInfo();
                 APIRequestTimeRecord = Time.time + APIRequestCycleTime;
-            }
-        }
-
-        private void GenerateTestPuffObject(int testNumber) {
-            for (int i = 0; i < testNumber; i++) {
-                JsonTypes.PuffMessageType msgType = new JsonTypes.PuffMessageType();
-                msgType.author = "Helloworld";
-                msgType.author_id = System.Guid.NewGuid().ToString();
-                msgType.body = "Gkekoiosd fa sdf";
-                msgType._id = System.Guid.NewGuid().ToString().Substring(0,8); 
-
-                GeneratePuffObjectToWorld(msgType);
             }
         }
 
@@ -138,6 +124,10 @@ namespace Puff.Ctrl
 
                 switch (puffTypes) {
                     case JsonTypes.PuffTypes.FloatSeed:
+                        GeneratePuffObjectToWorld(data);
+                        break;
+
+                    case JsonTypes.PuffTypes.NewsAvatar:
                         GeneratePuffObjectToWorld(data);
                         break;
 

@@ -41,8 +41,10 @@ class PuffModel {
                             //If the message is within range
                             { type : 0, geo_location: { $geoWithin: { $centerSphere: [   [ longitude,latitude ] ,  rangeToMile]} } },
                             //If the message is plant type
-                            { type : 1, geo_location: { $geoWithin: { $centerSphere: [  [ longitude, latitude ] ,  plantRange ]} } }
-                        ]                        
+                            { type : 1, geo_location: { $geoWithin: { $centerSphere: [  [ longitude, latitude ] ,  plantRange ]} } },
+                            //Demo only, 3d avatar man, talk to user
+                            { type : 2 }
+                        ]              
                     }
                 ]
             }

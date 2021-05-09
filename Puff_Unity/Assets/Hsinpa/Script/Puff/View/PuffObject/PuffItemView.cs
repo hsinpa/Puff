@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Hsinpa.Utility;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,6 +8,12 @@ namespace Puff.View {
     {
         [SerializeField]
         private float _gravity;
+
+        [SerializeField]
+        private Animator animator;
+
+        [SerializeField]
+        private Transform holderSpace;
 
         private string _puffID;
         public string puffID => _puffID;
@@ -65,9 +72,26 @@ namespace Puff.View {
             return true;
         }
 
+        public void SetAnimatorBoolEvent(string p_eventName, bool p_enable)
+        {
+            if (animator == null) return;
+            animator.SetBool(p_eventName, p_enable);
+        }
+
+        public void InsertToHolderSpace(GameObject prefab) {
+            var avatarDemeItem = UtilityMethod.CreateObjectToParent<PuffAvatarDemoView>(holderSpace, prefab);
+            avatarDemeItem.SetAvatarMessage(puffMessageType.body);
+            SetAnimatorBoolEvent("Open", true);
+        }
+
         public void Dismiss() {
             isBackToPosPeriod = true;
             isLanded = false;
+
+            if (this.holderSpace != null)
+                UtilityMethod.ClearChildObject(this.holderSpace);
+
+            SetAnimatorBoolEvent("Open", false);
         }
 
         public void CatchToFront() {

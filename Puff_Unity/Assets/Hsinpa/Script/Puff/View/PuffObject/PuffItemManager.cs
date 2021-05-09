@@ -18,7 +18,7 @@ namespace Puff.WorldManager {
         {
             JsonTypes.PuffTypes puffTypes = (JsonTypes.PuffTypes)puffMsgType.type;
 
-            PuffItemView spawnPrefab = (puffTypes == JsonTypes.PuffTypes.FloatSeed) ? puffPuffPrefab : plantPuffPrefab;
+            PuffItemView spawnPrefab = (puffTypes == JsonTypes.PuffTypes.Plant) ? plantPuffPrefab : puffPuffPrefab;
 
             GameObject generateObj = Instantiate(spawnPrefab.gameObject, this.transform);
             PuffItemView itemView = generateObj.GetComponent<PuffItemView>();

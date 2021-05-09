@@ -143,7 +143,7 @@ public class JsonTypes {
         }
     }
     #region Enum 
-    public enum PuffTypes { FloatSeed = 0, Plant }
+    public enum PuffTypes { FloatSeed = 0, Plant, NewsAvatar }
     
     public enum FriendStatus { Friends = 0, RequestFriend, ReceiveRequest, Block }
 

@@ -9,6 +9,7 @@ using TMPro;
 using System.Diagnostics.Tracing;
 using Puff.Ctrl.Utility;
 using Puff.Model;
+using Hsinpa.Utility;
 
 namespace Puff.Ctrl {
     public class PuffInspectCtrl : ObserverPattern.Observer
@@ -21,6 +22,9 @@ namespace Puff.Ctrl {
 
         [SerializeField]
         private Camera _camera;
+
+        [SerializeField]
+        private PuffAvatarDemoView avatarDemoPrefab;
 
         [SerializeField]
         private PuffItemView SelectedPuffObject;
@@ -119,7 +123,12 @@ namespace Puff.Ctrl {
             _puffInspectorInput.SetInputSelectObject(puffItem);
 
             puffInspectView.Show(true);
-            SetFaceInfo(PuffInspectorInput.Face.Front);      
+            SetFaceInfo(PuffInspectorInput.Face.Front);
+
+            //if (puffItem.puffMessageType.type == (int)JsonTypes.PuffTypes.NewsAvatar)
+            
+            if (UtilityMethod.RollDice() == 0 && puffItem.puffMessageType.type == (int)JsonTypes.PuffTypes.FloatSeed)
+                puffItem.InsertToHolderSpace(avatarDemoPrefab.gameObject);
 
             return true;
         }

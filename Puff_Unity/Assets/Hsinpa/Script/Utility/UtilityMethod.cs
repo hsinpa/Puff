@@ -47,8 +47,8 @@ namespace Hsinpa.Utility {
 			GameObject item = GameObject.Instantiate(prefab);
 			item.transform.SetParent(parent);
 			item.transform.localScale = Vector3.one;
-			item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y, 1);
-			item.transform.localPosition = new Vector3(0, 0, 1);
+			//item.transform.position = new Vector3(item.transform.position.x, item.transform.position.y, 1);
+			item.transform.localPosition = new Vector3(0, 0, 0.1f);
 			item.transform.localRotation = Quaternion.identity;
 
 			return item.GetComponent<T>();

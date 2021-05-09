@@ -2004,6 +2004,8 @@ MonoBehaviour:
   puffInspectView: {fileID: 1664361062}
   puffHUDView: {fileID: 692675485}
   _camera: {fileID: 1846505257}
+  avatarDemoPrefab: {fileID: 8896267226729541131, guid: dbae4d10269080845af8180dc3c7b5f5,
+    type: 3}
   SelectedPuffObject: {fileID: 0}
   DragThreshold: 30
 --- !u!1 &1404139277
@@ -3164,6 +3166,11 @@ PrefabInstance:
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2766038934709615502, guid: 97cd404dfd59dc34e958fa964875bdbd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -9.999939
+      objectReference: {fileID: 0}
     - target: {fileID: 2766038935138955204, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
       propertyPath: m_AnchorMin.y
@@ -3363,6 +3370,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5035947629301977222, guid: 97cd404dfd59dc34e958fa964875bdbd,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7461467798022021927, guid: 97cd404dfd59dc34e958fa964875bdbd,
         type: 3}
@@ -4030,6 +4042,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Pivot.y
       value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5590492227592381327, guid: 21d98855ed4a3814e8c8fc8bc98bc124,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0.49998474
       objectReference: {fileID: 0}
     - target: {fileID: 9104814602311440515, guid: 21d98855ed4a3814e8c8fc8bc98bc124,
         type: 3}
